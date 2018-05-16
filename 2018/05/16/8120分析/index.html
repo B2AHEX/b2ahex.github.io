@@ -493,7 +493,7 @@
 </blockquote>
 <p>漏洞原因是在 <em>win32k!SetImeInfoEx</em> 中没有对指针进行验证就直接使用，当指针指向0地址时，系统可能会引用用户层可控的数据,实现任意地址写到任意代码执行的功能。</p>
 <h3 id="2-漏洞分析"><a href="#2-漏洞分析" class="headerlink" title="2. 漏洞分析"></a>2. 漏洞分析</h3><p>对比 <a href="https://portal.msrc.microsoft.com/en-US/security-guidance/advisory/CVE-2018-8120" target="_blank" rel="external">kb4103712</a> 补丁前后 win32k.sys 文件，在 <em>win32k!SetImeInfoEx</em> 中增加对指针是否为0的验证。  </p>
-<p><img src="/1.png" alt="">   </p>
+<p><img src="/blog/img/src/8120-1.png" alt="">   </p>
 <p>补丁前:  </p>
 <pre><code>.text:BF810067                 push    ebp
 .text:BF810068                 mov     ebp, esp
@@ -569,13 +569,13 @@
 .text:BF810AB8                 mov     eax, [eax+8]
 .text:BF810ABB                 cmp     eax, edx
 .text:BF810ABD                 jnz     short loc_BF810AB3
-</code></pre><p>没有对 <em>spklList</em> 进行验证,下面访问该指针成员 <em>piiex</em> (+0x2c),如果 <em>spklList</em> 为0,在未开启零页保护的系统下可以通过 <em>NtAllocateVirtualMemory</em> 申请0地址内存,此时+0x2c的指针数据是可控的:<br><img src="/81.png" alt=""> </p>
+</code></pre><p>没有对 <em>spklList</em> 进行验证,下面访问该指针成员 <em>piiex</em> (+0x2c),如果 <em>spklList</em> 为0,在未开启零页保护的系统下可以通过 <em>NtAllocateVirtualMemory</em> 申请0地址内存,此时+0x2c的指针数据是可控的:<br><img src="/blog/img/src/8120-81.png" alt=""> </p>
 <p>如果该指针+0x48处为0,代码会执行memcpy操作:  </p>
-<p><img src="/9.png" alt=""> </p>
-<p>目的地址是由0x2c处的指针决定的,源地址来自参数,查看上一层 <em>NtUserSetImeInfoEx</em> v6经过一次memcpy,源数据来自用户层参数:<br><img src="/7.png" alt="">   </p>
-<h3 id="3-生成POC"><a href="#3-生成POC" class="headerlink" title="3. 生成POC"></a>3. 生成POC</h3><p>满足 <em>win32k!NtUserSetImeInfoEx</em> 及 <em>win32k!SetImeInfoEx</em> 中执行memcpy的几个条件后构造代码如下:<br><img src="/poc.png" alt=""></p>
-<p>memcpy前:<br><img src="/4.png" alt=""></p>
-<p>memcpy后:<br><img src="/5.png" alt=""></p>
+<p><img src="/blog/img/src/8120-9.png" alt=""> </p>
+<p>目的地址是由0x2c处的指针决定的,源地址来自参数,查看上一层 <em>NtUserSetImeInfoEx</em> v6经过一次memcpy,源数据来自用户层参数:<br><img src="/blog/img/src/8120-7.png" alt="">   </p>
+<h3 id="3-生成POC"><a href="#3-生成POC" class="headerlink" title="3. 生成POC"></a>3. 生成POC</h3><p>满足 <em>win32k!NtUserSetImeInfoEx</em> 及 <em>win32k!SetImeInfoEx</em> 中执行memcpy的几个条件后构造代码如下:<br><img src="/blog/img/src/8120-poc.png" alt=""></p>
+<p>memcpy前:<br><img src="/blog/img/src/8120-4.png" alt=""></p>
+<p>memcpy后:<br><img src="/blog/img/src/8120-5.png" alt=""></p>
 
     
 
