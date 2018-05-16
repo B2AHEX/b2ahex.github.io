@@ -12,6 +12,8 @@
     
     <title>
         
+            CVE-2018-8120 漏洞分析 | 
+        
         b2ahex&#39;s blog
     </title>
 
@@ -65,15 +67,18 @@
     <!-- The Open Graph protocol -->
     <meta property="og:url" content="https://b2ahex.github.io">
     <meta property="og:type" content="blog">
-    <meta property="og:title" content="b2ahex&#39;s blog">
+    <meta property="og:title" content="CVE-2018-8120 漏洞分析 | b2ahex&#39;s blog">
     <meta property="og:image" content="/blog/img/favicon.png" />
     <meta property="og:description" content="">
     
 
     
+        <meta property="article:published_time" content="5月 16, 2018" />
+        <meta property="article:modified_time" content="5月 16, 2018" />
+    
 
     <!-- The Twitter Card protocol -->
-    <meta name="twitter:title" content="b2ahex&#39;s blog">
+    <meta name="twitter:title" content="CVE-2018-8120 漏洞分析 | b2ahex&#39;s blog">
     <meta name="twitter:description" content="">
     <meta name="twitter:image" content="/blog/img/favicon.png">
     <meta name="twitter:card" content="summary_large_image" />
@@ -81,35 +86,43 @@
 
     <!-- Add canonical link for SEO -->
     
-        <link rel="canonical" href="https://b2ahex.github.io" />
+        <link rel="canonical" href="https://b2ahex.github.io/blog/2018/05/16/8120分析/index.html" />
     
 
     <!-- Structured-data for SEO -->
     
         
+
+
 <script type="application/ld+json">
 {
-    "@context": "http://schema.org",
-    "@type": "Website",
+    "@context": "https://schema.org",
+    "@type": "Article",
     "publisher": {
         "@type": "Organization",
         "name": "b2ahex&#39;s blog",
         "logo": "/blog/img/favicon.png"
     },
-    "url": "https://b2ahex.github.io/blog/index.html",
-    "image": {
-        "@type": "ImageObject",
-        "url": "/blog/img/favicon.png"
+    "author": {
+        "@type": "Person",
+        "name": "b2ahex",
+        "image": {
+            "@type": "ImageObject",
+            "url": "/blog/img/favicon.png"
+        },
+        "description": "Hi, nice to meet you"
     },
+    "headline": "CVE-2018-8120 漏洞分析",
+    "url": "https://b2ahex.github.io/blog/2018/05/16/8120分析/index.html",
+    "datePublished": "5月 16, 2018",
+    "dateModified": "5月 16, 2018",
+    "description": "",
     "mainEntityOfPage": {
         "@type": "WebPage",
         "@id": "https://b2ahex.github.io"
-    },
-    "description": "null"
+    }
 }
 </script>
-
-
 
 
     
@@ -299,356 +312,308 @@
                         </button>
                     
 
-                    <!-- Index Module -->
-<div class="material-index mdl-grid">
+                    <!-- Post TOC -->
+
     
-        <!-- Paradox Header -->
-        <!-- Daily pic -->
-<div class="mdl-card mdl-shadow--2dp daily-pic mdl-cell mdl-cell--8-col index-top-block">
-
-    <!-- Pic & Slogan -->
-    <div class="mdl-card__media mdl-color-text--grey-50" style="background-image:url(/blog/img/daily_pic.png)">
-        <p class="index-top-block-slogan"><a href="#">
-        
-            
-                Hi, nice to meet you
-            
-        
-        </a></p>
-    </div>
-
-    <!-- Avatar & Name -->
-    <div class="mdl-card__supporting-text meta mdl-color-text--grey-600">
-        <!-- Author Avatar -->
-        <div id="author-avatar">
-            <img src="/blog/img/avatar.png" width="32px" height="32px" alt="avatar">
-        </div>
-        <div>
-            <strong>b2ahex</strong>
-        </div>
-    </div>
-</div>
-
-        <!-- Blog info -->
-<div class="mdl-card mdl-shadow--2dp something-else mdl-cell mdl-cell--8-col mdl-cell--4-col-desktop index-top-block">
-
-    <!-- Search -->
-    
-    <!-- Google -->
-    <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable" method="post" action="">
-        <label id="search-label" class="mdl-button mdl-js-ripple-effect mdl-js-button mdl-button--fab mdl-color--accent mdl-shadow--4dp" for="search">
-            <i class="material-icons mdl-color-text--white" role="presentation">search</i>
-        </label>
-
-        <form autocomplete="off" id="search-form" method="get" action="//google.com/search" accept-charset="UTF-8" class="mdl-textfield__expandable-holder" target="_blank">
-            <input class="mdl-textfield__input search-input" type="search" name="q" id="search" placeholder="">
-            <label id="search-form-label" class="mdl-textfield__label" for="search"></label>
-
-            <input type="hidden" name="sitesearch" value="https://b2ahex.github.io">
-        </form>
-    </div>
-
-
-
-
-
-
-
-    <!-- LOGO -->
-    <div class="something-else-logo mdl-color--white mdl-color-text--grey-600">
-        <a href="#" target="_blank">
-            <img src="/blog/img/logo.png" alt="logo" />
+    <!-- Back Button -->
+    <!--
+    <div class="material-back" id="backhome-div" tabindex="0">
+        <a class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon"
+           href="#" onclick="window.history.back();return false;"
+           target="_self"
+           role="button"
+           data-upgraded=",MaterialButton,MaterialRipple">
+            <i class="material-icons" role="presentation">arrow_back</i>
+            <span class="mdl-button__ripple-container">
+                <span class="mdl-ripple"></span>
+            </span>
         </a>
     </div>
+    -->
 
-    <!-- Infomation -->
-    <div class="mdl-card__supporting-text meta meta--fill mdl-color-text--grey-600">
-        <!-- Blog Title -->
-        <div>
-            <strong>b2ahex&#39;s blog</strong>
-        </div>
-        <div class="section-spacer"></div>
-
-        <!-- Pages -->
-        <button id="show-pages-button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
-            <i class="material-icons" role="presentation">view_carousel</i>
-            <span class="visuallyhidden">Pages</span>
-        </button>
-        <ul class="mdl-menu mdl-js-menu mdl-menu--bottom-right" for="show-pages-button">
-            
-                <a class="index_share-link" href="https://b2ahex.github.io/blog/whoami" title="whoami">
-                    <li class="mdl-menu__item mdl-js-ripple-effect">
-                        whoami
-                    </li>
-                </a>
-            
-        </ul>
-
-        <!-- Menu -->
-        <button id="menubtn" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
-            <i class="material-icons" role="presentation">more_vert</i>
-            <span class="visuallyhidden">show menu</span>
-        </button>
-        <ul class="mdl-menu mdl-js-menu mdl-menu--bottom-right" for="menubtn">
-            
-
-            
-
-            
-                <a class="index_share-link" href="http://service.weibo.com/share/share.php?appkey=&title=b2ahex&#39;s blog&url=https://b2ahex.github.io/blog/&pic=&searchPic=false&style=simple" target="_blank">
-                    <li class="mdl-menu__item mdl-js-ripple-effect">
-                        分享到微博
-                    </li>
-                </a>
-            
-
-            
-                <a class="index_share-link" href="https://twitter.com/intent/tweet?text=b2ahex&#39;s blog&url=https://b2ahex.github.io/blog/&via=b2ahex" target="_blank">
-                    <li class="mdl-menu__item mdl-js-ripple-effect">
-                        分享到 Twitter
-                    </li>
-                </a>
-            
-
-            
-                <a class="index_share-link" href="https://www.facebook.com/sharer/sharer.php?u=https://b2ahex.github.io/blog/index.html" target="_blank">
-                    <li class="mdl-menu__item mdl-js-ripple-effect">
-                        分享到 Facebook
-                    </li>
-                </a>
-            
-
-            
-                <a class="index_share-link" href="https://plus.google.com/share?url=https://b2ahex.github.io/blog/" target="_blank">
-                    <li class="mdl-menu__item mdl-js-ripple-effect">
-                        分享到 Google+
-                    </li>
-                </a>
-            
-
-            
-
-            
-
-            
-        </ul>
-    </div>
-</div>
+    <!-- Left aligned menu below button -->
+    <button id="post-toc-trigger-btn"
+        class="mdl-button mdl-js-button mdl-button--icon">
+        <i class="material-icons">format_list_numbered</i>
+    </button>
 
     
-    <div class="locate-thumbnail-symbol"></div>
-
-    <!-- Pin on top -->
+    <ul class="post-toc-wrap mdl-menu mdl-menu--bottom-left mdl-js-menu mdl-js-ripple-effect" for="post-toc-trigger-btn" style="max-height:80vh; overflow-y:scroll;">
+        <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1-背景介绍"><span class="post-toc-number">1.</span> <span class="post-toc-text">1. 背景介绍</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-漏洞分析"><span class="post-toc-number">2.</span> <span class="post-toc-text">2. 漏洞分析</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#3-生成POC"><span class="post-toc-number">3.</span> <span class="post-toc-text">3. 生成POC</span></a></li></ol>
+        <!--
+        <li class="mdl-menu__item">
+            Some Action
+        </li>
+        -->
+    </ul>
     
 
-    <!-- Normal Post -->
-    
-        
-            
-                <!-- Paradox Thumbnail -->
-                <div class="post_entry-module mdl-card mdl-shadow--2dp mdl-cell mdl-cell--12-col fade out">
-    <!-- Post Thumbnail -->
+
+
+
+
+<!-- Layouts -->
+
+    <!-- Post Module -->
+    <div class="material-post_container">
+
+        <div class="material-post mdl-grid">
+            <div class="mdl-card mdl-shadow--4dp mdl-cell mdl-cell--12-col">
+
+                <!-- Post Header(Thumbnail & Title) -->
+                
+    <!-- Paradox Post Header -->
     
         
             <!-- Random Thumbnail -->
             <div class="post_thumbnail-random mdl-card__media mdl-color-text--grey-50">
-        
-    
+            <script type="text/ls-javascript" id="post-thumbnail-script">
+    var randomNum = Math.floor(Math.random() * 19 + 1);
 
-        <!-- Post Title -->
-        <p class="article-headline-p"><a href="/blog/2018/05/16/8120分析/">CVE-2018-8120 漏洞分析</a></p>
-    </div>
-
-    <!-- Post Excerpt -->
-    <div class="mdl-color-text--grey-600 mdl-card__supporting-text post_entry-content">
-        
-            作者：b2ahex
-
-        
-        &nbsp;&nbsp;&nbsp;
-        <span>
-            <a href="/blog/2018/05/16/8120分析/" target="_self">阅读全文</a>
-        </span>
-    </div>
-    <!-- Post_entry Info-->
-    <div id="post_entry-info">
-        <div id="post_entry-left-info" class="mdl-card__supporting-text meta mdl-color-text--grey-600 ">
-            <!-- Author Avatar -->
-            <div id="author-avatar">
-                <img src="/blog/img/avatar.png" width="44px" height="44px" alt="b2ahex's avatar">
-            </div>
-            <div>
-                <strong>b2ahex</strong>
-                <span>5月 16, 2018</span>
-            </div>
-        </div>
-        <div id="post_entry-right-info">
-            <!-- Category -->
-            <span class="post_entry-category">
-                
-            </span>
-
-            
-
-            
-
-            <!-- Post Views -->
-            <span class="post_entry-views">
-            </span>
-        </div>
-    </div>
-</div>
-
-            
-            
-        
-    
-        
-            
-                <!-- Paradox Thumbnail -->
-                <div class="post_entry-module mdl-card mdl-shadow--2dp mdl-cell mdl-cell--12-col fade out">
-    <!-- Post Thumbnail -->
-    
-        
-            <!-- Random Thumbnail -->
-            <div class="post_thumbnail-random mdl-card__media mdl-color-text--grey-50">
-        
-    
-
-        <!-- Post Title -->
-        <p class="article-headline-p"><a href="/blog/2017/06/13/4113分析/">CVE-2014-4113 漏洞利用分析</a></p>
-    </div>
-
-    <!-- Post Excerpt -->
-    <div class="mdl-color-text--grey-600 mdl-card__supporting-text post_entry-content">
-        
-            作者：b2ahex
-1. 背景介绍
-win32k.sys in the kernel-mode drivers in Microsoft Windows Server 2003 SP2, Windows Vista SP2, Windows Server 2008 SP2 and R2 SP1, Windows 7 SP1, Windows 8, Windows 8.1, Windows Server 2012 Gold and R2, and Windows RT Gold and 8.1 allows local users to gain privileges via a crafted application, as exploited in the wild in October 2014, aka “Win32k.sys Elevation of Privilege Vulnerability.”  
-
-        
-        &nbsp;&nbsp;&nbsp;
-        <span>
-            <a href="/blog/2017/06/13/4113分析/" target="_self">阅读全文</a>
-        </span>
-    </div>
-    <!-- Post_entry Info-->
-    <div id="post_entry-info">
-        <div id="post_entry-left-info" class="mdl-card__supporting-text meta mdl-color-text--grey-600 ">
-            <!-- Author Avatar -->
-            <div id="author-avatar">
-                <img src="/blog/img/avatar.png" width="44px" height="44px" alt="b2ahex's avatar">
-            </div>
-            <div>
-                <strong>b2ahex</strong>
-                <span>6月 13, 2017</span>
-            </div>
-        </div>
-        <div id="post_entry-right-info">
-            <!-- Category -->
-            <span class="post_entry-category">
-                
-            </span>
-
-            
-
-            
-
-            <!-- Post Views -->
-            <span class="post_entry-views">
-            </span>
-        </div>
-    </div>
-</div>
-
-            
-            
-        
-    
-        
-            
-                <!-- Paradox Thumbnail -->
-                <div class="post_entry-module mdl-card mdl-shadow--2dp mdl-cell mdl-cell--12-col fade out">
-    <!-- Post Thumbnail -->
-    
-        
-            <!-- Random Thumbnail -->
-            <div class="post_thumbnail-random mdl-card__media mdl-color-text--grey-50">
-        
-    
-
-        <!-- Post Title -->
-        <p class="article-headline-p"><a href="/blog/2014/08/08/利用kaspersky白文件的恶意样本分析/">利用kaspersky白文件的恶意样本分析</a></p>
-    </div>
-
-    <!-- Post Excerpt -->
-    <div class="mdl-color-text--grey-600 mdl-card__supporting-text post_entry-content">
-        
-            之前分析过的样本，随便贴点东西上来吧…
-by @b2ahex
-一、样本信息
-样本名称：280836636_37EEC1A29D316ED1E5E766B599DC32A1.bin样本大小： 64,599 字节文件类型：EXE文件病毒名称：HttpBrowser样本MD5： 37eec1a29d316ed1e5e766b599dc32a1样本SHA256：a89c21dd608c51c4bf0323d640f816e464578510389f9edcf04cd34090decc91
-
-        
-        &nbsp;&nbsp;&nbsp;
-        <span>
-            <a href="/blog/2014/08/08/利用kaspersky白文件的恶意样本分析/" target="_self">阅读全文</a>
-        </span>
-    </div>
-    <!-- Post_entry Info-->
-    <div id="post_entry-info">
-        <div id="post_entry-left-info" class="mdl-card__supporting-text meta mdl-color-text--grey-600 ">
-            <!-- Author Avatar -->
-            <div id="author-avatar">
-                <img src="/blog/img/avatar.png" width="44px" height="44px" alt="b2ahex's avatar">
-            </div>
-            <div>
-                <strong>b2ahex</strong>
-                <span>8月 08, 2014</span>
-            </div>
-        </div>
-        <div id="post_entry-right-info">
-            <!-- Category -->
-            <span class="post_entry-category">
-                
-            </span>
-
-            
-
-            
-
-            <!-- Post Views -->
-            <span class="post_entry-views">
-            </span>
-        </div>
-    </div>
-</div>
-
-            
-            
-        
-    
-
-    
-
-    
-        <script type="text/ls-javascript" id="thumbnail-script">
-    var randomNum;
-
-    var locatePost = $('.locate-thumbnail-symbol').next();
-    for(var i = 0; i < 10; i++) {
-        randomNum = Math.floor(Math.random() * 19 + 1);
-
-        locatePost.children('.post_thumbnail-random').attr('id', 'random_thumbnail-'+randomNum);
-        locatePost.children('.post_thumbnail-random').attr('data-original', '/blog/img/random/material-' + randomNum + '.png');
+    $('.post_thumbnail-random').attr('data-original', '/blog/img/random/material-' + randomNum + '.png');
     $('.post_thumbnail-random').addClass('lazy');
-
-        locatePost = locatePost.next();
-    }
 </script>
 
+        
+    
+            <p class="article-headline-p">
+                CVE-2018-8120 漏洞分析
+            </p>
+        </div>
+
+
+
+
+
+                
+                    <!-- Paradox Post Info -->
+                    <div class="mdl-color-text--grey-700 mdl-card__supporting-text meta">
+
+    <!-- Author Avatar -->
+    <div id="author-avatar">
+        <img src="/blog/img/avatar.png" width="44px" height="44px" alt="Author Avatar"/>
+    </div>
+    <!-- Author Name & Date -->
+    <div>
+        <strong>b2ahex</strong>
+        <span>5月 16, 2018</span>
+    </div>
+
+    <div class="section-spacer"></div>
+
+    <!-- Favorite -->
+    <!--
+        <button id="article-functions-like-button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon btn-like">
+            <i class="material-icons" role="presentation">favorite</i>
+            <span class="visuallyhidden">favorites</span>
+        </button>
+    -->
+
+    <!-- Qrcode -->
+    
+
+    <!-- Tags (bookmark) -->
+    
+    <button id="article-functions-viewtags-button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
+        <i class="material-icons" role="presentation">bookmark</i>
+        <span class="visuallyhidden">bookmark</span>
+    </button>
+    <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="article-functions-viewtags-button">
+        <li class="mdl-menu__item">
+        
+    </ul>
+    
+
+    <!-- Share -->
+    <button id="article-fuctions-share-button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
+    <i class="material-icons" role="presentation">share</i>
+    <span class="visuallyhidden">share</span>
+</button>
+<ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="article-fuctions-share-button">
+    
+
+    
+
+    <!-- Share Weibo -->
+    
+        <a class="post_share-link" href="http://service.weibo.com/share/share.php?appkey=&title=CVE-2018-8120 漏洞分析&url=https://b2ahex.github.io/blog/2018/05/16/8120分析/index.html&pic=&searchPic=false&style=simple" target="_blank">
+            <li class="mdl-menu__item">
+                分享到微博
+            </li>
+        </a>
+    
+
+    <!-- Share Twitter -->
+    
+        <a class="post_share-link" href="https://twitter.com/intent/tweet?text=CVE-2018-8120 漏洞分析&url=https://b2ahex.github.io/blog/2018/05/16/8120分析/index.html&via=b2ahex" target="_blank">
+            <li class="mdl-menu__item">
+                分享到 Twitter
+            </li>
+        </a>
+    
+
+    <!-- Share Facebook -->
+    
+        <a class="post_share-link" href="https://www.facebook.com/sharer/sharer.php?u=https://b2ahex.github.io/blog/2018/05/16/8120分析/index.html" target="_blank">
+            <li class="mdl-menu__item">
+                分享到 Facebook
+            </li>
+        </a>
+    
+
+    <!-- Share Google+ -->
+    
+        <a class="post_share-link" href="https://plus.google.com/share?url=https://b2ahex.github.io/blog/2018/05/16/8120分析/index.html" target="_blank">
+            <li class="mdl-menu__item">
+                分享到 Google+
+            </li>
+        </a>
+    
+
+    <!-- Share LinkedIn -->
+    
+
+    <!-- Share QQ -->
+    
+
+    <!-- Share Telegram -->
+    
+</ul>
+
+</div>
+
+                
+
+                <!-- Post Content -->
+                <div id="post-content" class="mdl-color-text--grey-700 mdl-card__supporting-text fade out">
+    
+        <p>作者：b2ahex</p>
+<h3 id="1-背景介绍"><a href="#1-背景介绍" class="headerlink" title="1. 背景介绍"></a>1. 背景介绍</h3><blockquote>
+<p>An elevation of privilege vulnerability exists in Windows when the Win32k component fails to properly handle objects in memory. An attacker who successfully exploited this vulnerability could run arbitrary code in kernel mode. An attacker could then install programs; view, change, or delete data; or create new accounts with full user rights.<br>To exploit this vulnerability, an attacker would first have to log on to the system. An attacker could then run a specially crafted application that could exploit the vulnerability and take control of an affected system.<br>The update addresses this vulnerability by correcting how Win32k handles objects in memory.  </p>
+</blockquote>
+<p>漏洞原因是在 <em>win32k!SetImeInfoEx</em> 中没有对指针进行验证就直接使用，当指针指向0地址时，系统可能会引用用户层可控的数据,实现任意地址写到任意代码执行的功能。</p>
+<h3 id="2-漏洞分析"><a href="#2-漏洞分析" class="headerlink" title="2. 漏洞分析"></a>2. 漏洞分析</h3><p>对比 <a href="https://portal.msrc.microsoft.com/en-US/security-guidance/advisory/CVE-2018-8120" target="_blank" rel="external">kb4103712</a> 补丁前后 win32k.sys 文件，在 <em>win32k!SetImeInfoEx</em> 中增加对指针是否为0的验证。  </p>
+<p><img src="/1.png" alt="">   </p>
+<p>补丁前:  </p>
+<pre><code>.text:BF810067                 push    ebp
+.text:BF810068                 mov     ebp, esp
+.text:BF81006A                 mov     eax, [ebp+atagWINDOWStation]
+.text:BF81006D                 test    eax, eax
+.text:BF81006F                 jz      short loc_BF81008B
+.text:BF810071                 mov     ecx, [eax+14h]    ;没有检查ecx,如果下面条件判断成功会跳到loc_BF81008F，执行rep movsd
+.text:BF810074                 push    esi
+.text:BF810075                 mov     esi, [ebp+r3buf]
+.text:BF810078                 mov     edx, [esi]
+.text:BF81007A                 mov     eax, ecx
+.text:BF81007C
+.text:BF81007C loc_BF81007C:                           ; CODE XREF: SetImeInfoEx(x,x)+21j
+.text:BF81007C                 cmp     [eax+14h], edx
+.text:BF81007F                 jz      short loc_BF81008F 
+.text:BF81007F                                         
+.text:BF810081                 mov     eax, [eax+8]
+.text:BF810084                 cmp     eax, ecx
+.text:BF810086                 jnz     short loc_BF81007C
+.text:BF810088
+.text:BF810088 loc_BF810088:                           ; CODE XREF: SetImeInfoEx(x,x)+2Fj
+.text:BF810088                 xor     eax, eax
+.text:BF81008A
+.text:BF81008A loc_BF81008A:                           ; CODE XREF: SetImeInfoEx(x,x)+43j
+.text:BF81008A                 pop     esi
+.text:BF81008B
+.text:BF81008B loc_BF81008B:                           ; CODE XREF: SetImeInfoEx(x,x)+Aj
+.text:BF81008B                 pop     ebp
+.text:BF81008C                 retn    8
+.text:BF81008F ; ---------------------------------------------------------------------------
+.text:BF81008F
+.text:BF81008F loc_BF81008F:                           ; CODE XREF: SetImeInfoEx(x,x)+1Aj
+.text:BF81008F                 mov     eax, [eax+2Ch]  
+.text:BF81008F                                         
+.text:BF810092                 test    eax, eax
+.text:BF810094                 jz      short loc_BF810088
+.text:BF810096                 cmp     dword ptr [eax+48h], 0 
+.text:BF81009A                 jnz     short loc_BF8100A5 
+.text:BF81009C                 push    edi             
+.text:BF81009D                 push    57h
+.text:BF81009F                 pop     ecx
+.text:BF8100A0                 mov     edi, eax
+.text:BF8100A2                 rep movsd
+.text:BF8100A4                 pop     edi
+.text:BF8100A5
+.text:BF8100A5 loc_BF8100A5:                           ; CODE XREF: SetImeInfoEx(x,x)+35j
+.text:BF8100A5                 xor     eax, eax        
+.text:BF8100A7                 inc     eax
+</code></pre><p>补丁后:  </p>
+<pre><code>.text:BF810A96                 push    ebp
+.text:BF810A97                 mov     ebp, esp
+.text:BF810A99                 mov     eax, [ebp+arg_0]
+.text:BF810A9C                 test    eax, eax
+.text:BF810A9E                 jnz     short loc_BF810AA4
+.text:BF810AA0
+.text:BF810AA0 loc_BF810AA0:                           ; CODE XREF: SetImeInfoEx(x,x)+15j
+.text:BF810AA0                 xor     eax, eax
+.text:BF810AA2                 jmp     short loc_BF810AC2
+.text:BF810AA4 ; ---------------------------------------------------------------------------
+.text:BF810AA4
+.text:BF810AA4 loc_BF810AA4:                           ; CODE XREF: SetImeInfoEx(x,x)+Aj
+.text:BF810AA4                 mov     edx, [eax+14h]
+.text:BF810AA7                 test    edx, edx            ;判断edx是否为0
+.text:BF810AA9                 jz      short loc_BF810AA0
+.text:BF810AAB                 push    esi
+.text:BF810AAC                 mov     esi, [ebp+arg_4]
+.text:BF810AAF                 mov     ecx, [esi]
+.text:BF810AB1                 mov     eax, edx
+.text:BF810AB3
+.text:BF810AB3 loc_BF810AB3:                           ; CODE XREF: SetImeInfoEx(x,x)+29j
+.text:BF810AB3                 cmp     [eax+14h], ecx
+.text:BF810AB6                 jz      short loc_BF810AC6
+.text:BF810AB8                 mov     eax, [eax+8]
+.text:BF810ABB                 cmp     eax, edx
+.text:BF810ABD                 jnz     short loc_BF810AB3
+</code></pre><p>没有对 <em>spklList</em> 进行验证,下面访问该指针成员 <em>piiex</em> (+0x2c),如果 <em>spklList</em> 为0,在未开启零页保护的系统下可以通过 <em>NtAllocateVirtualMemory</em> 申请0地址内存,此时+0x2c的指针数据是可控的:<br><img src="/81.png" alt=""> </p>
+<p>如果该指针+0x48处为0,代码会执行memcpy操作:  </p>
+<p><img src="/9.png" alt=""> </p>
+<p>目的地址是由0x2c处的指针决定的,源地址来自参数,查看上一层 <em>NtUserSetImeInfoEx</em> v6经过一次memcpy,源数据来自用户层参数:<br><img src="/7.png" alt="">   </p>
+<h3 id="3-生成POC"><a href="#3-生成POC" class="headerlink" title="3. 生成POC"></a>3. 生成POC</h3><p>满足 <em>win32k!NtUserSetImeInfoEx</em> 及 <em>win32k!SetImeInfoEx</em> 中执行memcpy的几个条件后构造代码如下:<br><img src="/poc.png" alt=""></p>
+<p>memcpy前:<br><img src="/4.png" alt=""></p>
+<p>memcpy后:<br><img src="/5.png" alt=""></p>
+
+    
+
     
 </div>
+
+
+                
+
+                <!-- Post Comments -->
+                
+                    
+                
+            </div>
+
+            <!-- Post Prev & Next Nav -->
+            <nav class="material-nav mdl-color-text--grey-50 mdl-cell mdl-cell--12-col">
+    <!-- Prev Nav -->
+    
+
+    <!-- Section Spacer -->
+    <div class="section-spacer"></div>
+
+    <!-- Next Nav -->
+    
+        <a href="/blog/2017/06/13/4113分析/" id="post_nav-older" class="next-content">
+            旧篇
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon mdl-color--white mdl-color-text--grey-900" role="presentation">
+                <i class="material-icons">arrow_forward</i>
+            </button>
+        </a>
+    
+</nav>
+
+        </div>
+    </div>
+
 
 
                     
@@ -934,12 +899,6 @@ It will not impact the appearance and can give developers a lot of support :)
 
 
 
-
-    <!-- Swiftye -->
-    
-
-    <!-- Local Search-->
-    
 
 
 <!-- UC Browser Compatible -->
