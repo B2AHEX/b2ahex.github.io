@@ -576,7 +576,7 @@
 <h3 id="3-生成POC"><a href="#3-生成POC" class="headerlink" title="3. 生成POC"></a>3. 生成POC</h3><p>满足 <em>win32k!NtUserSetImeInfoEx</em> 及 <em>win32k!SetImeInfoEx</em> 中执行memcpy的几个条件后构造代码如下:<br><img src="/blog/img/src/8120-poc.png" alt=""></p>
 <p>memcpy前:<br><img src="/blog/img/src/8120-4.png" alt=""></p>
 <p>memcpy后:<br><img src="/blog/img/src/8120-5.png" alt=""></p>
-<h3 id="4-漏洞利用"><a href="#4-漏洞利用" class="headerlink" title="4. 漏洞利用"></a>4. 漏洞利用</h3><p>由于漏洞可以实现任意地址写,可以利用Pool Spraying布置内存,通过 <em>NtAllocateReserveObject</em> 申请大量IOCO对象,由于漏洞会写入的buf长度是0x15c字节，所以free间隔4个对象的长度,通过 <em>NtQuerySystemInformation</em> 泄露出其中一个紧挨着free内存的IOCO对象，从free内存开始写直到覆盖TypeIndex部分,<a href="https://hk.saowen.com/a/025770740d1b1c8e1e38e8da29fbb2601bb532e8be253d15fe02e9faa92908f3" title="参考链接" target="_blank" rel="external">参考</a>,计算要复制的缓存区起点位置 = [该对象地址 - 0xC - 15b], -0xC 处是 <em>TypeIndex</em> )  </p>
+<h3 id="4-漏洞利用"><a href="#4-漏洞利用" class="headerlink" title="4. 漏洞利用"></a>4. 漏洞利用</h3><p>由于漏洞可以实现任意地址写,我们采取一种简单的利用方法，通过Pool Spraying布置内存,调用 <em>NtAllocateReserveObject</em> 申请大量IOCO对象,由于漏洞会写入的buf长度是0x15c字节，所以free间隔4个对象的长度,通过 <em>NtQuerySystemInformation</em> 泄露出其中一个紧挨着free内存的IOCO对象，从free内存开始写直到覆盖TypeIndex部分,<a href="https://hk.saowen.com/a/025770740d1b1c8e1e38e8da29fbb2601bb532e8be253d15fe02e9faa92908f3" title="参考链接" target="_blank" rel="external">参考</a>,计算要复制的缓存区起点位置 = [该对象地址 - 0xC - 15b], -0xC 处是 <em>TypeIndex</em> )  </p>
 <pre><code>nt!_OBJECT_HEADER
    +0x000 PointerCount     : Int4B
    +0x004 HandleCount      : Int4B
