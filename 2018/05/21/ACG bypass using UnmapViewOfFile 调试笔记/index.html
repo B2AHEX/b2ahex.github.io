@@ -488,8 +488,8 @@
                 <div id="post-content" class="mdl-color-text--grey-700 mdl-card__supporting-text fade out">
     
         <p>作者：b2ahex  </p>
-<h3 id="1-背景介绍"><a href="#1-背景介绍" class="headerlink" title="1. 背景介绍"></a>1. 背景介绍</h3><p>测试 <em>project-zero</em> 研究员ifratric提出的绕过ACG缓解的方法,原文:<em><a href="https://bugs.chromium.org/p/project-zero/issues/detail?id=1435" title="ACG bypass using UnmapViewOfFile" target="_blank" rel="external">ACG bypass using UnmapViewOfFile</a></em> </p>
-<p>系统加入ACG(Arbitrary Code Guard) 缓解之后把脚本引擎的JIT编译功能放到一个单独的Edge进程中,当渲染进程需要执行JIT功能时通过RPC将目标字节码发送到JIT进程,由JIT进程编译生成本地代码并将其映射回原来的请求进程中执行。</p>
+<h3 id="1-背景介绍"><a href="#1-背景介绍" class="headerlink" title="1. 背景介绍"></a>1. 背景介绍</h3><p>测试 <em>project-zero</em> 研究员 <em>ifratric</em> 提出的绕过ACG缓解的方法,原文:<em><a href="https://bugs.chromium.org/p/project-zero/issues/detail?id=1435" title="ACG bypass using UnmapViewOfFile" target="_blank" rel="external">ACG bypass using UnmapViewOfFile</a></em> </p>
+<p><em>Windows</em> 加入ACG(Arbitrary Code Guard) 缓解之后把脚本引擎的JIT编译功能放到一个单独的Edge进程中,当渲染进程需要执行JIT功能时通过RPC将目标字节码发送到JIT进程,由JIT进程编译生成本地代码并将其映射回原来的请求进程中执行。</p>
 <h3 id="2-利用流程"><a href="#2-利用流程" class="headerlink" title="2. 利用流程"></a>2. 利用流程</h3><p>JIT进程写回本地代码之前有如下几个步骤:<br>a.使用 <em>CreateFileMapping()</em> 创建内存映像对象<br>b.使用 <em>MapViewOfFile2()</em> 将它映射到请求进程中,在请求进程中的内存标志为RESERVE,不包含可写属性<br>c.当JIT进程需要写入数据时调用 <em>VirtualAllocEx()</em> 从之前映射的内存中申请内存,即使内存已经分配也会调用成功,包含 <em>PAGE_EXECUTE</em>  </p>
 <p>获取可执行内存思路:<br>在JIT进程调用 <em>VirtualAllocEx()</em> 之前停止内存映射(<em>UnmapViewOfFile</em>),在相同位置申请虚拟内存标记可写,写入shellcode到一个合理的位置,由JIT进程调用 <em>VirtualAllocEx()</em> 将这段内存改回可执行标志。    </p>
 <h3 id="3-上调试器"><a href="#3-上调试器" class="headerlink" title="3. 上调试器"></a>3. 上调试器</h3><p>调试记录如下：  </p>
@@ -556,7 +556,7 @@ Type:                   00040000          MEM_MAPPED
 Allocation Base:        0000020e`80000000
 Allocation Protect:     00000010          PAGE_EXECUTE
 Mapped file name:       PageFile  
-</code></pre><p>此时状态不可写,无法写入数据,Unmap掉这段内存,重新申请并标记 <em>PAGE_READWRITE</em>  </p>
+</code></pre><p>此时状态不可写,Unmap掉这段内存,重新申请并标记<em>PAGE_READWRITE</em>  </p>
 <pre><code>0:028&gt; r rip=kernelbase!unmapviewoffile
 0:028&gt; r rcx=0000020e`80000000
 0:028&gt; p
