@@ -487,25 +487,25 @@
                 <!-- Post Content -->
                 <div id="post-content" class="mdl-color-text--grey-700 mdl-card__supporting-text fade out">
     
-        <p>作者：b2ahex  </p>
-<p>上一篇edge中拿到任意地址读写，控制返回地址后，下面该触发内核漏洞进行提权，完成沙箱逃逸。</p>
-<h3 id="1-分析篇"><a href="#1-分析篇" class="headerlink" title="1. 分析篇"></a>1. 分析篇</h3><p>Poc来源: <a href="https://github.com/progmboy/cansecwest2017" target="_blank" rel="external">https://github.com/progmboy/cansecwest2017</a>  （感谢progmboy大佬分享）</p>
-<p>补丁前：<br><img src="/blog/img/src/krnl_1807_1.png" alt="">    </p>
-<p>补丁后：释放内存后，buf指针没有清零，导致后续可以继续使用。<br><img src="/blog/img/src/krnl_1807_2.png" alt=""> </p>
-<p>向上分析，执行到这里是因为条件判断成功： StringCbLengthW() &lt; 0<br>跟进 StringCbLengthW ，发现当前buf，在指定长度之内没有找到\0即可满足条件 StringCbLengthW() &lt; 0 判定成功：<br><img src="/blog/img/src/krnl_1807_3.png" alt="">   </p>
-<p>因此当下面的buf被传到内核后，由于 DirectComposition::CBaseExpressionMarshaler::SetBufferProperty 中 StringCbLengthW 没有在指定长度范围内找到 0x00，释放了该buf，但是没有将指针清零，导致后续流程继续使用这个对象的buf指针时可能发生异常访问：<br><img src="/blog/img/src/krnl_1807_4.png" alt=""><br>继续查看POC:<br><img src="/blog/img/src/krnl_1807_5.png" alt="">   </p>
-<p>对应的内核部分，ReleaseResource() 最终会触发析构函数，如果buf指针非零就再次FreePool，此时造成了doublefree:<br><img src="/blog/img/src/krnl_1807_6.png" alt=""><br><img src="/blog/img/src/krnl_1807_7.png" alt="">   </p>
-<p>第一次释放：<br><img src="/blog/img/src/krnl_1807_8.png" alt="">  </p>
-<p>第二次调用 releaseresource 再次释放,引发BSOD：<br><img src="/blog/img/src/krnl_1807_9.png" alt="">    </p>
-<h3 id="2-利用篇"><a href="#2-利用篇" class="headerlink" title="2. 利用篇"></a>2. 利用篇</h3><p>代码中可以控制申请pool的大小，因为后面会freepool，即可以控制hole大小：<br><img src="/blog/img/src/krnl_1807_10.png" alt="">  </p>
-<p>通过palette占用这个hole，此时指针指向的是这个palette，因为x64下palette必须要大于0xD0，所以要把buf设置的大一些，第一次申请pool的地方：<br><img src="/blog/img/src/krnl_1807_11.png" alt="">  </p>
-<p>释放了之后，pool fenghui用相同大小的palette占住这个free hole：<br><img src="/blog/img/src/krnl_1807_12.png" alt="">  </p>
-<p>通过 ReleaseResource 事件再次释放buf指针，此时是释放了刚刚申请的palette：<br><img src="/blog/img/src/krnl_1807_13.png" alt="">  </p>
-<p>现在如果申请数据可以覆盖原先 palette.pFirstcolor ，就可以在r3通过 GetPaletteEntries/SetPaletteEntries 读写一次任意地址，利用一组palette或者bitmap，即可获得完整的内核模式任意地址读写:(Win10RS1下可通过 gSharedInfo 泄露 AcceleratorTables 地址，结合pool fengshui获取bitmap/palette地址，详细参考：Abusing-GDI-Reloaded-ekoparty-2016)<br><img src="/blog/img/src/krnl_1807_14.png" alt=""><br><img src="/blog/img/src/krnl_1807_15.png" alt="">  </p>
-<p>由于edge运行在沙箱中，low Integrity无法调用NtQuerySystemInformation，所以下面要获取system进程的token，需要通过其他漏洞泄露出内核模块基址：<br><img src="/blog/img/src/krnl_1807_16.png" alt="">    </p>
-<p>从nt模块定位到nt!PsInitialSystemProcess，获取 SYSTEM EPROCESS：<br><img src="/blog/img/src/krnl_1807_17.png" alt="">  </p>
-<p>保存system token，遍历链表找到当前进程并修改Token完成提权：<br>(后面有点懒的截图了…)<br><img src="/blog/img/src/krnl_1807_18.png" alt="">   </p>
-<p>ps:在edge下创建进程时需要清零下PEB中的 IsPackagedProcess 标志：  </p>
+        <p><strong>作者：b2ahex</strong>   </p>
+<p><strong>上一篇edge中拿到任意地址读写，控制返回地址后，下面该触发内核漏洞进行提权，完成沙箱逃逸。</strong>  </p>
+<h3 id="1-分析篇"><a href="#1-分析篇" class="headerlink" title="1. 分析篇"></a>1. 分析篇</h3><p><strong>Poc来源: <a href="https://github.com/progmboy/cansecwest2017" target="_blank" rel="external">https://github.com/progmboy/cansecwest2017</a>  （感谢progmboy大佬分享）</strong>  </p>
+<p><strong>补丁前：</strong><br><img src="/blog/img/src/krnl_1807_1.png" alt="">    </p>
+<p><strong>补丁后：释放内存后，buf指针没有清零，导致后续可以继续使用。</strong><br><img src="/blog/img/src/krnl_1807_2.png" alt=""> </p>
+<p><strong>向上分析，执行到这里是因为条件判断成功： StringCbLengthW() &lt; 0<br>跟进 StringCbLengthW ，发现当前buf，在指定长度之内没有找到\0即可满足条件 StringCbLengthW() &lt; 0 判定成功：</strong><br><img src="/blog/img/src/krnl_1807_3.png" alt="">   </p>
+<p><strong>因此当下面的buf被传到内核后，由于 DirectComposition::CBaseExpressionMarshaler::SetBufferProperty 中 StringCbLengthW 没有在指定长度范围内找到 0x00，释放了该buf，但是没有将指针清零，导致后续流程继续使用这个对象的buf指针时可能发生异常访问：</strong><br><img src="/blog/img/src/krnl_1807_4.png" alt=""><br><strong>继续查看POC:</strong><br><img src="/blog/img/src/krnl_1807_5.png" alt="">   </p>
+<p><strong>对应的内核部分，ReleaseResource() 最终会触发析构函数，如果buf指针非零就再次FreePool，此时造成了doublefree:</strong><br><img src="/blog/img/src/krnl_1807_6.png" alt=""><br><img src="/blog/img/src/krnl_1807_7.png" alt="">   </p>
+<p><strong>第一次释放：</strong><br><img src="/blog/img/src/krnl_1807_8.png" alt="">  </p>
+<p><strong>第二次调用 releaseresource 再次释放,引发BSOD：</strong><br><img src="/blog/img/src/krnl_1807_9.png" alt="">    </p>
+<h3 id="2-利用篇"><a href="#2-利用篇" class="headerlink" title="2. 利用篇"></a>2. 利用篇</h3><p><strong>代码中可以控制申请pool的大小，因为后面会freepool，即可以控制hole大小：</strong><br><img src="/blog/img/src/krnl_1807_10.png" alt="">  </p>
+<p><strong>通过palette占用这个hole，此时指针指向的是这个palette，因为x64下palette必须要大于0xD0，所以要把buf设置的大一些，第一次申请pool的地方：</strong><br><img src="/blog/img/src/krnl_1807_11.png" alt="">  </p>
+<p><strong>释放了之后，pool fenghui用相同大小的palette占住这个free hole：</strong><br><img src="/blog/img/src/krnl_1807_12.png" alt="">  </p>
+<p><strong>通过 ReleaseResource 事件再次释放buf指针，此时是释放了刚刚申请的palette：</strong><br><img src="/blog/img/src/krnl_1807_13.png" alt="">  </p>
+<p><strong>现在如果申请数据可以覆盖原先 palette.pFirstcolor ，就可以在r3通过 GetPaletteEntries/SetPaletteEntries 读写一次任意地址，利用一组palette或者bitmap，即可获得完整的内核模式任意地址读写:(Win10RS1下可通过 gSharedInfo 泄露 AcceleratorTables 地址，结合pool fengshui获取bitmap/palette地址，详细参考：Abusing-GDI-Reloaded-ekoparty-2016)</strong><br><img src="/blog/img/src/krnl_1807_14.png" alt=""><br><img src="/blog/img/src/krnl_1807_15.png" alt="">  </p>
+<p><strong>由于edge运行在沙箱中，low Integrity无法调用NtQuerySystemInformation，所以下面要获取system进程的token，需要通过其他漏洞泄露出内核模块基址：</strong><br><img src="/blog/img/src/krnl_1807_16.png" alt="">    </p>
+<p><strong>从nt模块定位到nt!PsInitialSystemProcess，获取 SYSTEM EPROCESS：</strong><br><img src="/blog/img/src/krnl_1807_17.png" alt="">  </p>
+<p><strong>保存system token，遍历链表找到当前进程并修改Token完成提权：</strong><br>(后面有点懒的截图了…)<br><img src="/blog/img/src/krnl_1807_18.png" alt="">   </p>
+<p><strong>ps:在edge下创建进程时需要清零下PEB中的 IsPackagedProcess 标志：</strong>   </p>
 <pre><code>KERNELBASE!GetSidSubAuthority+0x12f:
 00007ffa`4940380f 488b4820        mov     rcx,qword ptr [rax+20h] ds:00000000`00000020=????????????????
 0:024&gt; k
@@ -522,7 +522,7 @@
 kd&gt; dt _peb 00000079b2357000 IsPackagedProcess
 nt!_PEB
    +0x003 IsPackagedProcess : 0y0 
-</code></pre><p>结合上一篇浏览器的利用，构造ROP,最终实现edge远程代码执行+提权沙箱逃逸：<br><img src="/blog/img/src/krnl_1807_19.png" alt="">  </p>
+</code></pre><p><strong>结合上一篇浏览器的利用，构造ROP,最终实现edge远程代码执行+提权沙箱逃逸：</strong><br><img src="/blog/img/src/krnl_1807_19.png" alt="">  </p>
 <h4 id="Reference"><a href="#Reference" class="headerlink" title="Reference:"></a>Reference:</h4><p><a href="https://github.com/progmboy/cansecwest2017" target="_blank" rel="external">https://github.com/progmboy/cansecwest2017</a><br><a href="http://powerofcommunity.net/poc2017/andrew.pdf" target="_blank" rel="external">http://powerofcommunity.net/poc2017/andrew.pdf</a><br><a href="https://whereisk0shl.top/Dark%20Composition%20Exploit%20in%20Ring0.html" target="_blank" rel="external">https://whereisk0shl.top/Dark%20Composition%20Exploit%20in%20Ring0.html</a><br><a href="https://www.coresecurity.com/system/files/publications/2016/10/Abusing-GDI-Reloaded-ekoparty-2016_0.pdf" target="_blank" rel="external">https://www.coresecurity.com/system/files/publications/2016/10/Abusing-GDI-Reloaded-ekoparty-2016_0.pdf</a>  </p>
 
     
@@ -543,13 +543,21 @@ nt!_PEB
             <nav class="material-nav mdl-color-text--grey-50 mdl-cell mdl-cell--12-col">
     <!-- Prev Nav -->
     
+        <a href="/blog/2018/07/18/Win10下的浏览器沙箱逃逸/" id="post_nav-newer" class="prev-content">
+            <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon mdl-color--white mdl-color-text--grey-900" role="presentation">
+                <i class="material-icons">arrow_back</i>
+            </button>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            新篇
+        </a>
+    
 
     <!-- Section Spacer -->
     <div class="section-spacer"></div>
 
     <!-- Next Nav -->
     
-        <a href="/blog/2018/07/18/Win10下的浏览器沙箱逃逸/" id="post_nav-older" class="next-content">
+        <a href="/blog/2018/05/21/ACG bypass using UnmapViewOfFile 调试笔记/" id="post_nav-older" class="next-content">
             旧篇
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon mdl-color--white mdl-color-text--grey-900" role="presentation">
