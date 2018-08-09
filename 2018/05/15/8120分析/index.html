@@ -12,7 +12,7 @@
     
     <title>
         
-            CVE-2018-8120 漏洞分析 | 
+            CVE-2018-8120 漏洞分析及利用 | 
         
         b2ahex&#39;s blog
     </title>
@@ -67,18 +67,18 @@
     <!-- The Open Graph protocol -->
     <meta property="og:url" content="https://b2ahex.github.io">
     <meta property="og:type" content="blog">
-    <meta property="og:title" content="CVE-2018-8120 漏洞分析 | b2ahex&#39;s blog">
+    <meta property="og:title" content="CVE-2018-8120 漏洞分析及利用 | b2ahex&#39;s blog">
     <meta property="og:image" content="/blog/img/favicon.png" />
     <meta property="og:description" content="">
     
 
     
         <meta property="article:published_time" content="5月 15, 2018" />
-        <meta property="article:modified_time" content="5月 17, 2018" />
+        <meta property="article:modified_time" content="6月 08, 2018" />
     
 
     <!-- The Twitter Card protocol -->
-    <meta name="twitter:title" content="CVE-2018-8120 漏洞分析 | b2ahex&#39;s blog">
+    <meta name="twitter:title" content="CVE-2018-8120 漏洞分析及利用 | b2ahex&#39;s blog">
     <meta name="twitter:description" content="">
     <meta name="twitter:image" content="/blog/img/favicon.png">
     <meta name="twitter:card" content="summary_large_image" />
@@ -112,10 +112,10 @@
         },
         "description": "Hi, nice to meet you"
     },
-    "headline": "CVE-2018-8120 漏洞分析",
+    "headline": "CVE-2018-8120 漏洞分析及利用",
     "url": "https://b2ahex.github.io/blog/2018/05/15/8120分析/index.html",
     "datePublished": "5月 15, 2018",
-    "dateModified": "5月 17, 2018",
+    "dateModified": "6月 08, 2018",
     "description": "",
     "mainEntityOfPage": {
         "@type": "WebPage",
@@ -377,7 +377,7 @@
         
     
             <p class="article-headline-p">
-                CVE-2018-8120 漏洞分析
+                CVE-2018-8120 漏洞分析及利用
             </p>
         </div>
 
@@ -436,7 +436,7 @@
 
     <!-- Share Weibo -->
     
-        <a class="post_share-link" href="http://service.weibo.com/share/share.php?appkey=&title=CVE-2018-8120 漏洞分析&url=https://b2ahex.github.io/blog/2018/05/15/8120分析/index.html&pic=&searchPic=false&style=simple" target="_blank">
+        <a class="post_share-link" href="http://service.weibo.com/share/share.php?appkey=&title=CVE-2018-8120 漏洞分析及利用&url=https://b2ahex.github.io/blog/2018/05/15/8120分析/index.html&pic=&searchPic=false&style=simple" target="_blank">
             <li class="mdl-menu__item">
                 分享到微博
             </li>
@@ -445,7 +445,7 @@
 
     <!-- Share Twitter -->
     
-        <a class="post_share-link" href="https://twitter.com/intent/tweet?text=CVE-2018-8120 漏洞分析&url=https://b2ahex.github.io/blog/2018/05/15/8120分析/index.html&via=b2ahex" target="_blank">
+        <a class="post_share-link" href="https://twitter.com/intent/tweet?text=CVE-2018-8120 漏洞分析及利用&url=https://b2ahex.github.io/blog/2018/05/15/8120分析/index.html&via=b2ahex" target="_blank">
             <li class="mdl-menu__item">
                 分享到 Twitter
             </li>
@@ -576,7 +576,7 @@
 <h3 id="3-生成POC"><a href="#3-生成POC" class="headerlink" title="3. 生成POC"></a>3. 生成POC</h3><p>满足 <em>win32k!NtUserSetImeInfoEx</em> 及 <em>win32k!SetImeInfoEx</em> 中执行memcpy的几个条件后构造代码如下:<br><img src="/blog/img/src/8120-poc.png" alt=""></p>
 <p>memcpy前:<br><img src="/blog/img/src/8120-4.png" alt=""></p>
 <p>memcpy后:<br><img src="/blog/img/src/8120-5.png" alt=""></p>
-<h3 id="4-漏洞利用"><a href="#4-漏洞利用" class="headerlink" title="4. 漏洞利用"></a>4. 漏洞利用</h3><p>由于漏洞可以实现任意地址写,我们采取一种简单的利用方法，通过Pool Spraying布置内存,调用 <em>NtAllocateReserveObject</em> 申请大量IOCO对象,由于漏洞会写入的buf长度是0x15c字节，所以free间隔4个对象的长度,通过 <em>NtQuerySystemInformation</em> 泄露出其中一个紧挨着free内存的IOCO对象，从free内存开始写直到覆盖TypeIndex部分,<a href="https://hk.saowen.com/a/025770740d1b1c8e1e38e8da29fbb2601bb532e8be253d15fe02e9faa92908f3" title="参考链接" target="_blank" rel="external">参考</a>,计算要复制的缓存区起点位置 = [该对象地址 - 0xC - 15b], -0xC 处是 <em>TypeIndex</em> )  </p>
+<h3 id="4-漏洞利用"><a href="#4-漏洞利用" class="headerlink" title="4. 漏洞利用"></a>4. 漏洞利用</h3><p>由于漏洞可以实现任意地址写,可以利用Pool Spraying布置内存,通过 <em>NtAllocateReserveObject</em> 申请大量IOCO对象,由于漏洞会写入的buf长度是0x15c字节，所以free间隔4个对象的长度,通过 <em>NtQuerySystemInformation</em> 泄露出其中一个紧挨着free内存的IOCO对象，从free内存开始写直到覆盖TypeIndex部分,<a href="https://hk.saowen.com/a/025770740d1b1c8e1e38e8da29fbb2601bb532e8be253d15fe02e9faa92908f3" title="参考链接" target="_blank" rel="external">参考</a>,计算要复制的缓存区起点位置 = [该对象地址 - 0xC - 15b], -0xC 处是 <em>TypeIndex</em> )  </p>
 <pre><code>nt!_OBJECT_HEADER
    +0x000 PointerCount     : Int4B
    +0x004 HandleCount      : Int4B
@@ -613,6 +613,14 @@
             <!-- Post Prev & Next Nav -->
             <nav class="material-nav mdl-color-text--grey-50 mdl-cell mdl-cell--12-col">
     <!-- Prev Nav -->
+    
+        <a href="/blog/2018/05/21/ACG bypass using UnmapViewOfFile 调试笔记/" id="post_nav-newer" class="prev-content">
+            <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon mdl-color--white mdl-color-text--grey-900" role="presentation">
+                <i class="material-icons">arrow_back</i>
+            </button>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            新篇
+        </a>
     
 
     <!-- Section Spacer -->
@@ -712,7 +720,7 @@
             </a>
             <ul class="dropdown-menu">
             <li>
-                <a class="sidebar_archives-link" href="/blog/archives/2018/05/">五月 2018<span class="sidebar_archives-count">1</span></a></li><li><a class="sidebar_archives-link" href="/blog/archives/2017/06/">六月 2017<span class="sidebar_archives-count">1</span></a></li><li><a class="sidebar_archives-link" href="/blog/archives/2014/08/">八月 2014<span class="sidebar_archives-count">1</span></a>
+                <a class="sidebar_archives-link" href="/blog/archives/2018/07/">七月 2018<span class="sidebar_archives-count">1</span></a></li><li><a class="sidebar_archives-link" href="/blog/archives/2018/05/">五月 2018<span class="sidebar_archives-count">2</span></a></li><li><a class="sidebar_archives-link" href="/blog/archives/2017/06/">六月 2017<span class="sidebar_archives-count">1</span></a></li><li><a class="sidebar_archives-link" href="/blog/archives/2014/08/">八月 2014<span class="sidebar_archives-count">1</span></a>
             </ul>
         </li>
         
