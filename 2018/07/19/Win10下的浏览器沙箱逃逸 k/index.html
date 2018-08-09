@@ -501,7 +501,7 @@
 <p><strong>通过palette占用这个hole，此时指针指向的是这个palette，因为x64下palette必须要大于0xD0，所以要把buf设置的大一些，第一次申请pool的地方：</strong><br><img src="/blog/img/src/krnl_1807_11.png" alt="">  </p>
 <p><strong>释放了之后，pool fenghui用相同大小的palette占住这个free hole：</strong><br><img src="/blog/img/src/krnl_1807_12.png" alt="">  </p>
 <p><strong>通过 ReleaseResource 事件再次释放buf指针，此时是释放了刚刚申请的palette：</strong><br><img src="/blog/img/src/krnl_1807_13.png" alt="">  </p>
-<p><strong>现在如果申请数据可以覆盖原先 palette.pFirstcolor ，就可以在r3通过 GetPaletteEntries/SetPaletteEntries 读写一次任意地址，利用一组palette或者bitmap，即可获得完整的内核模式任意地址读写:(Win10RS1下可通过 gSharedInfo 泄露 AcceleratorTables 地址，结合pool fengshui获取bitmap/palette地址，详细参考：Abusing-GDI-Reloaded-ekoparty-2016)</strong><br><img src="/blog/img/src/krnl_1807_14.png" alt=""><br><img src="/blog/img/src/krnl_1807_15.png" alt="">  </p>
+<p><strong>现在如果申请数据可以覆盖原先 palette.pFirstcolor ，就可以在r3通过 GetPaletteEntries/SetPaletteEntries 读写一次任意地址，利用一组palette或者bitmap，即可获得完整的内核模式任意地址读写:(Win10RS1下可通过 gSharedInfo 泄露 AcceleratorTables 地址，结合pool fengshui获取bitmap/palette地址，详细参考：Abusing-GDI-Reloaded-ekoparty-2016)</strong><br><strong>palette-&gt;pFirstcolor指向bitmapA-&gt;PvScan0</strong><br><img src="/blog/img/src/krnl_1807_14.png" alt=""><br><strong>SetPaletteEntries(hP, 0, 2, bitmapB-&gt;PvScan0);</strong><br><img src="/blog/img/src/krnl_1807_15.png" alt="">  </p>
 <p><strong>由于edge运行在沙箱中，low Integrity无法调用NtQuerySystemInformation，所以下面要获取system进程的token，需要通过其他漏洞泄露出内核模块基址：</strong><br><img src="/blog/img/src/krnl_1807_16.png" alt="">    </p>
 <p><strong>从nt模块定位到nt!PsInitialSystemProcess，获取 SYSTEM EPROCESS：</strong><br><img src="/blog/img/src/krnl_1807_17.png" alt="">  </p>
 <p><strong>保存system token，遍历链表找到当前进程并修改Token完成提权：</strong><br>(后面有点懒的截图了…)<br><img src="/blog/img/src/krnl_1807_18.png" alt="">   </p>
